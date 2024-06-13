@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '582028717733',
     projectId: 'project-nineties',
     storageBucket: 'project-nineties.appspot.com',
+    iosClientId: '582028717733-dofuk1b51n97u43cg5ms8q0nd9asp9bq.apps.googleusercontent.com',
     iosBundleId: 'com.erzet.developer.projectNineties',
   );
+
 }
