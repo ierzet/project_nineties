@@ -1,20 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class Constans {
-  static String imagesPath = 'assets/images/';
-  static String svgsPath = 'assets/svg_pictures/';
-  static String iconPath = 'assets/icons/';
-
-  static double deffaultPadding = 16;
+class AppPadding {
   static double halfPadding = 8;
+  static double deffaultPadding = 16;
   static double doublePadding = 32;
   static double triplePadding = 48;
   static double quadruplePadding = 64;
+}
 
-  static Color basicWhite = const Color.fromRGBO(254, 254, 254, 1.0);
-  static Color dirtyWhite = const Color.fromRGBO(249, 249, 249, 1.0);
-  static Color inputdecor = const Color.fromRGBO(237, 237, 237, 1.0);
-  static Color accentColor = const Color.fromRGBO(238, 140, 33, 1.0);
+class AppColors {
+  static const Color primary = Color(0xFF2C3E50); //Dark Slate Blue #2C3E50
+  static const Color secondary = Color(0xFFE74C3C); //Cinnabar Red  #E74C3C
+  static const Color accent = Color(0xFF3498DB); //Curious Blue  #3498DB
+  static const Color background = Color(0xFFECF0F1); //Light Gray #ECF0F1
+  static Color textColor = primary;
+}
+
+class AppStrings {
+  static const String welcomeMessage = "Welcome back you've been missed!x";
+  static const String forgotPassword = 'Forgot Password?';
+  static const String signIn = 'Sign In';
+  static const String notAMember = 'Not a member?';
+  static const String registerNow = 'Register now';
+  static const String orContinueWith = 'Or continue with';
+  static const String userName = 'Username';
+  static const String password = 'Password';
+}
+
+class AppStyles {
+  static final TextStyle header = GoogleFonts.montserrat(
+    fontSize: 16,
+    color: AppColors.primary,
+    fontWeight: FontWeight.bold,
+  );
+
+  static final TextStyle bodyText = GoogleFonts.lato(
+    fontSize: 16,
+    color: AppColors.primary,
+    fontWeight: FontWeight.w400,
+  );
+
+  static final TextStyle bodyTextBold = GoogleFonts.lato(
+    fontSize: 16,
+    color: AppColors.primary,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final TextStyle accentText = GoogleFonts.lato(
+    fontSize: 16,
+    color: AppColors.accent,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final TextStyle buttonText = GoogleFonts.montserrat(
+    fontSize: 16,
+    color: AppColors.background,
+    fontWeight: FontWeight.bold,
+  );
+}
+
+class AppPath {
+  static String googleIcon = 'assets/images/google.png';
+  static String appleIcon = 'assets/images/apple.png';
+  static String facebookIcon = 'assets/images/facebook.png';
 }
 
 enum ColorSelectionMethod {
@@ -23,7 +72,7 @@ enum ColorSelectionMethod {
 }
 
 enum ColorSeed {
-  baseColor('M3 Baseline', Colors.orange),
+  baseColor('M3 Baseline', Color(0xFF2C3E50)),
   indigo('Indigo', Colors.indigo),
   blue('Blue', Colors.blue),
   teal('Teal', Colors.teal),
@@ -56,3 +105,58 @@ enum ColorImageProvider {
   final String label;
   final String url;
 }
+
+
+
+
+// TextTheme(
+//           headlineLarge: TextStyle(
+//             fontFamily: 'Roboto',
+//             fontWeight: FontWeight.bold,
+//             fontSize: 32.0,
+//             color: Color(0xFF2C3E50),
+//           ),
+//           bodyLarge: TextStyle(
+//             fontFamily: 'Open Sans',
+//             fontWeight: FontWeight.normal,
+//             fontSize: 16.0,
+//             color: Color(0xFF2C3E50),
+//           ),
+//           bodyMedium: TextStyle(
+//             fontFamily: 'Open Sans',
+//             fontWeight: FontWeight.normal,
+//             fontSize: 14.0,
+//             color: Color(0xFF2C3E50),
+//           ),
+//           labelLarge: TextStyle(
+//             fontFamily: 'Roboto',
+//             fontWeight: FontWeight.w500,
+//             fontSize: 16.0,
+//             color: Colors.white,
+//           ),
+//         ),
+//         elevatedButtonTheme: ElevatedButtonThemeData(
+//           style: ElevatedButton.styleFrom(
+//             backgroundColor: Color(0xFFE74C3C),
+//             textStyle: TextStyle(
+//               fontFamily: 'Roboto',
+//               fontWeight: FontWeight.w500,
+//               fontSize: 16.0,
+//             ),
+//           ),
+//         ),
+//         inputDecorationTheme: InputDecorationTheme(
+//           border: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(8.0),
+//             borderSide: BorderSide(
+//               color: Color(0xFF2C3E50),
+//             ),
+//           ),
+//           focusedBorder: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(8.0),
+//             borderSide: BorderSide(
+//               color: Color(0xFF3498DB),
+//             ),
+//           ),
+//         ),
+//       ),
