@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppPadding {
   static double halfPadding = 8;
-  static double deffaultPadding = 16;
+  static double defaultPadding = 16;
   static double doublePadding = 32;
   static double triplePadding = 48;
   static double quadruplePadding = 64;
@@ -14,11 +14,12 @@ class AppColors {
   static const Color secondary = Color(0xFFE74C3C); //Cinnabar Red  #E74C3C
   static const Color accent = Color(0xFF3498DB); //Curious Blue  #3498DB
   static const Color background = Color(0xFFECF0F1); //Light Gray #ECF0F1
-  static Color textColor = primary;
+  static const Color textColor = primary;
 }
 
 class AppStrings {
-  static const String welcomeMessage = "Welcome back you've been missed!x";
+  //authetication page
+  static const String welcomeMessage = "Welcome back you've been missed!";
   static const String forgotPassword = 'Forgot Password?';
   static const String signIn = 'Sign In';
   static const String notAMember = 'Not a member?';
@@ -26,6 +27,11 @@ class AppStrings {
   static const String orContinueWith = 'Or continue with';
   static const String userName = 'Username';
   static const String password = 'Password';
+  static const String signUp = 'Sign Up';
+
+  //signup page
+  static const String name = 'Name';
+  static const String confirmedPassword = 'Confirmed password';
 }
 
 class AppStyles {
@@ -61,10 +67,14 @@ class AppStyles {
 }
 
 class AppPath {
-  static String googleIcon = 'assets/images/google.png';
-  static String appleIcon = 'assets/images/apple.png';
-  static String facebookIcon = 'assets/images/facebook.png';
+  static const String googleIcon = 'assets/images/google.png';
+  static const String appleIcon = 'assets/images/apple.png';
+  static const String facebookIcon = 'assets/images/facebook.png';
 }
+
+enum InputType { name, email, password, confirmedPassword }
+
+enum AuthenticationFormType { signin, signup }
 
 enum ColorSelectionMethod {
   colorSeed,

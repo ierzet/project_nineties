@@ -93,11 +93,16 @@ final class AuthValidationRegister extends AuthenticationState {
   final bool emailIsValid;
   final bool passwordIsValid;
   final bool confirmedPasswordIsValid;
+  final String email;
+  final String password;
 
-  const AuthValidationRegister(
-      {required this.emailIsValid,
-      required this.passwordIsValid,
-      required this.confirmedPasswordIsValid});
+  const AuthValidationRegister({
+    required this.emailIsValid,
+    required this.passwordIsValid,
+    required this.confirmedPasswordIsValid,
+    required this.email,
+    required this.password,
+  });
 
   @override
   List<Object> get props =>

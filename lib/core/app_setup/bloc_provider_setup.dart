@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/app_setup/authentication_init.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
 import 'package:project_nineties/injection_container.dart' as di;
 
 class BlocProviderSetup extends StatelessWidget {
@@ -29,6 +30,7 @@ class BlocProviderSetup extends StatelessWidget {
             ),
           ),
           BlocProvider(create: (context) => di.locator<AuthenticationBloc>()),
+          BlocProvider(create: (context) => AuthValidatorCubit()),
         ],
         child: child,
       ),

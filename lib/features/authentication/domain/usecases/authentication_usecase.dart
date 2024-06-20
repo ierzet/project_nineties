@@ -4,55 +4,50 @@ import 'package:project_nineties/features/authentication/domain/repositories/aut
 import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/user_dynamic.dart';
-import 'package:universal_html/html.dart';
+import 'dart:io';
 
 class AuthenticationUseCase {
   final AuthenticationRepository authenticationRepository;
 
   AuthenticationUseCase(this.authenticationRepository);
 
-  Future<Either<Failure, UserDynamic>> isAuthencticated() {
-    return authenticationRepository.isAuthencticated();
+  // Check if user is authenticated
+  Future<Either<Failure, UserDynamic>> isAuthenticated() {
+    return authenticationRepository.isAuthenticated();
   }
 
+  // Authenticate user using email and password
   Future<Either<Failure, UserDynamic>> authenticateEmailAndPassword(
       String email, String password) {
     final credential = LoginAuthentication(email: email, password: password);
     return authenticationRepository.authenticateEmailAndPassword(credential);
   }
 
-  // Future<Either<Failure, User>> loginEmailAndPassword(
-  //     RegisterAuthentication credential) {
-  //   return authenticationRepository.loginEmailAndPassword(
-  //       credential.email, credential.password);
-  // }
-
+  // Register a new user
   Future<Either<Failure, String>> register(
-      RegisterAuthentication credential, File? imageData) async {
-    // 1. Register user to firebase auth
+    RegisterAuthentication credential,
+  ) async {
     final registerResult =
-        authenticationRepository.signUpEmailAndPassword(credential, imageData);
-
-    //2. Login email and password
-    //3. Upload file to firebase storage
-    //4. Update user
-    //5. Logout
-    // authenticationRepository.onLogOut();
+        authenticationRepository.signUpEmailAndPassword(credential);
     return registerResult;
   }
 
-  Future<Either<Failure, UserDynamic>> authenticateGoogleSignin() {
+  // Authenticate user using Google Sign-In
+  Future<Either<Failure, UserDynamic>> authenticateGoogleSignIn() {
     return authenticationRepository.authenticateGoogleSignin();
   }
 
-  Future<Either<Failure, UserDynamic>> authenticateFacebookSignin() {
+  // Authenticate user using Facebook Sign-In
+  Future<Either<Failure, UserDynamic>> authenticateFacebookSignIn() {
     return authenticationRepository.authenticateFacebookSignin();
   }
 
+  // Get additional user data
   Future<String> getData() {
     return authenticationRepository.getData();
   }
 
+  // Log out the user
   Future<Either<Failure, String>> onLogOut() {
     return authenticationRepository.onLogOut();
   }

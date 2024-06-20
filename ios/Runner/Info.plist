@@ -59,11 +59,11 @@
 		</dict>
 	</array>
 	<key>FacebookAppID</key>
-	<string>1994854754246068</string>
+		<string>1994854754246068</string>
 	<key>FacebookClientToken</key>
-	<string>a1d7a6eecaacb5c8b54a7304c77c0c8f</string>
+		<string>a1d7a6eecaacb5c8b54a7304c77c0c8f</string>
 	<key>FacebookDisplayName</key>
-	<string>Project Nineties</string>
+		<string>Project Nineties</string>
 	<key>FacebookAutoLogAppEventsEnabled</key>
 	<false/>
 	<key>FacebookAdvertiserIDCollectionEnabled</key>
@@ -73,5 +73,12 @@
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+		<string>We need access to your photo library to allow you to select and upload images.</string>
+	<key>NSCameraUsageDescription</key>
+		<string>We need access to your camera to allow you to take photos for uploading.</string>
+	<key>NSMicrophoneUsageDescription</key>
+		<string>We need access to your microphone to allow you to record videos with audio.</string>
+
 </dict>
 </plist>

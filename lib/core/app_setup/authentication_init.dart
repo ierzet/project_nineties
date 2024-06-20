@@ -13,8 +13,9 @@ class AuthenticationInitiation {
   static const userCacheKey = '__user_cache_key__';
   Stream<UserAccountEntity> get user {
     return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      final user =
-          firebaseUser == null ? UserAccountEntity.empty : firebaseUser.toUser;
+      final user = firebaseUser == null
+          ? UserAccountEntity.empty
+          : firebaseUser.toUserAccount;
 
       return user;
     });
@@ -27,7 +28,7 @@ class AuthenticationInitiation {
 }
 
 extension on firebase_auth.User {
-  UserAccountEntity get toUser {
+  UserAccountEntity get toUserAccount {
     return UserAccountEntity(
         userId: uid, email: email, name: displayName, photo: photoURL);
   }

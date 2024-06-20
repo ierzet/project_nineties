@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
+
+class ListenerNotificationLogin extends StatelessWidget {
+  const ListenerNotificationLogin({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is AuthValidationButton) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Please enter a valid email and password.'),
+            ),
+          );
+        } else if (state is AuthenticationRegistered) {
+          // context.read<AuthenticationFormCubit>().onLogin();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.result),
+            ),
+          );
+        } else if (state is AuthenticationFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              // You can customize the duration, behavior, and other properties of the SnackBar
+            ),
+          );
+        }
+      },
+      child: Container(), // You can wrap your UI widgets with BlocListener
+    );
+  }
+}

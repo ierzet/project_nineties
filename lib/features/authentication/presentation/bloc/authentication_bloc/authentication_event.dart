@@ -31,15 +31,6 @@ class AuthFacebookLogin extends AuthenticationEvent {
   List<Object> get props => [];
 }
 
-class AuthValidationChange extends AuthenticationEvent {
-  final LoginAuthentication credential;
-
-  const AuthValidationChange(this.credential);
-
-  @override
-  List<Object> get props => [credential];
-}
-
 class AuthEmailAndPasswordLogIn extends AuthenticationEvent {
   final String email;
   final String password;
@@ -55,9 +46,8 @@ class AuthEmailAndPasswordLogIn extends AuthenticationEvent {
 
 class AuthUserSignUp extends AuthenticationEvent {
   final RegisterAuthentication credential;
-  final File? imageData;
 
-  const AuthUserSignUp(this.credential, this.imageData);
+  const AuthUserSignUp(this.credential);
 
   @override
   List<Object> get props => [credential];

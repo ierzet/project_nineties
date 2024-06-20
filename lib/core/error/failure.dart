@@ -29,6 +29,7 @@ class DatabaseFailure extends Failure {
 }
 
 class LogInWithEmailAndPasswordFailure extends Failure {
+  // ignore: use_super_parameters
   const LogInWithEmailAndPasswordFailure([
     this.message = 'An unknown exception occurred.',
   ]) : super(message);
@@ -67,6 +68,7 @@ class LogInWithEmailAndPasswordFailure extends Failure {
 
 class SignUpWithEmailAndPasswordFailure extends Failure {
   /// {@macro sign_up_with_email_and_password_failure}
+  // ignore: use_super_parameters
   const SignUpWithEmailAndPasswordFailure([
     this.message = 'An unknown exception occurred.',
   ]) : super(message);
@@ -109,6 +111,7 @@ class SignUpWithEmailAndPasswordFailure extends Failure {
 
 class LogInWithGoogleFailure extends Failure {
   /// {@macro log_in_with_google_failure}
+  // ignore: use_super_parameters
   const LogInWithGoogleFailure([
     this.message = 'An unknown exception occurred.',
   ]) : super(message);
@@ -162,6 +165,7 @@ class LogInWithGoogleFailure extends Failure {
 
 class AuthInitializeFailure extends Failure {
   /// {@macro log_in_with_google_failure}
+  // ignore: use_super_parameters
   const AuthInitializeFailure([
     this.message = 'An unknown exception occurred.',
   ]) : super(message);
@@ -214,6 +218,7 @@ class AuthInitializeFailure extends Failure {
 }
 
 class FireBaseCatchFailure extends Failure {
+  // ignore: use_super_parameters
   const FireBaseCatchFailure([
     this.message = 'An unknown exception occurred.',
   ]) : super(message);

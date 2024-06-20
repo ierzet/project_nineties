@@ -10,7 +10,6 @@ import 'package:project_nineties/features/authentication/domain/repositories/aut
 import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/user_dynamic.dart';
-import 'package:universal_html/html.dart';
 
 class AuthenticationRepositoryImpl extends AuthenticationRepository {
   final AuthenticationRemoteDataSource authenticationRemoteDataSource;
@@ -22,10 +21,10 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   //call remote data source to check authentication status
 
   @override
-  Future<Either<Failure, UserDynamic>> isAuthencticated() async {
+  Future<Either<Failure, UserDynamic>> isAuthenticated() async {
     try {
       final resultUserModel =
-          await authenticationRemoteDataSource.isAuthencticated();
+          await authenticationRemoteDataSource.isAuthenticated();
       final userAccountString = await authenticationLocalDataSource.getData();
       final user = resultUserModel.isEmpty
           ? UserDynamic.empty
@@ -36,7 +35,14 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
                   : UserAccountModel.fromJson(json.decode(userAccountString))
                       .toEntity(),
             );
-
+      // final user = resultUserModel.isEmpty
+      //     ? UserDynamic.empty
+      //     : UserDynamic(
+      //         userEntity: resultUserModel.toEntity(),
+      //         userAccountEntity:
+      //             UserAccountModel.fromJson(json.decode(userAccountString))
+      //                 .toEntity(),
+      //       );
       return right(user);
     } on AuthInitializeFailure catch (e) {
       return Left(
@@ -52,10 +58,10 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   //call the remote data source to sign up with email and password
   @override
   Future<Either<Failure, String>> signUpEmailAndPassword(
-      RegisterAuthentication credential, File? imageData) async {
+      RegisterAuthentication credential) async {
     try {
       final result = await authenticationRemoteDataSource
-          .signUpEmailAndPassword(credential, imageData);
+          .signUpEmailAndPassword(credential);
       return right(result);
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       return Left(

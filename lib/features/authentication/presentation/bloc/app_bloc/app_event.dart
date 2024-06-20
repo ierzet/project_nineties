@@ -15,3 +15,10 @@ class AppUserChanged extends AppEvent {
   @override
   List<Object> get props => [user];
 }
+
+class NavigateToSignup extends AppEvent {
+  const NavigateToSignup();
+
+  @override
+  List<Object> get props => [];
+}

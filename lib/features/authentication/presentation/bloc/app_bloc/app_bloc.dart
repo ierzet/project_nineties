@@ -17,6 +17,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
               : const AppState.unauthenticated(),
         ) {
     on<AppUserChanged>(_onUserChanged);
+    on<NavigateToSignup>(_onNavigateToSignup); // Add this line
 
     _userSubscription = _authenticationInitiation.user.listen(
       (user) => add(AppUserChanged(user)),
@@ -32,6 +33,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           ? AppState.authenticated(event.user)
           : const AppState.unauthenticated(),
     );
+  }
+
+  void _onNavigateToSignup(NavigateToSignup event, Emitter<AppState> emit) {
+    // Add this function
+
+    emit(const AppState.signup());
   }
 
   @override

@@ -37,7 +37,8 @@ class AppSetup extends StatelessWidget {
       darkTheme: ThemeData(
         colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed
             ? colorSelected.color
-            : imageColorScheme!.primary,
+            // : imageColorScheme!.primary,
+            : imageColorScheme.primary,
         useMaterial3: useMaterial3,
         brightness: Brightness.dark,
       ),

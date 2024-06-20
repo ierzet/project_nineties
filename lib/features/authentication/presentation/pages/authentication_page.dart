@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
+import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
+import 'package:project_nineties/features/authentication/presentation/widgets/custom_text_field.dart';
+import 'package:project_nineties/features/authentication/presentation/widgets/listener_notify_login.dart';
+import 'package:project_nineties/features/authentication/presentation/widgets/primary_button.dart';
+import 'package:project_nineties/features/authentication/presentation/widgets/social_login_tile.dart';
 
 class AuthenticationPage extends StatelessWidget {
   const AuthenticationPage({super.key});
@@ -11,13 +16,11 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // text editing controllers
-    final usernameController = TextEditingController();
+    final emailController = TextEditingController();
     final passwordController = TextEditingController();
 
-    void signUserIn() {}
-
     return Scaffold(
-      backgroundColor: const Color(0xFFECF0F1), // Background Color
+      backgroundColor: AppColors.background, // Background Color
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -26,9 +29,10 @@ class AuthenticationPage extends StatelessWidget {
               children: [
                 SizedBox(height: AppPadding.triplePadding),
                 const Icon(
-                  Icons.lock,
+                  // Icons.lock,
+                  Icons.directions_car,
                   size: 100,
-                  color: Color(0xFF2C3E50),
+                  color: AppColors.primary,
                 ),
                 SizedBox(height: AppPadding.triplePadding),
                 //Welcome back you've been missed!
@@ -38,19 +42,19 @@ class AuthenticationPage extends StatelessWidget {
                 ),
                 SizedBox(height: AppPadding.halfPadding * 3),
                 // username textfield
-                MyTextField(
-                  controller: usernameController,
-                  hintText: AppStrings.userName,
-                  obscureText: false,
+                CustomTextField(
+                  controller: emailController,
+                  type: InputType.email,
+                  authFormType: AuthenticationFormType.signin,
                 ),
-                SizedBox(height: AppPadding.deffaultPadding),
+                SizedBox(height: AppPadding.defaultPadding),
                 // password textfield
-                MyTextField(
+                CustomTextField(
                   controller: passwordController,
-                  hintText: AppStrings.password,
-                  obscureText: true,
+                  type: InputType.password,
+                  authFormType: AuthenticationFormType.signin,
                 ),
-                SizedBox(height: AppPadding.deffaultPadding),
+                SizedBox(height: AppPadding.defaultPadding),
                 // forgot password?
                 Padding(
                   padding: EdgeInsets.symmetric(
@@ -67,15 +71,14 @@ class AuthenticationPage extends StatelessWidget {
                 ),
                 SizedBox(height: AppPadding.halfPadding * 3),
                 // sign in button
-                MyButton(
-                  onTap: signUserIn,
-                  gradient: const LinearGradient(
+                const PrimaryButton(
+                  gradient: LinearGradient(
                     colors: [AppColors.accent, AppColors.primary],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  textColor:
-                      AppColors.background, // Background Color (Light Gray)
+                  textColor: AppColors.background,
+                  authFormType: AuthenticationFormType.signin,
                 ),
                 SizedBox(height: AppPadding.triplePadding),
                 // or continue with
@@ -112,13 +115,13 @@ class AuthenticationPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button
-                    SquareTile(
+                    const SocialLoginTile(
                       imagePath: AppPath.googleIcon,
                       loginType: 'google',
                     ),
                     SizedBox(width: AppPadding.halfPadding * 3),
                     // apple button
-                    SquareTile(
+                    const SocialLoginTile(
                       imagePath: AppPath.facebookIcon,
                       loginType: 'facebook',
                     )
@@ -135,135 +138,22 @@ class AuthenticationPage extends StatelessWidget {
                       style: AppStyles.bodyText, // Text Color (Primary Color)
                     ),
                     SizedBox(width: AppPadding.halfPadding / 2),
-                    Text(
-                      AppStrings.registerNow,
-                      style: AppStyles.accentText,
+                    GestureDetector(
+                      onTap: () {
+                        context.read<AppBloc>().add(const NavigateToSignup());
+                        context.read<AuthValidatorCubit>().clearValidation();
+                      },
+                      child: Text(
+                        AppStrings.registerNow,
+                        style: AppStyles.accentText,
+                      ),
                     ),
                   ],
-                )
+                ),
+                const ListenerNotificationLogin(),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MyButton extends StatelessWidget {
-  final Function()? onTap;
-  final LinearGradient? gradient;
-  final Color? textColor;
-  const MyButton(
-      {super.key, required this.onTap, this.gradient, required this.textColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(AppPadding.halfPadding * 3),
-        margin: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding * 3),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(AppPadding.deffaultPadding),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary,
-              offset: Offset(0, AppPadding.halfPadding / 2),
-              blurRadius: AppPadding.halfPadding / 2,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            AppStrings.signIn,
-            style: AppStyles.buttonText,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class MyTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final bool obscureText;
-
-  const MyTextField({
-    super.key,
-    required this.controller,
-    required this.hintText,
-    required this.obscureText,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding * 3),
-      child: TextField(
-        controller: controller,
-        obscureText: obscureText,
-        decoration: InputDecoration(
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-                color: AppColors.primary), // Primary Color for enabled border
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(
-                color: AppColors.accent), // Accent Color for focused border
-          ),
-          fillColor: AppColors
-              .background, // Slightly darker shade for the text field background
-          filled: true,
-          hintText: hintText,
-          hintStyle:
-              TextStyle(color: AppColors.textColor), // Text color for hint
-        ),
-      ),
-    );
-  }
-}
-
-class SquareTile extends StatelessWidget {
-  const SquareTile({
-    super.key,
-    required this.imagePath,
-    required this.loginType,
-  });
-  final String imagePath;
-  final String loginType;
-
-  @override
-  Widget build(BuildContext context) {
-    void action(loginType) {
-      loginType == 'google'
-          ? context.read<AuthenticationBloc>().add(AuthGoogleLogIn())
-          : context
-              .read<AuthenticationBloc>()
-              .add(AuthFacebookLogin()); //TODO: ganti sama appple id
-    }
-
-    return GestureDetector(
-      onTap: () => action(loginType),
-      child: Container(
-        padding: EdgeInsets.all(AppPadding.halfPadding * 3),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.primary), // Primary Color
-          borderRadius: BorderRadius.circular(16),
-          color: AppColors.background,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary,
-              offset: Offset(0, AppPadding.halfPadding / 2),
-              blurRadius: AppPadding.halfPadding / 2,
-            ),
-          ],
-        ),
-        child: Image.asset(
-          imagePath,
-          height: AppPadding.triplePadding,
         ),
       ),
     );

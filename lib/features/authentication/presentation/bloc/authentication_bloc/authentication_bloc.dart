@@ -1,15 +1,15 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_usecase.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/confirmed_password.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/email.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/password.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/user_dynamic.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:universal_html/html.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -35,14 +35,13 @@ class AuthenticationBloc
     on<AuthUserLogOut>(_onAuthUserLogOut,
         transformer: debounce(const Duration(milliseconds: 500)));
 
-    on<AuthValidationChange>(_onEmailAndPasswordChanged);
     on<AuthRegisterValidationChange>(_onEmailAndPasswordRegisterChanged);
   }
   final AuthenticationUseCase authenticationUseCase;
 
   void _onAuthUserChanged(
       AuthUserChanged event, Emitter<AuthenticationState> emit) async {
-    final result = await authenticationUseCase.isAuthencticated();
+    final result = await authenticationUseCase.isAuthenticated();
 
     result.fold(
       (failure) {
@@ -96,7 +95,7 @@ class AuthenticationBloc
       AuthGoogleLogIn event, Emitter<AuthenticationState> emit) async {
     emit(const AuthenticationLoading());
 
-    final result = await authenticationUseCase.authenticateGoogleSignin();
+    final result = await authenticationUseCase.authenticateGoogleSignIn();
     result.fold(
       (failure) {
         emit(AuthenticationFailure(failure.message));
@@ -113,7 +112,7 @@ class AuthenticationBloc
       AuthFacebookLogin event, Emitter<AuthenticationState> emit) async {
     emit(const AuthenticationLoading());
 
-    final result = await authenticationUseCase.authenticateFacebookSignin();
+    final result = await authenticationUseCase.authenticateFacebookSignIn();
     result.fold(
       (failure) {
         emit(AuthenticationFailure(failure.message));
@@ -135,6 +134,7 @@ class AuthenticationBloc
       value: event.credential.confirmedPassword,
     );
     final isValid = Formz.validate([email, password, confirmedPassword]);
+
     emit(
       isValid
           ? const AuthenticationRegistering()
@@ -142,13 +142,17 @@ class AuthenticationBloc
               emailIsValid: email.isValid,
               passwordIsValid: password.isValid,
               confirmedPasswordIsValid: confirmedPassword.isValid,
+              email: event.credential.email,
+              password: event.credential.password,
             ),
     );
+
     if (!isValid) {
       return;
     }
-    final result =
-        await authenticationUseCase.register(event.credential, event.imageData);
+
+    final result = await authenticationUseCase.register(event.credential);
+
     result.fold(
       (failure) {
         emit(AuthenticationFailure(failure.message));
@@ -172,18 +176,6 @@ class AuthenticationBloc
     );
   }
 
-  void _onEmailAndPasswordChanged(
-      AuthValidationChange event, Emitter<AuthenticationState> emit) {
-    final email = Email.dirty(event.credential.email);
-    final password = Password.dirty(event.credential.password);
-    emit(
-      AuthValidation(
-        emailIsValid: email.isValid,
-        passwordIsValid: password.isValid,
-      ),
-    );
-  }
-
   void _onEmailAndPasswordRegisterChanged(
       AuthRegisterValidationChange event, Emitter<AuthenticationState> emit) {
     final email = Email.dirty(event.credential.email);
@@ -194,10 +186,11 @@ class AuthenticationBloc
     );
     emit(
       AuthValidationRegister(
-        emailIsValid: email.isValid,
-        passwordIsValid: password.isValid,
-        confirmedPasswordIsValid: confirmedPassword.isValid,
-      ),
+          emailIsValid: email.isValid,
+          passwordIsValid: password.isValid,
+          confirmedPasswordIsValid: confirmedPassword.isValid,
+          email: event.credential.email,
+          password: event.credential.password),
     );
   }
 

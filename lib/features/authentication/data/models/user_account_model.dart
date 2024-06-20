@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 
 class UserAccountModel extends UserAccountEntity {
@@ -97,7 +98,7 @@ class UserAccountModel extends UserAccountEntity {
         menuAuth: data['menu_auth'] ?? [],
       );
     } catch (e) {
-      print('Error in fromFirestore: $e');
+      debugPrint('Error in fromFirestore: $e');
       rethrow;
     }
   }
