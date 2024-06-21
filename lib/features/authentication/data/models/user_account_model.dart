@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 
 class UserAccountModel extends UserAccountEntity {
-  const UserAccountModel({
-    required super.userId,
-    super.email,
-    super.name,
-    super.photo,
-    super.phoneNumber,
-    super.joinDate,
-    super.isActive,
-    super.mitraId,
-    super.roleId,
-    super.menuAuth,
-  });
+  const UserAccountModel(
+      {required super.userId,
+      super.email,
+      super.name,
+      super.photo,
+      super.phoneNumber,
+      super.joinDate,
+      super.isActive,
+      super.mitraId,
+      super.roleId,
+      super.menuAuth,
+      super.isInitiate});
 
   UserAccountEntity toEntity() => UserAccountEntity(
         userId: userId,
@@ -28,20 +28,21 @@ class UserAccountModel extends UserAccountEntity {
         mitraId: mitraId,
         roleId: roleId,
         menuAuth: menuAuth,
+        isInitiate: isInitiate,
       );
   factory UserAccountModel.fromEntity(UserAccountEntity entity) {
     return UserAccountModel(
-      userId: entity.userId,
-      email: entity.email,
-      name: entity.name,
-      photo: entity.photo,
-      phoneNumber: entity.phoneNumber,
-      joinDate: entity.joinDate,
-      isActive: entity.isActive,
-      mitraId: entity.mitraId,
-      roleId: entity.roleId,
-      menuAuth: entity.menuAuth,
-    );
+        userId: entity.userId,
+        email: entity.email,
+        name: entity.name,
+        photo: entity.photo,
+        phoneNumber: entity.phoneNumber,
+        joinDate: entity.joinDate,
+        isActive: entity.isActive,
+        mitraId: entity.mitraId,
+        roleId: entity.roleId,
+        menuAuth: entity.menuAuth,
+        isInitiate: entity.isInitiate);
   }
   factory UserAccountModel.fromFirebaseUser(User firebaseUser) {
     return UserAccountModel(
@@ -64,22 +65,23 @@ class UserAccountModel extends UserAccountEntity {
       'mitra_id': mitraId,
       'role_id': roleId,
       'menu_auth': menuAuth,
+      'isInitiate': isInitiate,
     };
   }
 
   factory UserAccountModel.fromJson(Map<String, dynamic> json) {
     return UserAccountModel(
-      userId: json['user_id'] ?? '',
-      email: json['email'] ?? '',
-      name: json['name'] ?? '',
-      photo: json['photo'] ?? '',
-      phoneNumber: json['phone_number'] ?? '',
-      joinDate: (json['join_date'] as Timestamp?)?.toDate(),
-      isActive: json['is_active'] ?? false,
-      mitraId: json['mitra_id'] ?? '',
-      roleId: json['role_id'] ?? '',
-      menuAuth: json['menu_auth'] ?? [],
-    );
+        userId: json['user_id'] ?? '',
+        email: json['email'] ?? '',
+        name: json['name'] ?? '',
+        photo: json['photo'] ?? '',
+        phoneNumber: json['phone_number'] ?? '',
+        joinDate: (json['join_date'] as Timestamp?)?.toDate(),
+        isActive: json['is_active'] ?? false,
+        mitraId: json['mitra_id'] ?? '',
+        roleId: json['role_id'] ?? '',
+        menuAuth: json['menu_auth'] ?? [],
+        isInitiate: json['isInitiate']);
   }
   factory UserAccountModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -95,13 +97,31 @@ class UserAccountModel extends UserAccountEntity {
         isActive: data['is_active'] ?? false,
         mitraId: data['mitra_id'] ?? '',
         roleId: data['role_id'] ?? '',
-        menuAuth: data['menu_auth'] ?? [],
+        //menuAuth: data['menu_auth'] ?? [],
+        menuAuth: List<String>.from(data['menu_auth'] ?? []),
+        isInitiate: data['isInitiate'] ?? false,
       );
     } catch (e) {
       debugPrint('Error in fromFirestore: $e');
       rethrow;
     }
   }
+
+  Map<String, dynamic> toFirestore() {
+    return {
+      'email': email,
+      'name': name,
+      'photo': photo,
+      'phone_number': phoneNumber,
+      'join_date': joinDate != null ? Timestamp.fromDate(joinDate!) : null,
+      'is_active': isActive,
+      'mitra_id': mitraId,
+      'role_id': roleId,
+      'menu_auth': menuAuth,
+      'isInitiate': false,
+    };
+  }
+
   static List<UserAccountEntity> convertListToEntity(
       List<UserAccountModel> models) {
     return models.map((model) => model.toEntity()).toList();
@@ -123,5 +143,6 @@ class UserAccountModel extends UserAccountEntity {
         isActive,
         mitraId,
         roleId,
+        isInitiate
       ];
 }

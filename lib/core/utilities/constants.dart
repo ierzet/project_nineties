@@ -9,12 +9,20 @@ class AppPadding {
   static double quadruplePadding = 64;
 }
 
+// class AppColors {
+//   static const Color primary = Color(0xFF2C3E50); //Dark Slate Blue #2C3E50
+//   static const Color secondary = Color(0xFFE74C3C); //Cinnabar Red  #E74C3C
+//   static const Color accent = Color(0xFF3498DB); //Curious Blue  #3498DB
+//   static const Color background = Color(0xFFECF0F1); //Light Gray #ECF0F1
+//   static const Color textColor = primary;
+// }
+
 class AppColors {
-  static const Color primary = Color(0xFF2C3E50); //Dark Slate Blue #2C3E50
-  static const Color secondary = Color(0xFFE74C3C); //Cinnabar Red  #E74C3C
-  static const Color accent = Color(0xFF3498DB); //Curious Blue  #3498DB
-  static const Color background = Color(0xFFECF0F1); //Light Gray #ECF0F1
-  static const Color textColor = primary;
+  static const Color primary = Color(0xFFECF0F1); // Light Gray #ECF0F1
+  static const Color secondary = Color(0xFF3498DB); // Curious Blue #3498DB
+  static const Color accent = Color(0xFFE74C3C); // Cinnabar Red #E74C3C
+  static const Color background = Color(0xFF2C3E50); // Dark Slate Blue #2C3E50
+  static const Color textColor = Color(0xFFFFFFFF); // White for text
 }
 
 class AppStrings {
@@ -32,6 +40,9 @@ class AppStrings {
   //signup page
   static const String name = 'Name';
   static const String confirmedPassword = 'Confirmed password';
+
+  //forgot password page
+  static const String email = 'Email';
 }
 
 class AppStyles {
@@ -74,7 +85,7 @@ class AppPath {
 
 enum InputType { name, email, password, confirmedPassword }
 
-enum AuthenticationFormType { signin, signup }
+enum AuthenticationFormType { signin, signup, forgotPassword }
 
 enum ColorSelectionMethod {
   colorSeed,

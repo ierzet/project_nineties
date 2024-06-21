@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -17,9 +15,7 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc(this.authenticationUseCase)
-      : super(const AuthenticationLoaded.unauthenticated()) {
-    on<AuthUserChanged>(_onAuthUserChanged);
-
+      : super(const AuthenticationInitial()) {
     on<AuthEmailAndPasswordLogIn>(_onAuthEmailAndPasswordLogIn,
         transformer: debounce(const Duration(milliseconds: 500)));
 
@@ -35,25 +31,13 @@ class AuthenticationBloc
     on<AuthUserLogOut>(_onAuthUserLogOut,
         transformer: debounce(const Duration(milliseconds: 500)));
 
+    on<AuthResetPassword>(_onAuthResetPassword,
+        transformer: debounce(const Duration(milliseconds: 500)));
+
     on<AuthRegisterValidationChange>(_onEmailAndPasswordRegisterChanged);
   }
+
   final AuthenticationUseCase authenticationUseCase;
-
-  void _onAuthUserChanged(
-      AuthUserChanged event, Emitter<AuthenticationState> emit) async {
-    final result = await authenticationUseCase.isAuthenticated();
-
-    result.fold(
-      (failure) {
-        emit(AuthenticationFailure(failure.message));
-      },
-      (data) {
-        emit(data.isNotEmpty
-            ? AuthenticationLoaded.authenticated(data)
-            : const AuthenticationLoaded.unauthenticated());
-      },
-    );
-  }
 
   void _onAuthEmailAndPasswordLogIn(AuthEmailAndPasswordLogIn event,
       Emitter<AuthenticationState> emit) async {
@@ -127,6 +111,8 @@ class AuthenticationBloc
 
   void _onAuthUserSignUp(
       AuthUserSignUp event, Emitter<AuthenticationState> emit) async {
+    emit(const AuthenticationRegistering());
+
     final email = Email.dirty(event.credential.email);
     final password = Password.dirty(event.credential.password);
     final confirmedPassword = ConfirmedPassword.dirty(
@@ -138,13 +124,7 @@ class AuthenticationBloc
     emit(
       isValid
           ? const AuthenticationRegistering()
-          : AuthValidationRegister(
-              emailIsValid: email.isValid,
-              passwordIsValid: password.isValid,
-              confirmedPasswordIsValid: confirmedPassword.isValid,
-              email: event.credential.email,
-              password: event.credential.password,
-            ),
+          : AuthValidationRegister.isNotValid,
     );
 
     if (!isValid) {
@@ -165,6 +145,7 @@ class AuthenticationBloc
 
   void _onAuthUserLogOut(
       AuthUserLogOut event, Emitter<AuthenticationState> emit) async {
+    emit(const AuthenticationLoading());
     final result = await authenticationUseCase.onLogOut();
     result.fold(
       (failure) {
@@ -172,6 +153,27 @@ class AuthenticationBloc
       },
       (data) {
         emit(const AuthenticationLoaded.unauthenticated());
+      },
+    );
+  }
+
+  void _onAuthResetPassword(
+      AuthResetPassword event, Emitter<AuthenticationState> emit) async {
+    emit(const AuthenticationLoading());
+
+    final emailObj = Email.dirty(event.email);
+    if (!emailObj.isValid) {
+      emit(AuthValidationResetPassword(emailIsValid: emailObj.isValid));
+      return;
+    }
+
+    final result = await authenticationUseCase.resetPassword(event.email);
+    result.fold(
+      (failure) {
+        emit(AuthenticationFailure(failure.message));
+      },
+      (data) {
+        emit(AuthResetPasswordSuccess(message: data));
       },
     );
   }

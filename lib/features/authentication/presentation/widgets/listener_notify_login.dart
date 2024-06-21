@@ -11,10 +11,19 @@ class ListenerNotificationLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
-        if (state is AuthValidationButton) {
+        if (state is AuthValidationButton ||
+            state is AuthValidationRegister ||
+            state is AuthValidationResetPassword) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Please enter a valid email and password.'),
+              content: Text('Please enter a valid isnformation.'),
+            ),
+          );
+        } else if (state is AuthResetPasswordSuccess) {
+          // context.read<AuthenticationFormCubit>().onLogin();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
             ),
           );
         } else if (state is AuthenticationRegistered) {

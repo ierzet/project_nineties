@@ -23,16 +23,28 @@ class UserModel extends UserEntity {
   }
 
   static const empty = UserModel(id: '');
+
   @override
   bool get isEmpty => this == UserModel.empty;
+
   @override
   bool get isNotEmpty => this != UserModel.empty;
+
   UserEntity toEntity() => UserEntity(
         id: id,
         email: email,
         name: name,
         photo: photo,
       );
+
+  Map<String, dynamic> toFirebase() {
+    return {
+      'uid': id,
+      'email': email,
+      'displayName': name,
+      'photoURL': photo,
+    };
+  }
 
   @override
   List<Object?> get props => [id, email, name, photo];

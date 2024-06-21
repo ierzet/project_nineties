@@ -12,21 +12,21 @@ abstract class AuthenticationState extends Equatable {
   List<Object> get props => [];
 }
 
-final class AuthenticationLoading extends AuthenticationState {
+class AuthenticationInitial extends AuthenticationState {
+  const AuthenticationInitial();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AuthenticationLoading extends AuthenticationState {
   const AuthenticationLoading();
 
   @override
   List<Object> get props => [];
 }
 
-final class AuthenticationInit extends AuthenticationState {
-  const AuthenticationInit();
-
-  @override
-  List<Object> get props => [];
-}
-
-final class AuthenticationLoaded extends AuthenticationState {
+class AuthenticationLoaded extends AuthenticationState {
   final AuthenticationStatus status;
   final UserDynamic user;
   const AuthenticationLoaded._({
@@ -44,7 +44,7 @@ final class AuthenticationLoaded extends AuthenticationState {
   List<Object> get props => [status, user];
 }
 
-final class AuthenticationRegistering extends AuthenticationState {
+class AuthenticationRegistering extends AuthenticationState {
   const AuthenticationRegistering();
 
   @override
@@ -58,7 +58,7 @@ class AuthenticationRegistered extends AuthenticationState {
   List<Object> get props => [result];
 }
 
-final class AuthValidation extends AuthenticationState {
+class AuthValidation extends AuthenticationState {
   final bool emailIsValid;
   final bool passwordIsValid;
 
@@ -69,7 +69,7 @@ final class AuthValidation extends AuthenticationState {
   List<Object> get props => [emailIsValid, passwordIsValid];
 }
 
-final class AuthValidationButton extends AuthenticationState {
+class AuthValidationButton extends AuthenticationState {
   final bool emailIsValid;
   final bool passwordIsValid;
 
@@ -80,7 +80,16 @@ final class AuthValidationButton extends AuthenticationState {
   List<Object> get props => [emailIsValid, passwordIsValid];
 }
 
-final class AuthenticationFailure extends AuthenticationState {
+class AuthValidationResetPassword extends AuthenticationState {
+  final bool emailIsValid;
+
+  const AuthValidationResetPassword({required this.emailIsValid});
+
+  @override
+  List<Object> get props => [emailIsValid];
+}
+
+class AuthenticationFailure extends AuthenticationState {
   final String message;
 
   const AuthenticationFailure(this.message);
@@ -89,7 +98,7 @@ final class AuthenticationFailure extends AuthenticationState {
   List<Object> get props => [message];
 }
 
-final class AuthValidationRegister extends AuthenticationState {
+class AuthValidationRegister extends AuthenticationState {
   final bool emailIsValid;
   final bool passwordIsValid;
   final bool confirmedPasswordIsValid;
@@ -103,8 +112,23 @@ final class AuthValidationRegister extends AuthenticationState {
     required this.email,
     required this.password,
   });
+  static const isNotValid = AuthValidationRegister(
+    emailIsValid: false,
+    passwordIsValid: false,
+    confirmedPasswordIsValid: false,
+    email: '',
+    password: '',
+  );
 
   @override
   List<Object> get props =>
       [emailIsValid, passwordIsValid, confirmedPasswordIsValid];
+}
+
+class AuthResetPasswordSuccess extends AuthenticationState {
+  const AuthResetPasswordSuccess({required this.message});
+
+  final String message;
+  @override
+  List<Object> get props => [message];
 }

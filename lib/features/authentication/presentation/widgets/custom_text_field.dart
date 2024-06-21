@@ -32,15 +32,19 @@ class CustomTextField extends StatelessWidget {
                 email: email,
                 password: password,
               )
-          : context.read<AuthValidatorCubit>().validateSignupCredentials(
-                email: email,
-                password: password,
-                name: name,
-                confirmedPassword: confirmedPassword,
-                avatarFile: currentState.avatarFile,
-                avatarFileWeb: currentState.avatarFileWeb,
-                isWeb: currentState.isWeb,
-              );
+          : authFormType == AuthenticationFormType.signup
+              ? context.read<AuthValidatorCubit>().validateSignupCredentials(
+                    email: email,
+                    password: password,
+                    name: name,
+                    confirmedPassword: confirmedPassword,
+                    avatarFile: currentState.avatarFile,
+                    avatarFileWeb: currentState.avatarFileWeb,
+                    isWeb: currentState.isWeb,
+                  )
+              : context
+                  .read<AuthValidatorCubit>()
+                  .validateForgotPasswordCredential(email: email);
     }
 
     final bool obscureText =
@@ -62,7 +66,7 @@ class CustomTextField extends StatelessWidget {
     final labelText = type == InputType.name
         ? AppStrings.name
         : type == InputType.email
-            ? AppStrings.userName
+            ? AppStrings.email
             : type == InputType.password
                 ? AppStrings.password
                 : AppStrings.confirmedPassword;
@@ -78,7 +82,7 @@ class CustomTextField extends StatelessWidget {
         borderSide: BorderSide(color: AppColors.secondary),
       ),
       labelText: labelText,
-      //TODO: tambahin style untuk label
+      labelStyle: AppStyles.bodyText,
       fillColor: AppColors.background,
       filled: true,
       hintStyle: const TextStyle(color: AppColors.textColor),

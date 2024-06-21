@@ -6,6 +6,7 @@ import 'package:project_nineties/features/authentication/data/datasources/remote
 import 'package:project_nineties/features/authentication/data/repositories/authentication_repository_impl.dart';
 import 'package:project_nineties/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_usecase.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
@@ -14,6 +15,8 @@ void setupLocator() {
   //blocs
   locator
       .registerFactory<AuthenticationBloc>(() => AuthenticationBloc(locator()));
+  locator.registerFactory<AppBloc>(() => AppBloc(
+      authenticationUseCase: locator(), authenticationInitiation: locator()));
 
 //usecase
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));

@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
 import 'package:universal_html/html.dart';
 
@@ -18,22 +19,21 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
 
   Future<Uint8List?> loadImage(File file) async {
     final reader = FileReader();
+    final completer = Completer<Uint8List>();
     reader.readAsArrayBuffer(file);
-    final res = await reader.onLoad.first;
-    print('${res.total} bytes loaded');
-    return reader.result as Uint8List;
+    reader.onLoadEnd.listen((_) {
+      completer.complete(reader.result as Uint8List);
+    });
+    return completer.future;
   }
 
   Future<void> _pickImage() async {
     try {
       final pickedFile = await ImagePickerWeb.getImageAsFile();
       if (pickedFile != null) {
-        print('1. pickedFile => pick file : $pickedFile');
         _webImage = await loadImage(pickedFile);
         setState(() {
           _webImage = _webImage;
-          print(
-              '2. _webImage => setState dan convert ke-Uint8List: ${_webImage!.isNotEmpty}');
           final currentState = context.read<AuthValidatorCubit>().state;
           context.read<AuthValidatorCubit>().validateSignupCredentials(
               email: currentState.email,
@@ -44,10 +44,9 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
               avatarFileWeb: pickedFile,
               isWeb: true);
         });
-        print(
-            '4. avatarFileWeb => ambil data dari state cubit ${context.read<AuthValidatorCubit>().state.avatarFileWeb}');
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to pick image: $e'),
@@ -59,9 +58,7 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
   void _removeImage() {
     setState(() {
       _webImage = null;
-      print(
-          '5. _webImage => akan dii set null jika image di remove, apakah null :$_webImage ');
-      // Handle the Cubit state update for mobile
+      // Handle the Cubit state update for web
       final currentState = context.read<AuthValidatorCubit>().state;
       context.read<AuthValidatorCubit>().validateSignupCredentials(
           email: currentState.email,
@@ -72,8 +69,6 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
           avatarFileWeb: null,
           isWeb: true);
     });
-    print(
-        '4. avatarFileWeb => ambil data dari state cubit, indikator null: ${context.read<AuthValidatorCubit>().state.avatarFileWeb.toString()}');
   }
 
   @override

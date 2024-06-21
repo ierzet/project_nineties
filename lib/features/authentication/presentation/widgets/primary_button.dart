@@ -8,43 +8,47 @@ import 'package:project_nineties/features/authentication/presentation/cubit/auth
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
-    this.gradient,
-    required this.textColor,
     required this.authFormType,
   });
 
-  final LinearGradient? gradient;
-  final Color? textColor;
   final AuthenticationFormType authFormType;
 
   @override
   Widget build(BuildContext context) {
+    const gradient = LinearGradient(
+      colors: [AppColors.accent, AppColors.primary],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+    void onTap() {
+      final currentState = context.read<AuthValidatorCubit>().state;
+      final credentialSignup = RegisterAuthentication(
+          email: currentState.email,
+          name: currentState.name,
+          password: currentState.password,
+          confirmedPassword: currentState.confirmedPassword,
+          avatar: currentState.avatarFile,
+          avatarWeb: currentState.avatarFileWeb,
+          mitraId: '',
+          isWeb: currentState.isWeb);
+
+      final authBloc = context.read<AuthenticationBloc>();
+
+      authFormType == AuthenticationFormType.signin
+          ? authBloc.add(AuthEmailAndPasswordLogIn(
+              email: currentState.email,
+              password: currentState.password,
+            ))
+          : authFormType == AuthenticationFormType.signup
+              ? authBloc.add(AuthUserSignUp(credential: credentialSignup))
+              : authBloc.add(AuthResetPassword(email: currentState.email));
+      context.read<AuthValidatorCubit>().clearValidation();
+
+      //TODO: Fix bug: skenario klik button signup namun terkendala validasi. validator cubit jadi missmatch
+    }
+
     return GestureDetector(
-      onTap: () {
-        final currentState = context.read<AuthValidatorCubit>().state;
-
-        final credential = RegisterAuthentication(
-            email: currentState.email,
-            name: currentState.name,
-            password: currentState.password,
-            confirmedPassword: currentState.confirmedPassword,
-            avatar: currentState.avatarFile,
-            avatarWeb: currentState.avatarFileWeb,
-            mitraId: '',
-            isWeb: currentState.isWeb);
-
-        print(
-            '7. avatarFileWeb => ambil data dari cubit untuk dikirim ke bloc currentState.avatarFileWeb: ${currentState.avatarFileWeb}');
-
-        authFormType == AuthenticationFormType.signin
-            ? context.read<AuthenticationBloc>().add(AuthEmailAndPasswordLogIn(
-                  email: currentState.email,
-                  password: currentState.password,
-                ))
-            : context
-                .read<AuthenticationBloc>()
-                .add(AuthUserSignUp(credential));
-      },
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(AppPadding.halfPadding * 3),
         margin: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding * 3),
@@ -62,14 +66,17 @@ class PrimaryButton extends StatelessWidget {
         child: Center(
           child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
-              return state is AuthenticationLoading
+              return state is AuthenticationLoading ||
+                      state is AuthenticationRegistering
                   ? const CircularProgressIndicator(
                       color: AppColors.background,
                     )
                   : Text(
                       authFormType == AuthenticationFormType.signin
                           ? AppStrings.signIn
-                          : AppStrings.signUp,
+                          : authFormType == AuthenticationFormType.signup
+                              ? AppStrings.signUp
+                              : AppStrings.forgotPassword,
                       style: AppStyles.buttonText,
                     );
             },

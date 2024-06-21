@@ -62,9 +62,14 @@ class AuthenticationPage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        AppStrings.forgotPassword,
-                        style: AppStyles.accentText,
+                      GestureDetector(
+                        onTap: () => context
+                            .read<AppBloc>()
+                            .add(const NavigateToForgotPassword()),
+                        child: Text(
+                          AppStrings.forgotPassword,
+                          style: AppStyles.accentText,
+                        ),
                       ),
                     ],
                   ),
@@ -72,14 +77,7 @@ class AuthenticationPage extends StatelessWidget {
                 SizedBox(height: AppPadding.halfPadding * 3),
                 // sign in button
                 const PrimaryButton(
-                  gradient: LinearGradient(
-                    colors: [AppColors.accent, AppColors.primary],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  textColor: AppColors.background,
-                  authFormType: AuthenticationFormType.signin,
-                ),
+                    authFormType: AuthenticationFormType.signin),
                 SizedBox(height: AppPadding.triplePadding),
                 // or continue with
                 Padding(
@@ -128,7 +126,6 @@ class AuthenticationPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: AppPadding.triplePadding),
-
                 // not a member? register now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

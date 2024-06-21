@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:io' as io;
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/data/datasources/local/authentication_local_datasource.dart';
 import 'package:project_nineties/features/authentication/data/datasources/remote/authentication_remote_datasoure.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
+import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
@@ -17,43 +16,6 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   AuthenticationRepositoryImpl(
       {required this.authenticationRemoteDataSource,
       required this.authenticationLocalDataSource});
-
-  //call remote data source to check authentication status
-
-  @override
-  Future<Either<Failure, UserDynamic>> isAuthenticated() async {
-    try {
-      final resultUserModel =
-          await authenticationRemoteDataSource.isAuthenticated();
-      final userAccountString = await authenticationLocalDataSource.getData();
-      final user = resultUserModel.isEmpty
-          ? UserDynamic.empty
-          : UserDynamic(
-              userEntity: resultUserModel.toEntity(),
-              userAccountEntity: userAccountString == null
-                  ? UserAccountModel.empty
-                  : UserAccountModel.fromJson(json.decode(userAccountString))
-                      .toEntity(),
-            );
-      // final user = resultUserModel.isEmpty
-      //     ? UserDynamic.empty
-      //     : UserDynamic(
-      //         userEntity: resultUserModel.toEntity(),
-      //         userAccountEntity:
-      //             UserAccountModel.fromJson(json.decode(userAccountString))
-      //                 .toEntity(),
-      //       );
-      return right(user);
-    } on AuthInitializeFailure catch (e) {
-      return Left(
-        AuthInitializeFailure(e.message),
-      );
-    } on io.SocketException {
-      return const Left(
-        ConnectionFailure('failed connect to the network'),
-      );
-    }
-  }
 
   //call the remote data source to sign up with email and password
   @override
@@ -184,16 +146,15 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  Future<Either<Failure, User>> loginEmailAndPassword(
-      String email, String password) async {
+  Future<Either<Failure, UserAccountEntity>> getUserAccountById(
+      String uid) async {
     try {
-      final result = await authenticationRemoteDataSource.loginEmailAndPassword(
-          email, password);
-
-      return right(result);
-    } on LogInWithEmailAndPasswordFailure catch (e) {
+      final result =
+          await authenticationRemoteDataSource.getUserAccountById(uid);
+      return right(result.toEntity());
+    } on FireBaseCatchFailure catch (e) {
       return Left(
-        LogInWithEmailAndPasswordFailure(e.message),
+        FireBaseCatchFailure(e.message),
       );
     } on io.SocketException {
       return const Left(
@@ -203,12 +164,18 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  Future<String> getData() async {
+  Future<Either<Failure, String>> resetPassword(String email) async {
     try {
-      final result = await authenticationLocalDataSource.getData();
-      return result;
-    } on ServerFailure catch (e) {
-      return e.message;
+      final result = await authenticationRemoteDataSource.resetPassword(email);
+      return right(result);
+    } on FireBaseCatchFailure catch (e) {
+      return Left(
+        FireBaseCatchFailure(e.message),
+      );
+    } on io.SocketException {
+      return const Left(
+        ConnectionFailure('failed connect to the network'),
+      );
     }
   }
 }

@@ -7,13 +7,6 @@ abstract class AuthenticationEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AuthUserChanged extends AuthenticationEvent {
-  const AuthUserChanged();
-
-  @override
-  List<Object> get props => [];
-}
-
 class AuthUserLogOut extends AuthenticationEvent {
   const AuthUserLogOut();
 
@@ -47,7 +40,7 @@ class AuthEmailAndPasswordLogIn extends AuthenticationEvent {
 class AuthUserSignUp extends AuthenticationEvent {
   final RegisterAuthentication credential;
 
-  const AuthUserSignUp(this.credential);
+  const AuthUserSignUp({required this.credential});
 
   @override
   List<Object> get props => [credential];
@@ -60,4 +53,13 @@ class AuthRegisterValidationChange extends AuthenticationEvent {
 
   @override
   List<Object> get props => [credential];
+}
+
+class AuthResetPassword extends AuthenticationEvent {
+  final String email;
+
+  const AuthResetPassword({required this.email});
+
+  @override
+  List<Object> get props => [email];
 }

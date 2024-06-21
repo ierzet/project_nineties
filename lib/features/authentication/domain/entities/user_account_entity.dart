@@ -11,18 +11,21 @@ class UserAccountEntity extends Equatable {
   final String? mitraId;
   final String? roleId;
   final List<String>? menuAuth;
+  final bool? isInitiate;
 
-  const UserAccountEntity(
-      {required this.userId,
-      this.email,
-      this.name,
-      this.phoneNumber,
-      this.joinDate,
-      this.photo,
-      this.isActive,
-      this.mitraId,
-      this.roleId,
-      this.menuAuth});
+  const UserAccountEntity({
+    required this.userId,
+    this.email,
+    this.name,
+    this.phoneNumber,
+    this.joinDate,
+    this.photo,
+    this.isActive,
+    this.mitraId,
+    this.roleId,
+    this.menuAuth,
+    this.isInitiate,
+  });
 
   UserAccountEntity copyWith({
     String? userId,
@@ -35,6 +38,7 @@ class UserAccountEntity extends Equatable {
     String? mitraId,
     String? roleId,
     List<String>? menuAuth,
+    bool? isInitiate,
   }) {
     return UserAccountEntity(
       userId: userId ?? this.userId,
@@ -47,6 +51,7 @@ class UserAccountEntity extends Equatable {
       mitraId: mitraId ?? this.mitraId,
       roleId: roleId ?? this.roleId,
       menuAuth: menuAuth ?? this.menuAuth,
+      isInitiate: isInitiate ?? this.isInitiate,
     );
   }
 
@@ -67,5 +72,6 @@ class UserAccountEntity extends Equatable {
         mitraId,
         roleId,
         menuAuth,
+        isInitiate
       ];
 }

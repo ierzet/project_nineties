@@ -29,7 +29,6 @@ class DatabaseFailure extends Failure {
 }
 
 class LogInWithEmailAndPasswordFailure extends Failure {
-  // ignore: use_super_parameters
   const LogInWithEmailAndPasswordFailure([
     this.message = 'An unknown exception occurred.',
   ]) : super(message);
@@ -56,6 +55,7 @@ class LogInWithEmailAndPasswordFailure extends Failure {
         return const LogInWithEmailAndPasswordFailure(
           'Incorrect password, please try again.',
         );
+
       default:
         return const LogInWithEmailAndPasswordFailure();
     }

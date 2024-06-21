@@ -1,20 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:project_nineties/core/error/failure.dart';
+import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/user_dynamic.dart';
-import 'dart:io';
 
 class AuthenticationUseCase {
   final AuthenticationRepository authenticationRepository;
 
   AuthenticationUseCase(this.authenticationRepository);
-
-  // Check if user is authenticated
-  Future<Either<Failure, UserDynamic>> isAuthenticated() {
-    return authenticationRepository.isAuthenticated();
-  }
 
   // Authenticate user using email and password
   Future<Either<Failure, UserDynamic>> authenticateEmailAndPassword(
@@ -42,13 +37,16 @@ class AuthenticationUseCase {
     return authenticationRepository.authenticateFacebookSignin();
   }
 
-  // Get additional user data
-  Future<String> getData() {
-    return authenticationRepository.getData();
+  Future<Either<Failure, UserAccountEntity>> getUserAccountById(String uid) {
+    return authenticationRepository.getUserAccountById(uid);
   }
 
   // Log out the user
   Future<Either<Failure, String>> onLogOut() {
     return authenticationRepository.onLogOut();
+  }
+
+  Future<Either<Failure, String>> resetPassword(String email) {
+    return authenticationRepository.resetPassword(email);
   }
 }

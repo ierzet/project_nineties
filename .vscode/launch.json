@@ -20,6 +20,18 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "project_nineties (web with HTML renderer)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-renderer",
+                "html"
+            ]
         }
     ]
 }

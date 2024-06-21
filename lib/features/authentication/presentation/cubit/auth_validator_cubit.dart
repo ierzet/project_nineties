@@ -51,7 +51,7 @@ class AuthValidatorCubit extends Cubit<AuthValidatorCubitState> {
       password: password,
       value: confirmedPassword,
     );
-    print('3. avatarFileWeb => diterima di cubit: $avatarFileWeb');
+
     emit(
       AuthValidatorCubitState(
           nameIsValid: name.isNotEmpty,
@@ -65,6 +65,25 @@ class AuthValidatorCubit extends Cubit<AuthValidatorCubitState> {
           avatarFile: avatarFile,
           avatarFileWeb: avatarFileWeb,
           isWeb: isWeb),
+    );
+  }
+
+  void validateForgotPasswordCredential({
+    required String email,
+  }) {
+    final emailObj = Email.dirty(email);
+
+    emit(
+      AuthValidatorCubitState(
+        emailIsValid: emailObj.isValid,
+        passwordIsValid: false,
+        email: email,
+        password: '',
+        nameIsValid: false,
+        confirmedPasswordIsValid: false,
+        name: '',
+        confirmedPassword: '',
+      ),
     );
   }
 }
