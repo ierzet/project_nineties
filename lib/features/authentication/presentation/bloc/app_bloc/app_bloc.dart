@@ -22,18 +22,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         ) {
     on<AppUserChanged>(_onUserChanged,
         transformer: debounce(const Duration(milliseconds: 500)));
-    on<NavigateToSignup>(_onNavigateToSignup); // Add this line
-    on<NavigateToForgotPassword>(_onNavigateToForgotPassword); // Add this line
+    on<NavigateToSignup>(_onNavigateToSignup);
+    on<NavigateToForgotPassword>(_onNavigateToForgotPassword);
 
     _userSubscription = _authenticationInitiation.user.listen(
       (user) => add(AppUserChanged(user)),
     );
   }
+
   final AuthenticationUseCase authenticationUseCase;
   final AuthenticationInitiation _authenticationInitiation;
   late final StreamSubscription<UserEntity> _userSubscription;
 
   void _onUserChanged(AppUserChanged event, Emitter<AppState> emit) async {
+    emit(const AppState.loading()); // Emit loading state
     if (event.user.isNotEmpty) {
       final result =
           await authenticationUseCase.getUserAccountById(event.user.id);
@@ -42,12 +44,6 @@ class AppBloc extends Bloc<AppEvent, AppState> {
           emit(const AppState.unauthenticated());
         },
         (data) {
-          // event.user.copyWith(isInitiate: data.isInitiate);
-          // data.isEmpty
-          //     ? emit(const AppState.unauthenticated())
-          //     : event.user.isInitiate == true
-          //         ? emit(const AppState.unauthenticated())
-          //         : emit(AppState.authenticated(event.user));
           final updatedUser = event.user.copyWith(isInitiate: data.isInitiate);
           if (data.isEmpty || updatedUser.isInitiate == true) {
             emit(const AppState.unauthenticated());
@@ -62,15 +58,11 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }
 
   void _onNavigateToSignup(NavigateToSignup event, Emitter<AppState> emit) {
-    // Add this function
-
     emit(const AppState.signup());
   }
 
   void _onNavigateToForgotPassword(
       NavigateToForgotPassword event, Emitter<AppState> emit) {
-    // Add this function
-
     emit(const AppState.forgotPassword());
   }
 

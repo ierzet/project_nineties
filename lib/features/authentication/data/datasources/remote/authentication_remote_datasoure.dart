@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -88,6 +87,7 @@ class AuthenticationRemoteDataSourceImpl
       await user.sendEmailVerification();
 
       await _firebaseAuth.signOut();
+
       return 'User has been registered. Please verify your email address.';
     } on firebase_auth.FirebaseAuthException catch (e) {
       debugPrint('FirebaseAuthException: ${e.code}');
@@ -106,11 +106,18 @@ class AuthenticationRemoteDataSourceImpl
           email: credential.email, password: credential.password);
       final user = _firebaseAuth.currentUser;
 
-      if (user == null || !user.emailVerified) {
+      //menggunakan verifikasi email
+      // if (user == null || !user.emailVerified) {
+      //   await _firebaseAuth.signOut();
+      //   throw LogInWithEmailAndPasswordFailure(user == null
+      //       ? 'Current user is null after authentication.'
+      //       : 'Please verify your email address to log in.');
+      // }
+      //tanpa verifikasi email
+      if (user == null) {
         await _firebaseAuth.signOut();
-        throw LogInWithEmailAndPasswordFailure(user == null
-            ? 'Current user is null after authentication.'
-            : 'Please verify your email address to log in.');
+        throw const LogInWithEmailAndPasswordFailure(
+            'Current user is null after authentication.');
       }
 
       return UserModel.fromFirebaseUser(user);

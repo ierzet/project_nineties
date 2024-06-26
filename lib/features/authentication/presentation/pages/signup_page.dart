@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
@@ -22,51 +23,51 @@ class SignupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      //backgroundColor: AppColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: AppPadding.doublePadding),
-                const Icon(
+                SizedBox(height: AppPadding.doublePadding.h),
+                Icon(
                   Icons.local_car_wash,
-                  size: 100,
-                  color: AppColors.primary,
+                  size: 100.r,
+                  //color: AppColors.primary,
                 ),
-                SizedBox(height: AppPadding.doublePadding),
+                SizedBox(height: AppPadding.doublePadding.h),
                 const AvatarPicker(), // Ensure this is styled well
-                SizedBox(height: AppPadding.defaultPadding),
+                SizedBox(height: AppPadding.defaultPadding.h),
                 Text(
                   'Join us for a top-notch experience!',
                   style: AppStyles.header.copyWith(fontSize: 20),
                 ),
-                SizedBox(height: AppPadding.defaultPadding),
+                SizedBox(height: AppPadding.defaultPadding.h),
                 CustomTextField(
                   controller: nameController,
                   type: InputType.name,
                   authFormType: AuthenticationFormType.signup,
                 ),
-                SizedBox(height: AppPadding.defaultPadding),
+                SizedBox(height: AppPadding.defaultPadding.h),
                 CustomTextField(
                   controller: emailController,
                   type: InputType.email,
                   authFormType: AuthenticationFormType.signup,
                 ),
-                SizedBox(height: AppPadding.defaultPadding),
+                SizedBox(height: AppPadding.defaultPadding.h),
                 CustomTextField(
                   controller: passwordController,
                   type: InputType.password,
                   authFormType: AuthenticationFormType.signup,
                 ),
-                SizedBox(height: AppPadding.defaultPadding),
+                SizedBox(height: AppPadding.defaultPadding.h),
                 CustomTextField(
                   controller: confirmedPasswordController,
                   type: InputType.confirmedPassword,
                   authFormType: AuthenticationFormType.signup,
                 ),
-                SizedBox(height: AppPadding.halfPadding * 3),
+                SizedBox(height: AppPadding.halfPadding.h * 3),
                 const PrimaryButton(
                     authFormType: AuthenticationFormType.signup),
                 SizedBox(height: AppPadding.triplePadding),
@@ -78,7 +79,7 @@ class SignupPage extends StatelessWidget {
                         'Already have an account?',
                         style: AppStyles.bodyText,
                       ),
-                      SizedBox(width: AppPadding.halfPadding / 2),
+                      SizedBox(width: AppPadding.halfPadding.w / 2),
                       GestureDetector(
                         onTap: () {
                           // Create an empty user to represent unauthenticated state

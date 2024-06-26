@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
 
@@ -73,19 +74,27 @@ class CustomTextField extends StatelessWidget {
 
     final inputDecoration = InputDecoration(
       enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.primary),
+        borderSide: BorderSide(
+            // color: AppColors.primary,
+            ),
       ),
       focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.accent),
+        borderSide: BorderSide(
+            //  color: AppColors.accent,
+            ),
       ),
       errorBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.secondary),
+        borderSide: BorderSide(
+            //  color: AppColors.secondary,
+            ),
       ),
       labelText: labelText,
       labelStyle: AppStyles.bodyText,
-      fillColor: AppColors.background,
+      //fillColor: AppColors.background,
       filled: true,
-      hintStyle: const TextStyle(color: AppColors.textColor),
+      hintStyle: const TextStyle(
+          // color: AppColors.textColor,
+          ),
       suffixIcon: BlocBuilder<AuthValidatorCubit, AuthValidatorCubitState>(
         builder: (context, state) {
           final isValid = type == InputType.name
@@ -99,7 +108,7 @@ class CustomTextField extends StatelessWidget {
           return isValid
               ? const Icon(
                   Icons.verified,
-                  color: AppColors.accent,
+                  // color: AppColors.accent,
                 )
               : const SizedBox.shrink();
         },
@@ -107,7 +116,7 @@ class CustomTextField extends StatelessWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding * 3),
+      padding: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding.w * 3),
       child: TextField(
         onChanged: onChanged,
         controller: controller,

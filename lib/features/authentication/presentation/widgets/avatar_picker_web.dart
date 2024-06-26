@@ -93,12 +93,12 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
                     onTap: _removeImage,
                     child: Container(
                       decoration: const BoxDecoration(
-                        color: Colors.red,
+                        //   color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
                         Icons.close,
-                        color: Colors.white,
+                        // color: Colors.white,
                         size: 20,
                       ),
                     ),
@@ -110,19 +110,24 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
               height: 150,
               width: 150,
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                // color: Colors.grey[200],
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.grey[400]!, width: 2),
               ),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.camera_alt,
-                      color: AppColors.secondary, size: 50),
-                  const SizedBox(height: 8),
+                  Icon(
+                    Icons.camera_alt,
+                    // color: AppColors.secondary,
+                    size: 50,
+                  ),
+                  SizedBox(height: 8),
                   Text(
                     "Tap to add photo",
-                    style: TextStyle(color: Colors.grey[800]),
+                    style: TextStyle(
+                        //   color: Colors.grey[800],
+                        ),
                   ),
                 ],
               ),

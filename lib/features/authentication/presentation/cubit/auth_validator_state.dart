@@ -11,7 +11,8 @@ class AuthValidatorCubitState extends Equatable {
   final String confirmedPassword;
   final io.File? avatarFile;
   final File? avatarFileWeb;
-  final bool? isWeb; // Add this property
+  final bool? isWeb;
+ // Add this property
 
   const AuthValidatorCubitState(
       {required this.emailIsValid,

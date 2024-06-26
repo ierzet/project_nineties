@@ -21,11 +21,10 @@ void main() async {
     runApp(
         ProjectNinetiesApp(authenticationInitiation: authenticationInitiation));
   } catch (e, stacktrace) {
-    // Log the error and stacktrace (consider using a logging package)
     debugPrint('Initialization Error: $e');
     debugPrint('Stacktrace: $stacktrace');
     // Optionally, report to a monitoring service like Firebase Crashlytics
-    // FirebaseCrashlytics.instance.recordError(e, stacktrace);
+// FirebaseCrashlytics.instance.recordError(e, stacktrace);
   }
 }
 
@@ -36,6 +35,7 @@ class ProjectNinetiesApp extends StatelessWidget {
   }) : _authenticationInitiation = authenticationInitiation;
 
   final AuthenticationInitiation _authenticationInitiation;
+
   @override
   Widget build(BuildContext context) {
     return BlocProviderSetup(

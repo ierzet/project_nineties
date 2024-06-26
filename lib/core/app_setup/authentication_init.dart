@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:project_nineties/core/utilities/cache.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 
 class AuthenticationInitiation {

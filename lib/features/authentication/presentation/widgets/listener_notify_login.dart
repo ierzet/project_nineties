@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 
 class ListenerNotificationLogin extends StatelessWidget {
@@ -16,13 +17,15 @@ class ListenerNotificationLogin extends StatelessWidget {
             state is AuthValidationResetPassword) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Please enter a valid isnformation.'),
+              //backgroundColor: AppColors.secondary,
+              content: Text('Please enter a valid information.'),
             ),
           );
         } else if (state is AuthResetPasswordSuccess) {
           // context.read<AuthenticationFormCubit>().onLogin();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              //  backgroundColor: AppColors.accent,
               content: Text(state.message),
             ),
           );
@@ -30,12 +33,14 @@ class ListenerNotificationLogin extends StatelessWidget {
           // context.read<AuthenticationFormCubit>().onLogin();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              //  backgroundColor: AppColors.accent,
               content: Text(state.result),
             ),
           );
         } else if (state is AuthenticationFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
+              // backgroundColor: AppColors.secondary,
               content: Text(state.message),
               // You can customize the duration, behavior, and other properties of the SnackBar
             ),

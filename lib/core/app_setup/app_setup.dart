@@ -1,51 +1,84 @@
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/core/utilities/route.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
+import 'package:project_nineties/features/authentication/presentation/pages/authentication_page.dart';
+import 'package:project_nineties/features/authentication/presentation/pages/forgot_password_page.dart';
+import 'package:project_nineties/features/authentication/presentation/pages/signup_page.dart';
+import 'package:project_nineties/features/main/presentation/pages/main_dashboard.dart';
 
 class AppSetup extends StatelessWidget {
-  const AppSetup({
-    super.key,
-  });
+  const AppSetup({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     bool useMaterial3 = true;
     ThemeMode themeMode = ThemeMode.system;
-    ColorSeed colorSelected = ColorSeed.baseColor;
-    ColorScheme? imageColorScheme = const ColorScheme.light();
-    ColorSelectionMethod colorSelectionMethod = ColorSelectionMethod.colorSeed;
-    // context.read<AuthenticationBloc>().add(const AuthUserChanged());
+    ColorSeed colorSelected = ColorSeed.deepOrange;
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: '90s Connect',
-      themeMode: themeMode,
-      theme: ThemeData(
-        colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed
-            ? colorSelected.color
-            : null,
-        colorScheme: colorSelectionMethod == ColorSelectionMethod.image
-            ? imageColorScheme
-            : null,
-        useMaterial3: useMaterial3,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: colorSelectionMethod == ColorSelectionMethod.colorSeed
-            ? colorSelected.color
-            // : imageColorScheme!.primary,
-            : imageColorScheme.primary,
-        useMaterial3: useMaterial3,
-        brightness: Brightness.dark,
-      ),
-      home: FlowBuilder<AppStatus>(
-        state: context.select((AppBloc bloc) => bloc.state.status),
-        onGeneratePages: onGenerateAppViewPages,
+    return ScreenUtilInit(
+      minTextAdapt: true,
+      splitScreenMode: true,
+      designSize: const Size(414, 896),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: '90s Connect',
+        themeMode: themeMode,
+        theme: ThemeData(
+          colorSchemeSeed: colorSelected.color,
+          useMaterial3: useMaterial3,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          colorSchemeSeed: colorSelected.color,
+          useMaterial3: useMaterial3,
+          brightness: Brightness.dark,
+        ),
+        home: BlocBuilder<AppBloc, AppState>(
+          builder: (context, state) {
+            if (state.status == AppStatus.loading) {
+              return const LoadingPage(); // Show loading page during auth check
+            }
+            return FlowBuilder<AppStatus>(
+              state: context.select((AppBloc bloc) => bloc.state.status),
+              onGeneratePages: onGenerateAppViewPages,
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+// home: BlocBuilder<AppBloc, AppState>(
+//           builder: (context, state) {
+//             if (state.status == AppStatus.loading) {
+//               return const LoadingPage(); // Show loading page during auth check
+//             } else if (state.status == AppStatus.authenticated) {
+//               return const MainDashboardPage();
+//             } else if (state.status == AppStatus.unauthenticated) {
+//               return const AuthenticationPage();
+//             } else if (state.status == AppStatus.signup) {
+//               return SignupPage();
+//             } else if (state.status == AppStatus.forgotPassword) {
+//               return ForgotPasswordPage();
+//             } else {
+//               return const ErrorPage(); // Optional error handling
+//             }
+//           },
+//         ),
+
+// home: BlocBuilder<AppBloc, AppState>(
+//           builder: (context, state) {
+//             if (state.status == AppStatus.loading) {
+//               return const LoadingPage(); // Show loading page during auth check
+//             }
+//             return FlowBuilder<AppStatus>(
+//               state: context.select((AppBloc bloc) => bloc.state.status),
+//               onGeneratePages: onGenerateAppViewPages,
+//             );
+//           },
+//         ),

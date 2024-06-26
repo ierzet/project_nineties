@@ -1,97 +1,69 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_customer_growth_box_chart.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_total_items_grid.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_transaction_trend_chart.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_user_activities_piechart.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  static Page<void> page() => const MaterialPage<void>(child: HomePage());
+class HomeDashboard extends StatelessWidget {
+  const HomeDashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      // Handle the case when user is not authenticated
-      return const Scaffold(
-        body: Center(
-          child: Text('User not authenticated'),
-        ),
-      );
-    }
-
-    final userModel = UserEntity.fromFirebaseUser(user);
-    final appBlocState = context.watch<AppBloc>().state.user;
-    // print(appBlocState.name);
-    // print(appBlocState.email);
-    // print(appBlocState.isEmpty);
-    // print(appBlocState);
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // CircleAvatar(
-                //   backgroundImage: userModel.photo != null
-                //       ? NetworkImage(
-                //           userModel.photo!,
-                //           // Provide an error builder for NetworkImage directly
-                //         ) as ImageProvider
-                //       : null,
-                //   radius: 50,
-
-                //   child:
-                //       userModel.photo == null ? Text('Failed to load image') : null,
-                // ),
-                CircleAvatar(
-                  backgroundImage:
-                      userModel.photo != null && userModel.photo!.isNotEmpty
-                          ? NetworkImage(userModel.photo!)
-                          : null,
-                  radius: 50,
-                  child: userModel.photo == null || userModel.photo!.isEmpty
-                      ? const Text(
-                          'Failed to load image',
-                          textAlign: TextAlign.center,
-                        )
-                      : null,
-                ),
-                Image.network(
-                  userModel.photo!,
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
-                    return const Text('Failed to load image');
-                  },
-                ),
-                // Image.network(
-                //   'https://firebasestorage.googleapis.com/v0/b/project-nineties.appspot.com/o/user_image%2Fuser_profile%2FdLsqVy1gHsgMiRXpPBAsklLsMg83?alt=media&token=64302c40-8122-40a7-93e5-7bc77a6c544d',
-                //   errorBuilder: (BuildContext context, Object exception,
-                //       StackTrace? stackTrace) {
-                //     return Text('Failed to load image');
-                //   },
-                // ),
-                const SizedBox(height: 16),
-                Text('Name: ${userModel.name}'),
-                const SizedBox(height: 8),
-                Text('Email: ${userModel.email}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    context
-                        .read<AuthenticationBloc>()
-                        .add(const AuthUserLogOut());
-                    context.read<AuthValidatorCubit>().clearValidation();
-                  },
-                  child: const Text('Sign out'),
-                ),
-              ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(AppPadding.defaultPadding.r),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Dashboard',
+              style: AppStyles.chartTitle, // Using AppStyles
             ),
-          ),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            const HomeTotalItemsGrid(),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            Text(
+              'Transaction Trends',
+              style: AppStyles.chartTitle,
+            ),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            SizedBox(
+              height: 200.h,
+              child: const HomeTransactionTrendChart(),
+            ),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            Text(
+              'Transaction Trends 2',
+              style: AppStyles.chartTitle,
+            ),
+            SizedBox(height: AppPadding.halfPadding.h),
+            SizedBox(
+              height: 200.h,
+              child: const TransactionTrendChart2(),
+            ),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            Text(
+              'Customer Growth',
+              style: AppStyles.chartTitle, // Using AppStyles
+            ),
+            SizedBox(height: AppPadding.halfPadding.h),
+            SizedBox(
+              height: 200.h,
+              child: const HomeCustomerGrowthBoxChart(),
+            ),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            Text(
+              'User Activities',
+              style: AppStyles.chartTitle, // Using AppStyles
+            ),
+            SizedBox(height: AppPadding.halfPadding.h),
+            SizedBox(
+              height: 200.h,
+              child: const HomeUserActivitisPieChart(),
+            ),
+          ],
         ),
       ),
     );

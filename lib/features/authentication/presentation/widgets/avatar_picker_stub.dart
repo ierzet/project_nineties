@@ -10,7 +10,7 @@ class PlatformAvatarPicker extends StatelessWidget {
     return Container(
       height: 150,
       width: 150,
-      color: Colors.red,
+      // color: Colors.red,
       child: const Center(child: Text('Unsupported platform')),
     );
   }

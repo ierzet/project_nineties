@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
@@ -50,16 +51,16 @@ class PrimaryButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(AppPadding.halfPadding * 3),
-        margin: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding * 3),
+        padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
+        margin: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding.w * 3),
         decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(AppPadding.defaultPadding),
+          // gradient: gradient,
+          borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary,
-              offset: Offset(0, AppPadding.halfPadding / 2),
-              blurRadius: AppPadding.halfPadding / 2,
+              //  color: AppColors.primary,
+              offset: Offset(0, AppPadding.halfPadding.r / 2),
+              blurRadius: AppPadding.halfPadding.r / 2,
             ),
           ],
         ),
@@ -69,8 +70,8 @@ class PrimaryButton extends StatelessWidget {
               return state is AuthenticationLoading ||
                       state is AuthenticationRegistering
                   ? const CircularProgressIndicator(
-                      color: AppColors.background,
-                    )
+                      // color: AppColors.background,
+                      )
                   : Text(
                       authFormType == AuthenticationFormType.signin
                           ? AppStrings.signIn
