@@ -23,27 +23,49 @@ class SocialLoginTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => action(loginType),
-      child: Container(
-        padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
-        decoration: BoxDecoration(
-          border: Border.all(
-              // color: AppColors.primary,
-              ), // Primary Color
-          borderRadius: BorderRadius.circular(16),
-          //color: AppColors.background,
-          boxShadow: [
-            BoxShadow(
-              //color: AppColors.primary,
-              offset: Offset(0, (AppPadding.halfPadding.r / 2)),
-              blurRadius: (AppPadding.halfPadding.r / 2),
-            ),
-          ],
-        ),
-        child: Image.asset(
-          imagePath,
-          height: AppPadding.triplePadding.h,
+      child: Card(
+        // shape: RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.circular(16),
+        //   side: const BorderSide(
+        //       // color: AppColors.primary,
+        //       ),
+        // ),
+        elevation: AppPadding.halfPadding.r / 2,
+        // shadowColor: AppColors.primary,
+        child: Padding(
+          padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
+          child: Image.asset(
+            imagePath,
+            height: AppPadding.triplePadding.h,
+          ),
         ),
       ),
     );
   }
 }
+
+
+// GestureDetector(
+//       onTap: () => action(loginType),
+//       child: Container(
+//         padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
+//         decoration: BoxDecoration(
+//           border: Border.all(
+//               // color: AppColors.primary,
+//               ), // Primary Color
+//           borderRadius: BorderRadius.circular(16),
+//           //color: AppColors.background,
+//           boxShadow: [
+//             BoxShadow(
+//               //color: AppColors.primary,
+//               offset: Offset(0, (AppPadding.halfPadding.r / 2)),
+//               blurRadius: (AppPadding.halfPadding.r / 2),
+//             ),
+//           ],
+//         ),
+//         child: Image.asset(
+//           imagePath,
+//           height: AppPadding.triplePadding.h,
+//         ),
+//       ),
+//     );

@@ -101,6 +101,19 @@ class AppStyles {
     //  color: AppColors.primary,
     fontWeight: FontWeight.bold,
   );
+  // New style for drawer header text
+  static final TextStyle drawerHeaderText = GoogleFonts.montserrat(
+    fontSize: 24,
+    //color: Colors.white,
+    fontWeight: FontWeight.bold,
+  );
+
+  // New style for drawer item text
+  static final TextStyle drawerItemText = GoogleFonts.lato(
+    fontSize: 18,
+    // color: AppColors.primary,
+    fontWeight: FontWeight.w400,
+  );
 }
 
 class AppPath {
@@ -127,6 +140,8 @@ enum ColorSeed {
   yellow('Yellow', Colors.yellow),
   orange('Orange', Colors.orange),
   deepOrange('Deep Orange', Colors.deepOrange),
+  naughtyRed('Cinnabar Red', Color(0xFFE74C3C)),
+  lightGrey('Light Grey', Color(0xFFECF0F1)),
   pink('Pink', Colors.pink);
 
   const ColorSeed(this.label, this.color);

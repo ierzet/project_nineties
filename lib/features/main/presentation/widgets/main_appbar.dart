@@ -48,25 +48,25 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       elevation: 10, // Elevation for shadow effect
       actions: [
-        IconButton(
-          iconSize: 30,
-          icon: const Icon(Icons.search),
-          onPressed: () {
-            showSearch(
-              context: context,
-              delegate: CustomSearchDelegate(),
-            );
-          },
-        ),
-        SizedBox(width: AppPadding.defaultPadding.w),
-        IconButton(
-          iconSize: 30,
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            // Handle general notifications or message notifications
-          },
-        ),
-        SizedBox(width: AppPadding.defaultPadding.w),
+        // IconButton(
+        //   iconSize: 30,
+        //   icon: const Icon(Icons.search),
+        //   onPressed: () {
+        //     showSearch(
+        //       context: context,
+        //       delegate: CustomSearchDelegate(),
+        //     );
+        //   },
+        // ),
+        // SizedBox(width: AppPadding.defaultPadding.w),
+        // IconButton(
+        //   iconSize: 30,
+        //   icon: const Icon(Icons.notifications),
+        //   onPressed: () {
+        //     // Handle general notifications or message notifications
+        //   },
+        // ),
+        // SizedBox(width: AppPadding.defaultPadding.w),
         PopupMenuButton<int>(
           onSelected: (item) => onSelected(context, item),
           itemBuilder: (context) => [

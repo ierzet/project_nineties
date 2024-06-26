@@ -48,21 +48,18 @@ class PrimaryButton extends StatelessWidget {
       //TODO: Fix bug: skenario klik button signup namun terkendala validasi. validator cubit jadi missmatch
     }
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
-        margin: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding.w * 3),
-        decoration: BoxDecoration(
-          // gradient: gradient,
-          borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
-          boxShadow: [
-            BoxShadow(
-              //  color: AppColors.primary,
-              offset: Offset(0, AppPadding.halfPadding.r / 2),
-              blurRadius: AppPadding.halfPadding.r / 2,
-            ),
-          ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding.w * 3),
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
+          ),
+          elevation: AppPadding.halfPadding.r / 2,
+          // Add your gradient background here if needed
+          // primary: AppColors.primary, // Set primary color if needed
         ),
         child: Center(
           child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -87,3 +84,42 @@ class PrimaryButton extends StatelessWidget {
     );
   }
 }
+
+
+// return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
+//         margin: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding.w * 3),
+//         decoration: BoxDecoration(
+//           // gradient: gradient,
+//           borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
+//           boxShadow: [
+//             BoxShadow(
+//               //  color: AppColors.primary,
+//               offset: Offset(0, AppPadding.halfPadding.r / 2),
+//               blurRadius: AppPadding.halfPadding.r / 2,
+//             ),
+//           ],
+//         ),
+//         child: Center(
+//           child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+//             builder: (context, state) {
+//               return state is AuthenticationLoading ||
+//                       state is AuthenticationRegistering
+//                   ? const CircularProgressIndicator(
+//                       // color: AppColors.background,
+//                       )
+//                   : Text(
+//                       authFormType == AuthenticationFormType.signin
+//                           ? AppStrings.signIn
+//                           : authFormType == AuthenticationFormType.signup
+//                               ? AppStrings.signUp
+//                               : AppStrings.forgotPassword,
+//                       style: AppStyles.buttonText,
+//                     );
+//             },
+//           ),
+//         ),
+//       ),
+//     );

@@ -3,6 +3,7 @@ import 'package:project_nineties/core/utilities/responsive_display.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_body.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_bottom_nav_bar.dart';
+import 'package:project_nineties/features/main/presentation/widgets/main_drawer.dart';
 
 class MainDashboardPage extends StatelessWidget {
   const MainDashboardPage({super.key});
@@ -12,6 +13,7 @@ class MainDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: MainAppBar(),
+      drawer: MainDrawer(),
       body: ResponsiveLayout(
         mobileBody: MainBody(),
         desktopBody: Center(

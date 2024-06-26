@@ -40,7 +40,6 @@ class MainBottomNavBar extends StatelessWidget {
             // ),
           ],
           onTap: (index) {
-            print('index: $index');
             context.read<NavigationCubit>().updateIndex(index);
           },
         );
