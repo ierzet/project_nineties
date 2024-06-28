@@ -9,6 +9,7 @@ import 'package:project_nineties/features/authentication/domain/usecases/authent
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 
 final locator = GetIt.instance;
 void setupLocator() {
@@ -17,21 +18,27 @@ void setupLocator() {
       .registerFactory<AuthenticationBloc>(() => AuthenticationBloc(locator()));
   locator.registerFactory<AppBloc>(() => AppBloc(
       authenticationUseCase: locator(), authenticationInitiation: locator()));
+  locator.registerFactory<PartnerBloc>(() => PartnerBloc(locator()));
 
 //usecase
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));
+  locator.registerLazySingleton(() => PartnerUseCase(repository: locator()));
 
   //repository
   locator.registerLazySingleton<AuthenticationRepository>(() =>
       AuthenticationRepositoryImpl(
           authenticationLocalDataSource: locator(),
           authenticationRemoteDataSource: locator()));
+  locator.registerLazySingleton<PartnerRepository>(
+      () => PartnerRepositoryImpl(remoteDataSource: locator()));
 
   //data source
   locator.registerLazySingleton<AuthenticationRemoteDataSource>(() =>
       AuthenticationRemoteDataSourceImpl(locator(), locator(), locator()));
   locator.registerLazySingleton<AuthenticationLocalDataSource>(
       () => AuthenticationLocalDataSourceImpl(locator()));
+  locator.registerLazySingleton<PartnerRemoteDataSource>(
+      () => PartnerRemoteDataSourceImpl(locator(), locator()));
 
   //external
 

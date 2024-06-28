@@ -4,6 +4,7 @@ import 'package:project_nineties/features/authentication/presentation/pages/auth
 import 'package:project_nineties/features/authentication/presentation/pages/forgot_password_page.dart';
 import 'package:project_nineties/features/authentication/presentation/pages/signup_page.dart';
 import 'package:project_nineties/features/main/presentation/pages/main_dashboard.dart';
+import 'package:project_nineties/features/partner/presentation/pages/partner_page.dart';
 
 List<Page<dynamic>> onGenerateAppViewPages(
   AppStatus state,
@@ -18,6 +19,7 @@ List<Page<dynamic>> onGenerateAppViewPages(
       return [SignupPage.page()];
     case AppStatus.forgotPassword:
       return [ForgotPasswordPage.page()];
+
     case AppStatus.loading:
       return [LoadingPage.page()]; // Add loading state handling
     default:

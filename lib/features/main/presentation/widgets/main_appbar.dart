@@ -5,7 +5,6 @@ import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
-import 'package:project_nineties/features/main/presentation/widgets/widgets.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar({super.key});

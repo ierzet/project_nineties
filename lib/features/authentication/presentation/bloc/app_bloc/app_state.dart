@@ -5,7 +5,8 @@ enum AppStatus {
   unauthenticated,
   signup,
   forgotPassword,
-  loading
+  loading,
+  partner,
 }
 
 class AppState extends Equatable {
@@ -17,13 +18,30 @@ class AppState extends Equatable {
   const AppState.authenticated(UserEntity user)
       : this._(status: AppStatus.authenticated, user: user);
 
-  const AppState.unauthenticated() : this._(status: AppStatus.unauthenticated);
+  const AppState.unauthenticated()
+      : this._(
+          status: AppStatus.unauthenticated,
+        );
 
-  const AppState.signup() : this._(status: AppStatus.signup);
+  const AppState.signup()
+      : this._(
+          status: AppStatus.signup,
+        );
 
-  const AppState.forgotPassword() : this._(status: AppStatus.forgotPassword);
+  const AppState.forgotPassword()
+      : this._(
+          status: AppStatus.forgotPassword,
+        );
 
-  const AppState.loading() : this._(status: AppStatus.loading);
+  const AppState.partner()
+      : this._(
+          status: AppStatus.partner,
+        );
+
+  const AppState.loading()
+      : this._(
+          status: AppStatus.loading,
+        );
 
   final AppStatus status;
   final UserEntity user;

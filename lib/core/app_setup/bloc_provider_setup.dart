@@ -7,6 +7,9 @@ import 'package:project_nineties/features/authentication/presentation/bloc/app_b
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
+import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
+import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
+import 'package:project_nineties/features/partner/presentation/cubit/partner_join_date_cubit.dart';
 import 'package:project_nineties/injection_container.dart' as di;
 
 class BlocProviderSetup extends StatelessWidget {
@@ -39,6 +42,9 @@ class BlocProviderSetup extends StatelessWidget {
               create: (context) =>
                   GlobalCubit()), //TODO:kalo ga dipake hapus aja
           BlocProvider(create: (context) => NavigationCubit()),
+          BlocProvider(create: (context) => PartnerValidatorBloc()),
+          BlocProvider(create: (context) => PartnerJoinDateCubit()),
+          BlocProvider(create: (context) => di.locator<PartnerBloc>()),
         ],
         child: child,
       ),

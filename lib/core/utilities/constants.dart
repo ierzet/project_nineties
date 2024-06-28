@@ -51,6 +51,7 @@ class AppStrings {
   static const String userName = 'Username';
   static const String password = 'Password';
   static const String signUp = 'Sign Up';
+    static const String dataIsNotValid = 'Data is not valid';
 
   //signup page
   static const String name = 'Name';
@@ -122,7 +123,7 @@ class AppPath {
   static const String facebookIcon = 'assets/images/facebook.png';
 }
 
-enum InputType { name, email, password, confirmedPassword }
+enum InputType { name, email, password, confirmedPassword, phone, date, address }
 
 enum AuthenticationFormType { signin, signup, forgotPassword }
 

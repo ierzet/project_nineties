@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
+import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -31,7 +34,8 @@ class MainDrawer extends StatelessWidget {
               'Partner',
               style: AppStyles.drawerItemText,
             ),
-            onTap: () {},
+            onTap: () =>
+                context.read<NavigationCubit>().updateSubMenu('partner'),
           ),
           ListTile(
             leading: const Icon(Icons.people),
