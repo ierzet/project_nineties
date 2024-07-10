@@ -12,19 +12,15 @@ class ListenerNotificationPartner extends StatelessWidget {
     return BlocListener<PartnerBloc, PartnerState>(
       listener: (context, state) {
         if (state is PartnerLoadSuccess) {
-          // context.read<AuthenticationFormCubit>().onLogin();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              //  backgroundColor: AppColors.accent,
               content: Text(state.message),
             ),
           );
         } else if (state is PartnerLoadFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              // backgroundColor: AppColors.secondary,
               content: Text(state.message),
-              // You can customize the duration, behavior, and other properties of the SnackBar
             ),
           );
         }

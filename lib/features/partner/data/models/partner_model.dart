@@ -7,28 +7,25 @@ import 'package:project_nineties/features/partner/domain/usecases/partner_params
 import 'package:universal_html/html.dart';
 
 class PartnerModel extends PartnerEntity {
-  const PartnerModel(
-      {required super.partnerId,
-      super.partnerName,
-      super.partnerEmail,
-      super.partnerPhoneNumber,
-      super.partnerImageUrl,
-      super.partnerAddress,
-      String? partnerStatus,
-      super.partnerJoinDate,
-      super.partnerCreatedBy,
-      super.partnerCreatedDate,
-      super.partnerUpdatedBy,
-      super.partnerUpdatedDate,
-      super.partnerDeletedBy,
-      super.partnerDeletedDate,
-      super.partnerIsDeleted,
-      super.partnerAvatarFile,
-      super.partnerAvatarFileWeb})
-      : super(
-          partnerStatus: 'active',
-        );
-
+  const PartnerModel({
+    required super.partnerId,
+    super.partnerName,
+    super.partnerEmail,
+    super.partnerPhoneNumber,
+    super.partnerImageUrl,
+    super.partnerAddress,
+    super.partnerStatus,
+    super.partnerJoinDate,
+    super.partnerCreatedBy,
+    super.partnerCreatedDate,
+    super.partnerUpdatedBy,
+    super.partnerUpdatedDate,
+    super.partnerDeletedBy,
+    super.partnerDeletedDate,
+    super.partnerIsDeleted,
+    super.partnerAvatarFile,
+    super.partnerAvatarFileWeb,
+  });
   PartnerEntity toEntity() => PartnerEntity(
         partnerId: partnerId,
         partnerName: partnerName,
@@ -93,7 +90,8 @@ class PartnerModel extends PartnerEntity {
 
   Map<String, dynamic> toFireStore() {
     return {
-      // 'partner_id': partnerId,
+      //partner_id menggunakan email atau jika kosong gunakan '' agar terbaca empty
+      'partner_id': partnerEmail ?? partnerId,
       'partner_name': partnerName,
       'partner_email': partnerEmail,
       'partner_phone_number': partnerPhoneNumber,
@@ -120,13 +118,16 @@ class PartnerModel extends PartnerEntity {
       partnerImageUrl: json['partner_image_url'] ?? '',
       partnerAddress: json['partner_address'] ?? '',
       partnerStatus: json['partner_status'] ?? '',
-      partnerJoinDate: json['partner_join_date'] as DateTime?,
+      partnerJoinDate: (json['partner_join_date'] as Timestamp?)?.toDate(),
       partnerCreatedBy: json['partner_created_by'] ?? '',
-      partnerCreatedDate: json['partner_created_date'] as DateTime?,
+      partnerCreatedDate:
+          (json['partner_created_date'] as Timestamp?)?.toDate(),
       partnerUpdatedBy: json['partner_updated_by'] ?? '',
-      partnerUpdatedDate: json['partner_updated_date'] as DateTime?,
+      partnerUpdatedDate:
+          (json['partner_updated_date'] as Timestamp?)?.toDate(),
       partnerDeletedBy: json['partner_deleted_by'] ?? '',
-      partnerDeletedDate: json['partner_deleted_date'] as DateTime?,
+      partnerDeletedDate:
+          (json['partner_deleted_date'] as Timestamp?)?.toDate(),
       partnerIsDeleted: json['partner_is_deleted'] ?? false,
     );
   }
@@ -160,6 +161,9 @@ class PartnerModel extends PartnerEntity {
       debugPrint('Error in fromFirestore: $e');
       rethrow; // Rethrow the exception for better debugging
     }
+  }
+  List<PartnerEntity> convertModelListToEntityList(List<PartnerModel> models) {
+    return models.map((model) => model.toEntity()).toList();
   }
 
   @override

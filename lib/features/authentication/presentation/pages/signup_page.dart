@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator/authentication_validator_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/avatar_picker.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/custom_text_field.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/listener_notify_login.dart';
@@ -16,6 +16,7 @@ class SignupPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmedPasswordController =
       TextEditingController();
+  final ddlMitraController = TextEditingController();
 
   SignupPage({super.key});
   static Page<void> page() => MaterialPage<void>(child: SignupPage());
@@ -87,7 +88,9 @@ class SignupPage extends StatelessWidget {
                           context
                               .read<AppBloc>()
                               .add(const AppUserChanged(emptyUser));
-                          context.read<AuthValidatorCubit>().clearValidation();
+                          context
+                              .read<AuthenticationValidatorBloc>()
+                              .add(const AuthenticationClearValidator());
                         },
                         child: Text('Sign In', style: AppStyles.accentText),
                       ),

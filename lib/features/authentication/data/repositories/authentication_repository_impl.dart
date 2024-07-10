@@ -4,10 +4,10 @@ import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/data/datasources/local/authentication_local_datasource.dart';
 import 'package:project_nineties/features/authentication/data/datasources/remote/authentication_remote_datasoure.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
+import 'package:project_nineties/features/authentication/data/models/user_model.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/repositories/authentication_repository.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
+import 'package:project_nineties/features/authentication/domain/usecases/authentication_params.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/user_dynamic.dart';
 
 class AuthenticationRepositoryImpl extends AuthenticationRepository {
@@ -17,17 +17,39 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
       {required this.authenticationRemoteDataSource,
       required this.authenticationLocalDataSource});
 
-  //call the remote data source to sign up with email and password
+  //event untuk  registrasi dengan email and password
   @override
   Future<Either<Failure, String>> signUpEmailAndPassword(
-      RegisterAuthentication credential) async {
+      AuthenticationParams params) async {
     try {
-      final result = await authenticationRemoteDataSource
-          .signUpEmailAndPassword(credential);
+      //daftar user dan passsword email
+      await authenticationRemoteDataSource.signUpEmailAndPassword(params);
+
+      /* 1. jika daftar berhasil, maka ambil data user firebase auth 
+         2. upload file avatar di firebase storage dan download url file nya
+         3. update displayName dan photoURL(url file) user firebase auth*/
+      await authenticationRemoteDataSource
+          .uploadFileImageAndUpdateProfile(params);
+
+      // //initiate data useraccount dari registrasi (true)
+      await authenticationRemoteDataSource.initiateUserAccountFireStore(
+          isInitiate: true);
+
+      // /* 1. kirim email verifikasi
+      //    2. logout
+      //    3. mengembalikan string proses signup berhasil */
+      final result =
+          await authenticationRemoteDataSource.sendEmailNotification();
+
+      //kirim status berhasil
       return right(result);
     } on SignUpWithEmailAndPasswordFailure catch (e) {
       return Left(
         SignUpWithEmailAndPasswordFailure(e.message),
+      );
+    } on FirebaseStorageFailure catch (e) {
+      return Left(
+        FirebaseStorageFailure(e.message),
       );
     } on io.SocketException {
       return const Left(
@@ -39,29 +61,65 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   //call the remote data source to sign in with email and password
   @override
   Future<Either<Failure, UserDynamic>> authenticateEmailAndPassword(
-      LoginAuthentication credential) async {
+      AuthenticationParams params) async {
     try {
-      final resultUserModel = await authenticationRemoteDataSource
-          .authenticateEmailAndPassword(credential);
+      // signin email and password dengan mengembalikan data firebase user
+      final currentUser = await authenticationRemoteDataSource
+          .authenticateEmailAndPassword(params);
 
-      final dataExist =
-          await authenticationRemoteDataSource.getDataById(resultUserModel.id);
+      // check data firebase user apakah sudah ada di user_account firestore?
+      final snapshotUserAccount =
+          await authenticationRemoteDataSource.getDataById(currentUser.uid);
 
-      final resultUserAccountModel = dataExist.exists
-          ? UserAccountModel.fromFirestore(dataExist)
-          : await authenticationRemoteDataSource.updateUserAccountFireStore();
+      /*
+      jika user snapshot account account ada di firestore maka,
+      snapshot ditampung di user account modoel, sebaliknya jika 
+      tidak maka data current user akan di insert ke user account firestore (false)
+      kemudian kembalikan data user account
+       */
+      final userAccountModel = snapshotUserAccount.exists
+          ? UserAccountModel.fromFirestore(snapshotUserAccount)
+          : await authenticationRemoteDataSource.initiateUserAccountFireStore(
+              isInitiate: false);
 
+      /* Jika is initiate true, ubah isInitiate menjadi false 
+      untuk memastikan sudah pernah login*/
+      if (userAccountModel.isInitiate == true) {
+        await authenticationRemoteDataSource.initiateUserAccountFireStore(
+          isInitiate: false,
+        );
+      }
+
+      //validasi approval user
+      if (userAccountModel.isActive == false) {
+        await authenticationRemoteDataSource.onLogOut();
+        return const Left(
+          LogInWithEmailAndPasswordFailure('User need approval from admin'),
+        );
+      }
+
+      //update user account ke shared preference lokal
       await authenticationLocalDataSource.updateAuthSharedPreference();
 
-      final user = UserDynamic(
-        userEntity: resultUserModel.toEntity(),
-        userAccountEntity: resultUserAccountModel.toEntity(),
+      //tampung data di user dynamic
+      final userDynamic = UserDynamic(
+        userEntity: UserModel.fromFirebaseUser(currentUser).toEntity(),
+        userAccountEntity: userAccountModel.toEntity(),
       );
 
-      return right(user);
+      //mengembalikan nilai user dynamic
+      return right(userDynamic);
     } on LogInWithEmailAndPasswordFailure catch (e) {
       return Left(
         LogInWithEmailAndPasswordFailure(e.message),
+      );
+    } on FireBaseCatchFailure catch (e) {
+      return Left(
+        FireBaseCatchFailure(e.message),
+      );
+    } on SharedPreferenceFailure catch (e) {
+      return Left(
+        SharedPreferenceFailure(e.message),
       );
     } on io.SocketException {
       return const Left(
@@ -70,27 +128,52 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
     }
   }
 
-  //call the remote data source to sign in with google
+  //event untuk sign in with google
   @override
   Future<Either<Failure, UserDynamic>> authenticateGoogleSignin() async {
     try {
-      final resultUserModel =
+      // signin google dengan mengembalikan data firebase user
+      final currentUser =
           await authenticationRemoteDataSource.authenticateGoogleSignin();
-      final dataExist =
-          await authenticationRemoteDataSource.getDataById(resultUserModel.id);
-      final resultUserAccountModel = dataExist.exists
-          ? UserAccountModel.fromFirestore(dataExist)
-          : await authenticationRemoteDataSource.updateUserAccountFireStore();
+
+      // check data firebase user apakah sudah ada di user_account firestore?
+      final snapshotUserAccount =
+          await authenticationRemoteDataSource.getDataById(currentUser.uid);
+
+      /*
+      jika user snapshot account account ada di firestore maka,
+      snapshot ditampung di user account modoel, sebaliknya jika 
+      tidak maka data current user akan di insert ke user account firestore (false)
+      kemudian kembalikan data user account
+       */
+      final userAccountModel = snapshotUserAccount.exists
+          ? UserAccountModel.fromFirestore(snapshotUserAccount)
+          : await authenticationRemoteDataSource.initiateUserAccountFireStore(
+              isInitiate: false,
+            );
+
+      //update user account ke shared preference lokal
       await authenticationLocalDataSource.updateAuthSharedPreference();
-      final user = UserDynamic(
-        userEntity: resultUserModel.toEntity(),
-        userAccountEntity: resultUserAccountModel.toEntity(),
+
+      //tampung data di user dynamic
+      final userDynamic = UserDynamic(
+        userEntity: UserModel.fromFirebaseUser(currentUser).toEntity(),
+        userAccountEntity: userAccountModel.toEntity(),
       );
 
-      return right(user);
+      //kembalikan data user dynamic
+      return right(userDynamic);
     } on LogInWithGoogleFailure catch (e) {
       return Left(
         LogInWithGoogleFailure(e.message),
+      );
+    } on FireBaseCatchFailure catch (e) {
+      return Left(
+        FireBaseCatchFailure(e.message),
+      );
+    } on SharedPreferenceFailure catch (e) {
+      return Left(
+        SharedPreferenceFailure(e.message),
       );
     } on io.SocketException {
       return const Left(
@@ -102,23 +185,46 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   @override
   Future<Either<Failure, UserDynamic>> authenticateFacebookSignin() async {
     try {
-      final resultUserModel =
+      // signin google dengan mengembalikan data firebase user
+      final currentUser =
           await authenticationRemoteDataSource.authenticateFacebookSignin();
-      final dataExist =
-          await authenticationRemoteDataSource.getDataById(resultUserModel.id);
-      final resultUserAccountModel = dataExist.exists
-          ? UserAccountModel.fromFirestore(dataExist)
-          : await authenticationRemoteDataSource.updateUserAccountFireStore();
-      await authenticationLocalDataSource.updateAuthSharedPreference();
-      final user = UserDynamic(
-        userEntity: resultUserModel.toEntity(),
-        userAccountEntity: resultUserAccountModel.toEntity(),
-      );
 
+      // check data firebase user apakah sudah ada di user_account firestore?
+      final snapshotUserAccount =
+          await authenticationRemoteDataSource.getDataById(currentUser.uid);
+
+      /*
+      jika user snapshot account account ada di firestore maka,
+      snapshot ditampung di user account modoel, sebaliknya jika 
+      tidak maka data current user akan di insert ke user account firestore (false)
+      kemudian kembalikan data user account
+       */
+      final userAccountModel = snapshotUserAccount.exists
+          ? UserAccountModel.fromFirestore(snapshotUserAccount)
+          : await authenticationRemoteDataSource.initiateUserAccountFireStore(
+              isInitiate: false);
+
+      //update user account ke shared preference lokal
+      await authenticationLocalDataSource.updateAuthSharedPreference();
+
+      //tampung data di user dynamic
+      final user = UserDynamic(
+        userEntity: UserModel.fromFirebaseUser(currentUser).toEntity(),
+        userAccountEntity: userAccountModel.toEntity(),
+      );
+      //kembalikan data user dynamic
       return right(user);
     } on LogInWithGoogleFailure catch (e) {
       return Left(
         LogInWithGoogleFailure(e.message),
+      );
+    } on FireBaseCatchFailure catch (e) {
+      return Left(
+        FireBaseCatchFailure(e.message),
+      );
+    } on SharedPreferenceFailure catch (e) {
+      return Left(
+        SharedPreferenceFailure(e.message),
       );
     } on io.SocketException {
       return const Left(

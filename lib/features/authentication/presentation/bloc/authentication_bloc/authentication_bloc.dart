@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
+import 'package:project_nineties/features/authentication/domain/usecases/authentication_params.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_usecase.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/confirmed_password.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/email.dart';
@@ -41,27 +41,22 @@ class AuthenticationBloc
 
   void _onAuthEmailAndPasswordLogIn(AuthEmailAndPasswordLogIn event,
       Emitter<AuthenticationState> emit) async {
-    final email = Email.dirty(event.email);
-    final password = Password.dirty(event.password);
-
-    final isValid = Formz.validate([email, password]);
+    const AuthenticationLoading();
+    final isValid = event.params.isValidSignin;
 
     emit(
       isValid
           ? const AuthenticationLoading()
-          : AuthValidation(
-              emailIsValid: email.isValid, passwordIsValid: password.isValid),
+          : AuthValidationButton(
+              emailIsValid: event.params.isEmailValid,
+              passwordIsValid: event.params.isPasswordValid,
+            ),
     );
-
     if (!isValid) {
-      // Show a validation error in the state if the form is invalid
-      emit(AuthValidationButton(
-          emailIsValid: email.isValid, passwordIsValid: password.isValid));
-
       return;
     }
-    final result = await authenticationUseCase.authenticateEmailAndPassword(
-        event.email, event.password);
+    final result =
+        await authenticationUseCase.authenticateEmailAndPassword(event.params);
 
     result.fold(
       (failure) {
@@ -113,13 +108,7 @@ class AuthenticationBloc
       AuthUserSignUp event, Emitter<AuthenticationState> emit) async {
     emit(const AuthenticationRegistering());
 
-    final email = Email.dirty(event.credential.email);
-    final password = Password.dirty(event.credential.password);
-    final confirmedPassword = ConfirmedPassword.dirty(
-      password: event.credential.password,
-      value: event.credential.confirmedPassword,
-    );
-    final isValid = Formz.validate([email, password, confirmedPassword]);
+    final isValid = event.params.isValidSignUp;
 
     emit(
       isValid
@@ -131,7 +120,7 @@ class AuthenticationBloc
       return;
     }
 
-    final result = await authenticationUseCase.register(event.credential);
+    final result = await authenticationUseCase.register(event.params);
 
     result.fold(
       (failure) {
@@ -145,7 +134,7 @@ class AuthenticationBloc
 
   void _onAuthUserLogOut(
       AuthUserLogOut event, Emitter<AuthenticationState> emit) async {
-    emit(const AuthenticationLoading());
+    emit(const AuthenticationLogingOff());
     final result = await authenticationUseCase.onLogOut();
     result.fold(
       (failure) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/core/utilities/responsive_display.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/authentication_body_mobile.dart';
 

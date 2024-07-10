@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 
@@ -13,9 +14,13 @@ class PartnerSubmitButton extends StatelessWidget {
     void onSubmit() {
       final partnerParams =
           context.read<PartnerValidatorBloc>().state.partnerParams;
+      context.read<PartnerBloc>().add(AdminRegPartnerClicked(
+            context: context,
+            params: partnerParams,
+          ));
       context
-          .read<PartnerBloc>()
-          .add(AdminRegPartnerClicked(params: partnerParams));
+          .read<PartnerValidatorBloc>()
+          .add(PartnerClearValidator(context: context));
     }
 
     return Padding(
@@ -35,6 +40,9 @@ class PartnerSubmitButton extends StatelessWidget {
           child: BlocBuilder<PartnerBloc, PartnerState>(
             builder: (context, state) {
               return state is PartnerLoadInProgress
+                  // ? const CircularProgressIndicator(
+                  //     // color: AppColors.background,
+                  //     )
                   ? const CircularProgressIndicator(
                       // color: AppColors.background,
                       )

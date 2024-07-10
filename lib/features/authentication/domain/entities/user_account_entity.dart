@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
 class UserAccountEntity extends Equatable {
   final String userId;
@@ -8,10 +9,17 @@ class UserAccountEntity extends Equatable {
   final DateTime? joinDate;
   final String? photo;
   final bool? isActive;
-  final String? mitraId;
+  final PartnerEntity partner;
   final String? roleId;
   final List<String>? menuAuth;
   final bool? isInitiate;
+  final String? createdBy;
+  final DateTime? createdDate;
+  final String? updatedBy;
+  final DateTime? updatedDate;
+  final String? deletedBy;
+  final DateTime? deletedDate;
+  final bool? isDeleted;
 
   const UserAccountEntity({
     required this.userId,
@@ -21,10 +29,17 @@ class UserAccountEntity extends Equatable {
     this.joinDate,
     this.photo,
     this.isActive,
-    this.mitraId,
+    required this.partner,
     this.roleId,
     this.menuAuth,
     this.isInitiate,
+    this.createdBy,
+    this.createdDate,
+    this.updatedBy,
+    this.updatedDate,
+    this.deletedBy,
+    this.deletedDate,
+    this.isDeleted,
   });
 
   UserAccountEntity copyWith({
@@ -35,10 +50,17 @@ class UserAccountEntity extends Equatable {
     DateTime? joinDate,
     String? photo,
     bool? isActive,
-    String? mitraId,
+    PartnerEntity? partner,
     String? roleId,
     List<String>? menuAuth,
     bool? isInitiate,
+    String? createdBy,
+    DateTime? createdDate,
+    String? updatedBy,
+    DateTime? updatedDate,
+    String? deletedBy,
+    DateTime? deletedDate,
+    bool? isDeleted,
   }) {
     return UserAccountEntity(
       userId: userId ?? this.userId,
@@ -48,14 +70,22 @@ class UserAccountEntity extends Equatable {
       joinDate: joinDate ?? this.joinDate,
       photo: photo ?? this.photo,
       isActive: isActive ?? this.isActive,
-      mitraId: mitraId ?? this.mitraId,
+      partner: partner ?? this.partner,
       roleId: roleId ?? this.roleId,
       menuAuth: menuAuth ?? this.menuAuth,
       isInitiate: isInitiate ?? this.isInitiate,
+      createdBy: createdBy ?? this.createdBy,
+      createdDate: createdDate ?? this.createdDate,
+      updatedBy: updatedBy ?? this.updatedBy,
+      updatedDate: updatedDate ?? this.updatedDate,
+      deletedBy: deletedBy ?? this.deletedBy,
+      deletedDate: deletedDate ?? this.deletedDate,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 
-  static const empty = UserAccountEntity(userId: '');
+  static const empty =
+      UserAccountEntity(userId: '', partner: PartnerEntity.empty);
 
   bool get isEmpty => this == UserAccountEntity.empty;
   bool get isNotEmpty => this != UserAccountEntity.empty;
@@ -69,9 +99,16 @@ class UserAccountEntity extends Equatable {
         photo,
         joinDate,
         isActive,
-        mitraId,
+        partner,
         roleId,
         menuAuth,
-        isInitiate
+        isInitiate,
+        createdBy,
+        createdDate,
+        updatedBy,
+        updatedDate,
+        deletedBy,
+        deletedDate,
+        isDeleted,
       ];
 }

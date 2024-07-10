@@ -4,7 +4,6 @@ import 'package:project_nineties/features/authentication/presentation/pages/auth
 import 'package:project_nineties/features/authentication/presentation/pages/forgot_password_page.dart';
 import 'package:project_nineties/features/authentication/presentation/pages/signup_page.dart';
 import 'package:project_nineties/features/main/presentation/pages/main_dashboard.dart';
-import 'package:project_nineties/features/partner/presentation/pages/partner_page.dart';
 
 List<Page<dynamic>> onGenerateAppViewPages(
   AppStatus state,

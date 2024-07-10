@@ -34,3 +34,11 @@ final class PartnerLoadFailure extends PartnerState {
   @override
   List<Object> get props => [];
 }
+
+final class PartnerLoadDataSuccess extends PartnerState {
+  final List<PartnerEntity> data;
+  const PartnerLoadDataSuccess({required this.data});
+
+  @override
+  List<Object> get props => [data];
+}

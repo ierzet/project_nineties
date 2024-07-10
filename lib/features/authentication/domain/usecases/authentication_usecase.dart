@@ -2,8 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/repositories/authentication_repository.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
+import 'package:project_nineties/features/authentication/domain/usecases/authentication_params.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/user_dynamic.dart';
 
 class AuthenticationUseCase {
@@ -13,18 +12,19 @@ class AuthenticationUseCase {
 
   // Authenticate user using email and password
   Future<Either<Failure, UserDynamic>> authenticateEmailAndPassword(
-      String email, String password) {
-    final credential = LoginAuthentication(email: email, password: password);
-    return authenticationRepository.authenticateEmailAndPassword(credential);
+      AuthenticationParams params) {
+    return authenticationRepository.authenticateEmailAndPassword(params);
   }
 
   // Register a new user
   Future<Either<Failure, String>> register(
-    RegisterAuthentication credential,
+    AuthenticationParams params,
   ) async {
     final registerResult =
-        authenticationRepository.signUpEmailAndPassword(credential);
+        authenticationRepository.signUpEmailAndPassword(params);
     return registerResult;
+    //
+    // return Right('params: $params');
   }
 
   // Authenticate user using Google Sign-In

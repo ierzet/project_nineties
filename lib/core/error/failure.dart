@@ -8,6 +8,10 @@ abstract class Failure extends Equatable {
   List<Object?> get props => [message];
 }
 
+class RegisteringPartnerFailure extends Failure {
+  const RegisteringPartnerFailure(super.message);
+}
+
 class AddToCartFailure extends Failure {
   const AddToCartFailure(super.message);
 }
@@ -26,6 +30,10 @@ class ConnectionFailure extends Failure {
 
 class DatabaseFailure extends Failure {
   const DatabaseFailure(super.message);
+}
+
+class SharedPreferenceFailure extends Failure {
+  const SharedPreferenceFailure(super.message);
 }
 
 class LogInWithEmailAndPasswordFailure extends Failure {

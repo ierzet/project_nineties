@@ -26,7 +26,7 @@ class _PartnerPlatformAvatarPickerState
           _image = newImage;
           final currentState =
               context.read<PartnerValidatorBloc>().state.partnerParams;
-          context.read<PartnerValidatorBloc>().add(PartnerValidatorBlocEvent(
+          context.read<PartnerValidatorBloc>().add(PartnerValidatorForm(
               partnerParams: currentState.copyWith(partnerAvatarFile: _image)));
         });
       }
@@ -45,7 +45,7 @@ class _PartnerPlatformAvatarPickerState
       _image = null;
       final currentState =
           context.read<PartnerValidatorBloc>().state.partnerParams;
-      context.read<PartnerValidatorBloc>().add(PartnerValidatorBlocEvent(
+      context.read<PartnerValidatorBloc>().add(PartnerValidatorForm(
           partnerParams: currentState.copyWith(partnerAvatarFile: null)));
     });
   }

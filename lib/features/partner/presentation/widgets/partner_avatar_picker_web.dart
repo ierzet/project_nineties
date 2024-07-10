@@ -38,12 +38,13 @@ class _PartnerPlatformAvatarPickerState
           _webImage = _webImage;
           final currentState =
               context.read<PartnerValidatorBloc>().state.partnerParams;
-          context.read<PartnerValidatorBloc>().add(PartnerValidatorBlocEvent(
+          context.read<PartnerValidatorBloc>().add(PartnerValidatorForm(
               partnerParams:
                   currentState.copyWith(partnerAvatarFileWeb: pickedFile)));
         });
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to pick image: $e'),
@@ -57,7 +58,7 @@ class _PartnerPlatformAvatarPickerState
       _webImage = null;
       final currentState =
           context.read<PartnerValidatorBloc>().state.partnerParams;
-      context.read<PartnerValidatorBloc>().add(PartnerValidatorBlocEvent(
+      context.read<PartnerValidatorBloc>().add(PartnerValidatorForm(
           partnerParams: currentState.copyWith(partnerAvatarFileWeb: null)));
     });
   }

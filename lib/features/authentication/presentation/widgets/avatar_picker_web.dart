@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator/authentication_validator_bloc.dart';
+
 import 'package:universal_html/html.dart';
 
 class PlatformAvatarPicker extends StatefulWidget {
@@ -34,15 +34,15 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
         _webImage = await loadImage(pickedFile);
         setState(() {
           _webImage = _webImage;
-          final currentState = context.read<AuthValidatorCubit>().state;
-          context.read<AuthValidatorCubit>().validateSignupCredentials(
-              email: currentState.email,
-              password: currentState.password,
-              name: currentState.name,
-              confirmedPassword: currentState.confirmedPassword,
-              avatarFile: currentState.avatarFile,
-              avatarFileWeb: pickedFile,
-              isWeb: true);
+          final currentState =
+              context.read<AuthenticationValidatorBloc>().state.params;
+          context
+              .read<AuthenticationValidatorBloc>()
+              .add(AuthenticationValidatorForm(
+                  params: currentState.copyWith(
+                avatarFileWeb: pickedFile,
+                isWeb: true,
+              )));
         });
       }
     } catch (e) {
@@ -59,15 +59,16 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
     setState(() {
       _webImage = null;
       // Handle the Cubit state update for web
-      final currentState = context.read<AuthValidatorCubit>().state;
-      context.read<AuthValidatorCubit>().validateSignupCredentials(
-          email: currentState.email,
-          password: currentState.password,
-          name: currentState.name,
-          confirmedPassword: currentState.confirmedPassword,
-          avatarFile: currentState.avatarFile,
-          avatarFileWeb: null,
-          isWeb: true);
+      final currentState =
+          context.read<AuthenticationValidatorBloc>().state.params;
+
+      context
+          .read<AuthenticationValidatorBloc>()
+          .add(AuthenticationValidatorForm(
+              params: currentState.copyWith(
+            avatarFileWeb: null,
+            isWeb: true,
+          )));
     });
   }
 

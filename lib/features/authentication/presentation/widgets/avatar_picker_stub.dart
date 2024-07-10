@@ -7,11 +7,11 @@ class PlatformAvatarPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return const SizedBox(
       height: 150,
       width: 150,
       // color: Colors.red,
-      child: const Center(child: Text('Unsupported platform')),
+      child: Center(child: Text('Unsupported platform')),
     );
   }
 }

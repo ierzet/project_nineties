@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator/authentication_validator_bloc.dart';
 
 class AccountWidget extends StatelessWidget {
   const AccountWidget({super.key});
@@ -21,6 +22,7 @@ class AccountWidget extends StatelessWidget {
       );
     }
     final userModel = UserEntity.fromFirebaseUser(user);
+    final appBloc = context.read<AppBloc>().state.user;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -28,30 +30,56 @@ class AccountWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundImage:
-                    userModel.photo != null && userModel.photo!.isNotEmpty
-                        ? NetworkImage(userModel.photo!)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundImage:
+                        userModel.photo != null && userModel.photo!.isNotEmpty
+                            ? NetworkImage(userModel.photo!)
+                            : null,
+                    radius: 100,
+                    child: userModel.photo == null || userModel.photo!.isEmpty
+                        ? const Text(
+                            'Failed to load image',
+                            textAlign: TextAlign.center,
+                          )
                         : null,
-                radius: 100,
-                child: userModel.photo == null || userModel.photo!.isEmpty
-                    ? const Text(
-                        'Failed to load image',
-                        textAlign: TextAlign.center,
-                      )
-                    : null,
+                  ),
+                  CircleAvatar(
+                    backgroundImage:
+                        appBloc.photo != null && appBloc.photo!.isNotEmpty
+                            ? NetworkImage(userModel.photo!)
+                            : null,
+                    radius: 100,
+                    child: appBloc.photo == null || appBloc.photo!.isEmpty
+                        ? const Text(
+                            'Failed to load image',
+                            textAlign: TextAlign.center,
+                          )
+                        : null,
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Text('Name: ${userModel.name}'),
               const SizedBox(height: 8),
               Text('Email: ${userModel.email}'),
               const SizedBox(height: 16),
+              Text('Name bloc: ${appBloc.name}'),
+              const SizedBox(height: 16),
+              Text('Email bloc: ${appBloc.email}'),
+              const SizedBox(height: 16),
+              Text('ID Bloc: ${userModel.id}'),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
                   context
+                      .read<AuthenticationValidatorBloc>()
+                      .add(const AuthenticationClearValidator());
+                  context
                       .read<AuthenticationBloc>()
                       .add(const AuthUserLogOut());
-                  context.read<AuthValidatorCubit>().clearValidation();
                 },
                 child: const Text('Sign out'),
               ),

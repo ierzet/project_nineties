@@ -5,10 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/core/utilities/route.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/pages/authentication_page.dart';
-import 'package:project_nineties/features/authentication/presentation/pages/forgot_password_page.dart';
-import 'package:project_nineties/features/authentication/presentation/pages/signup_page.dart';
-import 'package:project_nineties/features/main/presentation/pages/main_dashboard.dart';
 
 class AppSetup extends StatelessWidget {
   const AppSetup({super.key});

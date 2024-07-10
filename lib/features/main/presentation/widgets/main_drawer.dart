@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -20,13 +19,40 @@ class MainDrawer extends StatelessWidget {
               style: AppStyles.drawerHeaderText,
             ),
           ),
-          ListTile(
+          ExpansionTile(
             leading: const Icon(Icons.person),
             title: Text(
               'User',
               style: AppStyles.drawerItemText,
             ),
-            onTap: () {},
+            childrenPadding: const EdgeInsets.only(
+                left: 16.0), // Optional for better alignment
+            children: [
+              ListTile(
+                leading: const Icon(Icons.view_list),
+                title: Text(
+                  'View Users',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context.read<NavigationCubit>().updateSubMenu('view_users');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.approval),
+                title: Text(
+                  'User Approvals',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context
+                      .read<NavigationCubit>()
+                      .updateSubMenu('user_approvals');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+            ],
           ),
           ListTile(
             leading: const Icon(Icons.business),
@@ -34,8 +60,10 @@ class MainDrawer extends StatelessWidget {
               'Partner',
               style: AppStyles.drawerItemText,
             ),
-            onTap: () =>
-                context.read<NavigationCubit>().updateSubMenu('partner'),
+            onTap: () {
+              context.read<NavigationCubit>().updateSubMenu('partner');
+              Scaffold.of(context).closeDrawer();
+            },
           ),
           ListTile(
             leading: const Icon(Icons.people),

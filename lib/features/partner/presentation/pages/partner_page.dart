@@ -80,7 +80,6 @@ class PartnerRegistrationPage extends StatelessWidget {
               SizedBox(height: AppPadding.halfPadding.h * 3),
               const PartnerSubmitButton(),
               SizedBox(height: AppPadding.triplePadding),
-
               const ListenerNotificationPartner(),
             ],
           ),

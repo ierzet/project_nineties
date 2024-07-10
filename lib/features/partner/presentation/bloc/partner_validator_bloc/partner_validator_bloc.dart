@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 
@@ -8,12 +9,17 @@ part 'partner_validator_bloc_event.dart';
 class PartnerValidatorBloc
     extends Bloc<PartnerValidatorBlocEvent, PartnerValidatorBlocState> {
   PartnerValidatorBloc() : super(PartnerValidatorBlocState.empty) {
-    on<PartnerValidatorBlocEvent>(_onPartnerValidatorBlocEvent);
+    on<PartnerValidatorForm>(_onPartnerValidatorForm);
+    on<PartnerClearValidator>(_onPartnerClearValidator);
   }
-  void _onPartnerValidatorBlocEvent(PartnerValidatorBlocEvent event,
+  void _onPartnerValidatorForm(PartnerValidatorForm event,
       Emitter<PartnerValidatorBlocState> emit) async {
-    //print('event: ${event.partnerParams}');
-
     emit(PartnerValidatorBlocState(partnerParams: event.partnerParams));
+  }
+
+  void _onPartnerClearValidator(PartnerClearValidator event,
+      Emitter<PartnerValidatorBlocState> emit) async {
+    //TODO:add clear textfield here
+    emit(PartnerValidatorBlocState.empty);
   }
 }

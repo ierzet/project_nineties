@@ -40,7 +40,7 @@ class PartnerCustomTextField extends StatelessWidget {
         partnerJoinDate: partnerParams.partnerJoinDate != DateTime(1970, 1, 1)
             ? partnerParams.partnerJoinDate
             : DateTime.now(),
-        partnerCreatedBy: partnerParams.partnerCreatedBy ?? currentUser.id,
+        partnerCreatedBy: currentUser.id,
         partnerCreatedDate: partnerParams.partnerCreatedDate ?? DateTime.now(),
         partnerIsDeleted: partnerParams.partnerIsDeleted ?? false,
       );
@@ -65,7 +65,7 @@ class PartnerCustomTextField extends StatelessWidget {
 
       context
           .read<PartnerValidatorBloc>()
-          .add(PartnerValidatorBlocEvent(partnerParams: updatedParams));
+          .add(PartnerValidatorForm(partnerParams: updatedParams));
     }
 
     List<TextInputFormatter> getInputFormatters() {

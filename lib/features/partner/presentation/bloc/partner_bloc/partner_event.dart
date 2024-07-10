@@ -7,13 +7,21 @@ sealed class PartnerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class AdminRegPartnerClicked extends PartnerEvent {
+class AdminRegPartnerClicked extends PartnerEvent {
   final PartnerParams params;
-
+  final BuildContext context;
   const AdminRegPartnerClicked({
+    required this.context,
     required this.params,
   });
 
   @override
-  List<Object> get props => [params];
+  List<Object> get props => [context, params];
+}
+
+class PartnerGetData extends PartnerEvent {
+  const PartnerGetData();
+
+  @override
+  List<Object> get props => [];
 }

@@ -22,7 +22,7 @@ class PartnerJoinDateCubit extends Cubit<DateTime> {
 
     if (date != null) {
       final partnerParams = partnerValidatorBloc.state.partnerParams;
-      partnerValidatorBloc.add(PartnerValidatorBlocEvent(
+      partnerValidatorBloc.add(PartnerValidatorForm(
           partnerParams: partnerParams.copyWith(partnerJoinDate: date)));
       emit(date);
     }

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/authentication/presentation/cubit/auth_validator_cubit.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator/authentication_validator_bloc.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -20,7 +20,8 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onChanged(value) {
-      final currentState = context.read<AuthValidatorCubit>().state;
+      final currentState =
+          context.read<AuthenticationValidatorBloc>().state.params;
       final email = type == InputType.email ? value : currentState.email;
       final password =
           type == InputType.password ? value : currentState.password;
@@ -28,13 +29,20 @@ class CustomTextField extends StatelessWidget {
       final confirmedPassword = type == InputType.confirmedPassword
           ? value
           : currentState.confirmedPassword;
+
       authFormType == AuthenticationFormType.signin
-          ? context.read<AuthValidatorCubit>().validateAuthCredentials(
+          ? context
+              .read<AuthenticationValidatorBloc>()
+              .add(AuthenticationValidatorForm(
+                  params: currentState.copyWith(
                 email: email,
                 password: password,
-              )
+              )))
           : authFormType == AuthenticationFormType.signup
-              ? context.read<AuthValidatorCubit>().validateSignupCredentials(
+              ? context
+                  .read<AuthenticationValidatorBloc>()
+                  .add(AuthenticationValidatorForm(
+                      params: currentState.copyWith(
                     email: email,
                     password: password,
                     name: name,
@@ -42,19 +50,21 @@ class CustomTextField extends StatelessWidget {
                     avatarFile: currentState.avatarFile,
                     avatarFileWeb: currentState.avatarFileWeb,
                     isWeb: currentState.isWeb,
-                  )
+                  )))
               : context
-                  .read<AuthValidatorCubit>()
-                  .validateForgotPasswordCredential(email: email);
+                  .read<AuthenticationValidatorBloc>()
+                  .add(AuthenticationValidatorForm(
+                      params: currentState.copyWith(
+                    email: email,
+                  )));
     }
 
     final bool obscureText =
         type == InputType.password || type == InputType.confirmedPassword;
     final List<TextInputFormatter> inputFormatters = [
       LengthLimitingTextInputFormatter(100),
-      type == InputType.email
-          ? FilteringTextInputFormatter.allow(RegExp(r'[0-9@a-zA-Z.]'))
-          : FilteringTextInputFormatter.deny(RegExp(r'[\s]')),
+      if (type == InputType.email)
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9@a-zA-Z.]')),
     ];
 
     final keyboardType = type == InputType.name
@@ -95,15 +105,16 @@ class CustomTextField extends StatelessWidget {
       hintStyle: const TextStyle(
           // color: AppColors.textColor,
           ),
-      suffixIcon: BlocBuilder<AuthValidatorCubit, AuthValidatorCubitState>(
+      suffixIcon: BlocBuilder<AuthenticationValidatorBloc,
+          AuthenticationValidatorState>(
         builder: (context, state) {
           final isValid = type == InputType.name
-              ? state.nameIsValid
+              ? state.params.isNameValid
               : type == InputType.email
-                  ? state.emailIsValid
+                  ? state.params.isEmailValid
                   : type == InputType.password
-                      ? state.passwordIsValid
-                      : state.confirmedPasswordIsValid;
+                      ? state.params.isPasswordValid
+                      : state.params.isConfirmedPasswordValid;
 
           return isValid
               ? const Icon(

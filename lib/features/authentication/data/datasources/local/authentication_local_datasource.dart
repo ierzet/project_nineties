@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,13 +24,17 @@ class AuthenticationLocalDataSourceImpl
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userAccount', json.encode(userAccountJson));
       } else {
-        throw const LogInWithEmailAndPasswordFailure(
+        throw const SharedPreferenceFailure(
             'Current user is null after authentication.');
       }
-    } on FirebaseException catch (e) {
-      throw FireBaseCatchFailure.fromCode(e.code);
-    } catch (_) {
-      throw const FireBaseCatchFailure();
+    } catch (e) {
+      if (e is SharedPreferenceFailure) {
+        await _firebaseAuth.signOut();
+        rethrow;
+      } else {
+        await _firebaseAuth.signOut();
+        throw SharedPreferenceFailure(e.toString());
+      }
     }
   }
 

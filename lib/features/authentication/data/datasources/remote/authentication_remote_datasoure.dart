@@ -8,119 +8,129 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
-import 'package:project_nineties/features/authentication/data/models/user_model.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/login_authentication.dart';
-import 'package:project_nineties/features/authentication/domain/usecases/register_authentication.dart';
+import 'package:project_nineties/features/authentication/domain/usecases/authentication_params.dart';
 import 'package:universal_html/html.dart' as html;
 
 abstract class AuthenticationRemoteDataSource {
-  Future<String> signUpEmailAndPassword(RegisterAuthentication credential);
-  Future<UserModel> authenticateEmailAndPassword(
-      LoginAuthentication credential);
-  Future<UserModel> authenticateGoogleSignin();
-  Future<UserModel> authenticateFacebookSignin();
-  Future<UserAccountModel> updateUserAccountFireStore();
+  Future signUpEmailAndPassword(AuthenticationParams params);
+  Future uploadFileImageAndUpdateProfile(AuthenticationParams params);
+  Future<User> authenticateEmailAndPassword(AuthenticationParams params);
+  Future<User> authenticateGoogleSignin();
+  Future<User> authenticateFacebookSignin();
+  Future<UserAccountModel> initiateUserAccountFireStore({
+    required bool isInitiate,
+  });
   Future<DocumentSnapshot<Map<String, dynamic>>> getDataById(String userId);
   Future<UserAccountModel> getUserAccountById(String uid);
   Future<String> onLogOut();
   Future<String> resetPassword(String email);
+  Future sendEmailNotification();
 }
 
 class AuthenticationRemoteDataSourceImpl
     implements AuthenticationRemoteDataSource {
   final firebase_auth.FirebaseAuth _firebaseAuth;
+
   final FirebaseFirestore _firestore;
   final FirebaseStorage _firebaseStorage;
 
   AuthenticationRemoteDataSourceImpl(
-      this._firebaseAuth, this._firestore, this._firebaseStorage);
+    this._firebaseAuth,
+    this._firestore,
+    this._firebaseStorage,
+  );
 
   @override
-  Future<String> signUpEmailAndPassword(
-    RegisterAuthentication credential,
-  ) async {
+  Future signUpEmailAndPassword(AuthenticationParams params) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
-          email: credential.email, password: credential.password);
+          email: params.email, password: params.password);
+    } on FirebaseAuthException catch (e) {
+      await _firebaseAuth.signOut();
+      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+    } catch (e) {
+      if (e is SignUpWithEmailAndPasswordFailure) {
+        await _firebaseAuth.signOut();
+        rethrow;
+      } else {
+        await _firebaseAuth.signOut();
+        throw const SignUpWithEmailAndPasswordFailure();
+      }
+    }
+  }
 
+  @override
+  Future uploadFileImageAndUpdateProfile(AuthenticationParams params) async {
+    try {
       final user = _firebaseAuth.currentUser;
       if (user == null) {
-        debugPrint('User is null after registration');
         return 'User registration failed';
       }
-
       String downloadUrl = '';
-      if (credential.isWeb == true && credential.avatarWeb != null) {
-        final blob = html.Blob([credential.avatarWeb!]);
+      if (params.isWeb == true && params.avatarFileWeb != null) {
+        final blob = html.Blob([params.avatarFileWeb!]);
         var snapshot = await _firebaseStorage
             .ref()
             .child('user_image/user_profile/${user.uid}')
             .putBlob(blob);
         downloadUrl = await snapshot.ref.getDownloadURL();
-      } else if (credential.avatar != null) {
+      } else if (params.avatarFile != null) {
         var snapshot = await _firebaseStorage
             .ref()
             .child('user_image/user_profile/${user.uid}')
-            .putFile(credential.avatar!);
+            .putFile(params.avatarFile!);
         downloadUrl = await snapshot.ref.getDownloadURL();
       }
-
       await user.updateProfile(
-        displayName: credential.name,
+        displayName: params.name,
         photoURL: downloadUrl.isNotEmpty ? downloadUrl : null,
       );
-
-      final userAccountData = {
-        'email': credential.email,
-        'name': credential.name,
-        'photo': downloadUrl,
-        'mitra_id': credential.mitraId,
-        'isInitiate': true,
-      };
-
-      await _firestore
-          .collection('UserAccount')
-          .doc(user.uid)
-          .set(userAccountData);
-
-      // Send email verification
-      await user.sendEmailVerification();
-
-      await _firebaseAuth.signOut();
-
-      return 'User has been registered. Please verify your email address.';
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      debugPrint('FirebaseAuthException: ${e.code}');
-      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
-    } catch (error) {
-      debugPrint('Exception: $error');
-      throw const SignUpWithEmailAndPasswordFailure();
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseStorageFailure.fromCode(e.code);
+    } catch (e) {
+      if (e is FirebaseStorageFailure) {
+        rethrow;
+      } else {
+        throw const FirebaseStorageFailure();
+      }
     }
   }
 
   @override
-  Future<UserModel> authenticateEmailAndPassword(
-      LoginAuthentication credential) async {
+  Future<String> sendEmailNotification() async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null) {
+      return 'User registration failed';
+    }
+    await user.sendEmailVerification();
+
+    await _firebaseAuth.signOut();
+    // return 'User has been registered. Please verify your email address.';
+    return 'Your user has been send appproval request. Please verify your email address and wait until admin approval your request';
+  }
+
+  @override
+  Future<User> authenticateEmailAndPassword(AuthenticationParams params) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
-          email: credential.email, password: credential.password);
-      final user = _firebaseAuth.currentUser;
+          email: params.email, password: params.password);
+      final currentUser = _firebaseAuth.currentUser;
 
       //menggunakan verifikasi email
-      // if (user == null || !user.emailVerified) {
-      //   await _firebaseAuth.signOut();
-      //   throw LogInWithEmailAndPasswordFailure(user == null
-      //       ? 'Current user is null after authentication.'
-      //       : 'Please verify your email address to log in.');
-      // }
-      //tanpa verifikasi email
-      if (user == null) {
+      if (currentUser == null || !currentUser.emailVerified) {
         await _firebaseAuth.signOut();
-        throw const LogInWithEmailAndPasswordFailure(
-            'Current user is null after authentication.');
+        throw LogInWithEmailAndPasswordFailure(currentUser == null
+            ? 'Current user is null after authentication.'
+            : 'Please verify your email address to log in.');
       }
+      //tanpa verifikasi email
+      // if (currentUser == null) {
+      //   await _firebaseAuth.signOut();
+      //   throw const LogInWithEmailAndPasswordFailure(
+      //       'Current user is null after authentication.');
+      // }
 
-      return UserModel.fromFirebaseUser(user);
+      return currentUser;
     } on FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (e) {
@@ -133,22 +143,20 @@ class AuthenticationRemoteDataSourceImpl
   }
 
   @override
-  Future<UserModel> authenticateGoogleSignin() async {
+  Future<User> authenticateGoogleSignin() async {
     try {
       if (kIsWeb) {
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         googleProvider
             .addScope('https://www.googleapis.com/auth/contacts.readonly');
-        googleProvider
-            .setCustomParameters({'login_hint': 'example@example.com'});
+        googleProvider.setCustomParameters({'login_hint': ''});
 
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithPopup(googleProvider);
         final currentUser = userCredential.user;
 
         if (currentUser != null) {
-          final user = UserModel.fromFirebaseUser(currentUser);
-          return user;
+          return currentUser;
         } else {
           throw const LogInWithGoogleFailure(
               'Current user is null after authentication.');
@@ -170,8 +178,7 @@ class AuthenticationRemoteDataSourceImpl
         final currentUser = _firebaseAuth.currentUser;
 
         if (currentUser != null) {
-          final user = UserModel.fromFirebaseUser(currentUser);
-          return user;
+          return currentUser;
         } else {
           throw const LogInWithGoogleFailure(
               'Current user is null after authentication.');
@@ -179,13 +186,19 @@ class AuthenticationRemoteDataSourceImpl
       }
     } on FirebaseAuthException catch (e) {
       throw LogInWithGoogleFailure.fromCode(e.code);
-    } catch (_) {
-      throw const LogInWithGoogleFailure();
+    } catch (e) {
+      if (e is LogInWithGoogleFailure) {
+        await _firebaseAuth.signOut();
+        rethrow;
+      } else {
+        await _firebaseAuth.signOut();
+        throw const LogInWithGoogleFailure();
+      }
     }
   }
 
   @override
-  Future<UserModel> authenticateFacebookSignin() async {
+  Future<User> authenticateFacebookSignin() async {
     try {
       if (kIsWeb) {
         FacebookAuthProvider facebookProvider = FacebookAuthProvider();
@@ -197,8 +210,7 @@ class AuthenticationRemoteDataSourceImpl
         final currentUser = userCredential.user;
 
         if (currentUser != null) {
-          final user = UserModel.fromFirebaseUser(currentUser);
-          return user;
+          return currentUser;
         } else {
           throw const LogInWithGoogleFailure(
               'Current user is null after authentication.');
@@ -215,8 +227,7 @@ class AuthenticationRemoteDataSourceImpl
           final currentUser = userCredential.user;
 
           if (currentUser != null) {
-            final user = UserModel.fromFirebaseUser(currentUser);
-            return user;
+            return currentUser;
           } else {
             throw const LogInWithGoogleFailure(
                 'Current user is null after authentication.');
@@ -227,29 +238,29 @@ class AuthenticationRemoteDataSourceImpl
       }
     } on FirebaseAuthException catch (e) {
       throw LogInWithGoogleFailure.fromCode(e.code);
-    } catch (_) {
-      throw const LogInWithGoogleFailure();
+    } catch (e) {
+      if (e is LogInWithGoogleFailure) {
+        await _firebaseAuth.signOut();
+        rethrow;
+      } else {
+        await _firebaseAuth.signOut();
+        throw const LogInWithGoogleFailure();
+      }
     }
   }
 
   @override
-  Future<UserAccountModel> updateUserAccountFireStore() async {
+  Future<UserAccountModel> initiateUserAccountFireStore({
+    required bool isInitiate,
+  }) async {
     try {
       final currentUser = _firebaseAuth.currentUser;
-
       if (currentUser != null) {
         final userAccount = UserAccountModel.fromFirebaseUser(currentUser);
-        final userAccountData = {
-          'email': userAccount.email,
-          'name': userAccount.name,
-          'photo': userAccount.photo,
-          'isInitiate': false
-        };
 
-        await _firestore
-            .collection('UserAccount')
-            .doc(userAccount.userId)
-            .set(userAccountData);
+        await _firestore.collection('user_account').doc(userAccount.userId).set(
+            userAccount.initiateUserAccountToFirestore(
+                isInitiate, currentUser.uid));
 
         return userAccount;
       } else {
@@ -268,26 +279,25 @@ class AuthenticationRemoteDataSourceImpl
       String userId) async {
     try {
       final result =
-          await _firestore.collection('UserAccount').doc(userId).get();
-      if (result.exists) {
-        final updateFirestore = UserAccountModel.fromFirestore(result);
-        await _firestore
-            .collection('UserAccount')
-            .doc(updateFirestore.userId)
-            .set(updateFirestore.toFirestore());
-      }
+          await _firestore.collection('user_account').doc(userId).get();
       return result;
     } on FirebaseException catch (e) {
       throw FireBaseCatchFailure.fromCode(e.code);
-    } catch (_) {
-      throw const FireBaseCatchFailure();
+    } catch (e) {
+      if (e is FireBaseCatchFailure) {
+        await _firebaseAuth.signOut();
+        rethrow;
+      } else {
+        await _firebaseAuth.signOut();
+        throw const FireBaseCatchFailure();
+      }
     }
   }
 
   @override
   Future<UserAccountModel> getUserAccountById(String uid) async {
     try {
-      final result = await _firestore.collection('UserAccount').doc(uid).get();
+      final result = await _firestore.collection('user_account').doc(uid).get();
       return result.exists
           ? UserAccountModel.fromFirestore(result)
           : UserAccountModel.empty;
@@ -302,6 +312,7 @@ class AuthenticationRemoteDataSourceImpl
   Future<String> onLogOut() async {
     try {
       await _firebaseAuth.signOut();
+
       return 'LogOut Succed';
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw AuthInitializeFailure.fromCode(e.code);
@@ -322,202 +333,3 @@ class AuthenticationRemoteDataSourceImpl
     }
   }
 }
-
-
-
-  // @override
-  // Future<String> signUpEmailAndPassword(
-  //   RegisterAuthentication credential,
-  // ) async {
-  //   try {
-  //     await _firebaseAuth.createUserWithEmailAndPassword(
-  //         email: credential.email, password: credential.password);
-
-  //     final user = _firebaseAuth.currentUser;
-  //     if (user != null) {
-  //       if (credential.isWeb != null && credential.isWeb == true) {
-  //         // Web
-  //         if (credential.avatarWeb != null) {
-  //           // Convert Uint8List to Blob
-  //           final blob = html.Blob([credential.avatarWeb!]);
-
-  //           // Upload to Firebase Storage
-  //           var snapshot = await _firebaseStorage
-  //               .ref()
-  //               .child('user_image/user_profile/${user.uid}')
-  //               .putBlob(blob);
-
-  //           // Get download URL
-  //           String downloadUrl = await snapshot.ref.getDownloadURL();
-
-  //           // Update user photo URL
-  //           await user.updateProfile(
-  //               displayName: credential.name, photoURL: downloadUrl);
-  //           //await user.updatePhotoURL(downloadUrl);
-
-  //           // Prepare user account data
-  //           final userAccountData = {
-  //             'email': credential.email,
-  //             'name': credential.name,
-  //             'photo': downloadUrl,
-  //             'mitra_id': credential.mitraId,
-  //             'isInitiate': true,
-  //           };
-
-  //           // Save to Firestore
-  //           await _firestore
-  //               .collection('UserAccount')
-  //               .doc(user.uid)
-  //               .set(userAccountData);
-  //         } else {
-  //           // Avatar web is null
-  //           final userAccountData = {
-  //             'email': credential.email,
-  //             'name': credential.name,
-  //             'photo': '',
-  //             'mitra_id': credential.mitraId,
-  //             'isInitiate': true,
-  //           };
-  //           await _firestore
-  //               .collection('UserAccount')
-  //               .doc(user.uid)
-  //               .set(userAccountData);
-  //         }
-  //       } else {
-  //         // Mobile
-
-  //         if (credential.avatar != null) {
-  //           var snapshot = await _firebaseStorage
-  //               .ref()
-  //               .child('user_image/user_profile/${user.uid}')
-  //               .putFile(credential.avatar!);
-
-  //           String downloadUrl = await snapshot.ref.getDownloadURL();
-  //           await user.updateProfile(
-  //               displayName: credential.name, photoURL: downloadUrl);
-  //           //await user.updatePhotoURL(downloadUrl);
-
-  //           final userAccountData = {
-  //             'email': credential.email,
-  //             'name': credential.name,
-  //             'photo': downloadUrl,
-  //             'mitra_id': credential.mitraId,
-  //             'isInitiate': true,
-  //           };
-
-  //           await _firestore
-  //               .collection('UserAccount')
-  //               .doc(user.uid)
-  //               .set(userAccountData);
-  //         } else {
-  //           final userAccountData = {
-  //             'email': credential.email,
-  //             'name': credential.name,
-  //             'photo': '',
-  //             'mitra_id': credential.mitraId,
-  //             'isInitiate': true,
-  //           };
-  //           await user.updateProfile(displayName: credential.name);
-  //           await _firestore
-  //               .collection('UserAccount')
-  //               .doc(user.uid)
-  //               .set(userAccountData);
-  //         }
-  //       }
-  //       await _firebaseAuth.signOut();
-  //     } else {
-  //       // User is null after registration
-  //       debugPrint('User is null after registration');
-  //     }
-  //     return 'User has been registered';
-  //   } on firebase_auth.FirebaseAuthException catch (e) {
-  //     debugPrint('FirebaseAuthException: ${e.code}');
-  //     throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
-  //   } catch (error) {
-  //     debugPrint('Exception: $error');
-  //     throw const SignUpWithEmailAndPasswordFailure();
-  //   }
-  // }
-
-
-  //////////////////////////////////////////////////////////
-  // WITHOUT VERIFYING EMAIL
-   //////////////////////////////////////////////////////////
-  // @override
-  // Future<String> signUpEmailAndPassword(
-  //   RegisterAuthentication credential,
-  // ) async {
-  //   try {
-  //     await _firebaseAuth.createUserWithEmailAndPassword(
-  //         email: credential.email, password: credential.password);
-
-  //     final user = _firebaseAuth.currentUser;
-  //     if (user == null) {
-  //       debugPrint('User is null after registration');
-  //       return 'User registration failed';
-  //     }
-
-  //     String downloadUrl = '';
-  //     if (credential.isWeb == true && credential.avatarWeb != null) {
-  //       final blob = html.Blob([credential.avatarWeb!]);
-  //       var snapshot = await _firebaseStorage
-  //           .ref()
-  //           .child('user_image/user_profile/${user.uid}')
-  //           .putBlob(blob);
-  //       downloadUrl = await snapshot.ref.getDownloadURL();
-  //     } else if (credential.avatar != null) {
-  //       var snapshot = await _firebaseStorage
-  //           .ref()
-  //           .child('user_image/user_profile/${user.uid}')
-  //           .putFile(credential.avatar!);
-  //       downloadUrl = await snapshot.ref.getDownloadURL();
-  //     }
-
-  //     await user.updateProfile(
-  //       displayName: credential.name,
-  //       photoURL: downloadUrl.isNotEmpty ? downloadUrl : null,
-  //     );
-
-  //     final userAccountData = {
-  //       'email': credential.email,
-  //       'name': credential.name,
-  //       'photo': downloadUrl,
-  //       'mitra_id': credential.mitraId,
-  //       'isInitiate': true,
-  //     };
-
-  //     await _firestore
-  //         .collection('UserAccount')
-  //         .doc(user.uid)
-  //         .set(userAccountData);
-
-  //     await _firebaseAuth.signOut();
-  //     return 'User has been registered';
-  //   } on firebase_auth.FirebaseAuthException catch (e) {
-  //     debugPrint('FirebaseAuthException: ${e.code}');
-  //     throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
-  //   } catch (error) {
-  //     debugPrint('Exception: $error');
-  //     throw const SignUpWithEmailAndPasswordFailure();
-  //   }
-  // }
-
-  //  @override
-  // Future<User> loginEmailAndPassword(String email, String password) async {
-  //   try {
-  //     await _firebaseAuth.signInWithEmailAndPassword(
-  //         email: email, password: password);
-  //     final result = _firebaseAuth.currentUser;
-
-  //     if (result != null) {
-  //       return result;
-  //     } else {
-  //       throw const LogInWithEmailAndPasswordFailure(
-  //           'Current user is null after authentication.');
-  //     }
-  //   } on firebase_auth.FirebaseAuthException catch (e) {
-  //     throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
-  //   } catch (_) {
-  //     throw const LogInWithEmailAndPasswordFailure();
-  //   }
-  // }

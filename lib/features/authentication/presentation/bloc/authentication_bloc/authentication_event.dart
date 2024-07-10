@@ -25,25 +25,21 @@ class AuthFacebookLogin extends AuthenticationEvent {
 }
 
 class AuthEmailAndPasswordLogIn extends AuthenticationEvent {
-  final String email;
-  final String password;
+  final AuthenticationParams params;
 
-  const AuthEmailAndPasswordLogIn({
-    required this.email,
-    required this.password,
-  });
+  const AuthEmailAndPasswordLogIn({required this.params});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [params];
 }
 
 class AuthUserSignUp extends AuthenticationEvent {
-  final RegisterAuthentication credential;
+  final AuthenticationParams params;
 
-  const AuthUserSignUp({required this.credential});
+  const AuthUserSignUp({required this.params});
 
   @override
-  List<Object> get props => [credential];
+  List<Object> get props => [params];
 }
 
 class AuthRegisterValidationChange extends AuthenticationEvent {

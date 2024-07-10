@@ -44,6 +44,13 @@ class AuthenticationLoaded extends AuthenticationState {
   List<Object> get props => [status, user];
 }
 
+class AuthenticationLogingOff extends AuthenticationState {
+  const AuthenticationLogingOff();
+
+  @override
+  List<Object> get props => [];
+}
+
 class AuthenticationRegistering extends AuthenticationState {
   const AuthenticationRegistering();
 
