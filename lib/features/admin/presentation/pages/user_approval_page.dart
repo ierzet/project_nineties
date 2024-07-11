@@ -33,15 +33,16 @@ class UserApprovalPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CircleAvatar(
-              backgroundImage: user.photo != null && user.photo!.isNotEmpty
-                  ? NetworkImage(user.photo!)
-                  : const AssetImage('assets/images/profile_empty.png')
-                      as ImageProvider,
+              backgroundImage:
+                  user.user.photo != null && user.user.photo!.isNotEmpty
+                      ? NetworkImage(user.user.photo!)
+                      : const AssetImage('assets/images/profile_empty.png')
+                          as ImageProvider,
               radius: 50,
             ),
             const SizedBox(height: 32),
             Text(
-              user.name ?? 'No Name',
+              user.user.name ?? 'No Name',
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -49,7 +50,7 @@ class UserApprovalPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              user.email ?? 'No Email',
+              user.user.email ?? 'No Email',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -188,7 +189,7 @@ class ApprovalButton extends StatelessWidget {
     // final updatedUserRead = context.read<AppBloc>().state.user;
     // final updatedUserWatch = context.watch<AppBloc>().state.user;
     // final updatedUserProvider = BlocProvider.of<AppBloc>(context).state.user;
-    final updatedUser = context.watch<AppBloc>().state.user.id;
+    final updatedUser = context.watch<AppBloc>().state.user.user.id;
     // print('updatedUser watch: $updatedUserWatch');
     // print('updatedUser read: $updatedUserRead');
     // print('updatedUser provider: $updatedUserProvider');

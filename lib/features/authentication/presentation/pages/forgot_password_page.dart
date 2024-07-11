@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/core/utilities/responsive_display.dart';
+import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/custom_text_field.dart';
@@ -85,7 +86,7 @@ class ForgotPasswordPage extends StatelessWidget {
                         GestureDetector(
                           onTap: () => context
                               .read<AppBloc>()
-                              .add(const AppUserChanged(UserEntity.empty)),
+                              .add(const AppUserChanged(UserAccountEntity.empty)),
                           child: Text('Sign In', style: AppStyles.accentText),
                         ),
                       ],

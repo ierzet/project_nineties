@@ -20,6 +20,9 @@ abstract class AuthenticationRemoteDataSource {
   Future<UserAccountModel> initiateUserAccountFireStore({
     required bool isInitiate,
   });
+  Future<UserAccountModel> initiateUserAccountFalseFireStore({
+    required UserAccountModel userAccount,
+  });
   Future<DocumentSnapshot<Map<String, dynamic>>> getDataById(String userId);
   Future<UserAccountModel> getUserAccountById(String uid);
   Future<String> onLogOut();
@@ -149,7 +152,9 @@ class AuthenticationRemoteDataSourceImpl
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         googleProvider
             .addScope('https://www.googleapis.com/auth/contacts.readonly');
-        googleProvider.setCustomParameters({'login_hint': ''});
+        // googleProvider.setCustomParameters({'login_hint': ''});
+        googleProvider
+            .setCustomParameters({'login_hint': 'example@example.com'});
 
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithPopup(googleProvider);
@@ -258,8 +263,10 @@ class AuthenticationRemoteDataSourceImpl
       if (currentUser != null) {
         final userAccount = UserAccountModel.fromFirebaseUser(currentUser);
 
-        await _firestore.collection('user_account').doc(userAccount.userId).set(
-            userAccount.initiateUserAccountToFirestore(
+        await _firestore
+            .collection('user_account')
+            .doc(userAccount.user.id)
+            .set(userAccount.initiateUserAccountToFirestore(
                 isInitiate, currentUser.uid));
 
         return userAccount;
@@ -267,6 +274,23 @@ class AuthenticationRemoteDataSourceImpl
         throw const LogInWithEmailAndPasswordFailure(
             'Current user is null after authentication.');
       }
+    } on FirebaseException catch (e) {
+      throw FireBaseCatchFailure.fromCode(e.code);
+    } catch (_) {
+      throw const FireBaseCatchFailure();
+    }
+  }
+
+  @override
+  Future<UserAccountModel> initiateUserAccountFalseFireStore({
+    required UserAccountModel userAccount,
+  }) async {
+    try {
+      await _firestore
+          .collection('user_account')
+          .doc(userAccount.user.id)
+          .set(userAccount.initiateUserAccountFalseFireStore());
+      return userAccount;
     } on FirebaseException catch (e) {
       throw FireBaseCatchFailure.fromCode(e.code);
     } catch (_) {

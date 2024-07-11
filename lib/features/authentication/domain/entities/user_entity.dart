@@ -6,6 +6,7 @@ class UserEntity extends Equatable {
   final String? email;
   final String? name;
   final String? photo;
+  final String? phoneNumber;
   final bool? isInitiate;
 
   const UserEntity({
@@ -13,6 +14,7 @@ class UserEntity extends Equatable {
     this.email,
     this.name,
     this.photo,
+    this.phoneNumber,
     this.isInitiate,
   });
 
@@ -22,6 +24,7 @@ class UserEntity extends Equatable {
       email: firebaseUser.email ?? '',
       name: firebaseUser.displayName ?? '',
       photo: firebaseUser.photoURL ?? '',
+      phoneNumber: firebaseUser.phoneNumber ?? '',
     );
   }
 
@@ -35,6 +38,7 @@ class UserEntity extends Equatable {
     String? email,
     String? name,
     String? photo,
+    String? phoneNumber,
     bool? isInitiate,
   }) {
     return UserEntity(
@@ -42,10 +46,18 @@ class UserEntity extends Equatable {
       email: email ?? this.email,
       name: name ?? this.name,
       photo: photo ?? this.photo,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       isInitiate: isInitiate ?? this.isInitiate,
     );
   }
 
   @override
-  List<Object?> get props => [id, email, name, photo, isInitiate];
+  List<Object?> get props => [
+        id,
+        email,
+        name,
+        photo,
+        phoneNumber,
+        isInitiate,
+      ];
 }

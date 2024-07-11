@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator/authentication_validator_bloc.dart';
@@ -84,7 +85,7 @@ class SignupPage extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           // Create an empty user to represent unauthenticated state
-                          const emptyUser = UserEntity.empty;
+                          const emptyUser = UserAccountEntity.empty;
                           context
                               .read<AppBloc>()
                               .add(const AppUserChanged(emptyUser));

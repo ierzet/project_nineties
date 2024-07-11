@@ -82,20 +82,19 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           : await authenticationRemoteDataSource.initiateUserAccountFireStore(
               isInitiate: false);
 
-      /* Jika is initiate true, ubah isInitiate menjadi false 
-      untuk memastikan sudah pernah login*/
-      if (userAccountModel.isInitiate == true) {
-        await authenticationRemoteDataSource.initiateUserAccountFireStore(
-          isInitiate: false,
-        );
-      }
-
       //validasi approval user
       if (userAccountModel.isActive == false) {
         await authenticationRemoteDataSource.onLogOut();
         return const Left(
           LogInWithEmailAndPasswordFailure('User need approval from admin'),
         );
+      }
+
+      /* Jika is initiate true, ubah isInitiate menjadi false 
+      untuk memastikan sudah pernah login*/
+      if (userAccountModel.isInitiate == true) {
+        await authenticationRemoteDataSource.initiateUserAccountFalseFireStore(
+            userAccount: userAccountModel.copyWith(isInitiate: false));
       }
 
       //update user account ke shared preference lokal
@@ -152,6 +151,22 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
               isInitiate: false,
             );
 
+      // validasi untuk pertama kali login dengan gmail
+      if (!snapshotUserAccount.exists) {
+        await authenticationRemoteDataSource.onLogOut();
+        return const Left(
+          LogInWithEmailAndPasswordFailure('User need approval from admin'),
+        );
+      }
+
+      //validasi approval user
+      if (userAccountModel.isActive == false) {
+        await authenticationRemoteDataSource.onLogOut();
+        return const Left(
+          LogInWithEmailAndPasswordFailure('User need approval from admin'),
+        );
+      }
+
       //update user account ke shared preference lokal
       await authenticationLocalDataSource.updateAuthSharedPreference();
 
@@ -204,16 +219,33 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
           : await authenticationRemoteDataSource.initiateUserAccountFireStore(
               isInitiate: false);
 
+      // validasi untuk pertama kali login dengan gmail,
+      if (!snapshotUserAccount.exists) {
+        await authenticationRemoteDataSource.onLogOut();
+        return const Left(
+          LogInWithEmailAndPasswordFailure('User need approval from admin'),
+        );
+      }
+
+      //validasi approval user
+      if (userAccountModel.isActive == false) {
+        await authenticationRemoteDataSource.onLogOut();
+        return const Left(
+          LogInWithEmailAndPasswordFailure('User need approval from admin'),
+        );
+      }
+
       //update user account ke shared preference lokal
       await authenticationLocalDataSource.updateAuthSharedPreference();
 
       //tampung data di user dynamic
-      final user = UserDynamic(
+      final userDynamic = UserDynamic(
         userEntity: UserModel.fromFirebaseUser(currentUser).toEntity(),
         userAccountEntity: userAccountModel.toEntity(),
       );
+
       //kembalikan data user dynamic
-      return right(user);
+      return right(userDynamic);
     } on LogInWithGoogleFailure catch (e) {
       return Left(
         LogInWithGoogleFailure(e.message),

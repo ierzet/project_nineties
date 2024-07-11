@@ -19,32 +19,33 @@ class ViewUsersPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is UserLoadSuccess) {
             final users = state.data;
+
             return ListView.builder(
               itemCount: users.length,
               itemBuilder: (context, index) {
-                final user = users[index];
+                final userAccount = users[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: user.photo != null &&
-                              user.photo!.isNotEmpty
-                          ? NetworkImage(user.photo!)
+                      backgroundImage: userAccount.user.photo != null &&
+                              userAccount.user.photo!.isNotEmpty
+                          ? NetworkImage(userAccount.user.photo!)
                           : const AssetImage('assets/images/profile_empty.png')
                               as ImageProvider,
                       onBackgroundImageError: (_, __) {
                         // Handle image load error
                       },
                     ),
-                    title: Text(user.name ?? 'No Name'),
-                    subtitle: Text(user.email ?? 'No Email'),
+                    title: Text(userAccount.user.name ?? 'No Name'),
+                    subtitle: Text(userAccount.user.email ?? 'No Email'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          user.isActive == true ? 'Approved' : 'Pending',
+                          userAccount.isActive == true ? 'Approved' : 'Pending',
                           style: TextStyle(
-                            color: user.isActive == true
+                            color: userAccount.isActive == true
                                 ? Colors.green
                                 : Colors.red,
                           ),
@@ -54,10 +55,11 @@ class ViewUsersPage extends StatelessWidget {
                           onPressed: () {
                             context
                                 .read<NavigationCubit>()
-                                .updateSubMenuWithUser('user_approval', user);
+                                .updateSubMenuWithUser(
+                                    'user_approval', userAccount);
                             context
                                 .read<UserValidatorCubit>()
-                                .updateUser(userAccountenitity: user);
+                                .updateUser(userAccountenitity: userAccount);
                           },
                         ),
                       ],

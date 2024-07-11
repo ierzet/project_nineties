@@ -79,8 +79,8 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 CircleAvatar(
                   radius: 17.r,
-                  backgroundImage: user.photo != null && user.photo!.isNotEmpty
-                      ? NetworkImage(user.photo!)
+                  backgroundImage: user.user.photo != null && user.user.photo!.isNotEmpty
+                      ? NetworkImage(user.user.photo!)
                       : const AssetImage('assets/images/profile_empty.png'),
                   backgroundColor: Colors.transparent,
                 ),

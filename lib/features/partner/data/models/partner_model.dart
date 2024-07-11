@@ -162,6 +162,39 @@ class PartnerModel extends PartnerEntity {
       rethrow; // Rethrow the exception for better debugging
     }
   }
+
+  factory PartnerModel.fromFirestoreUserAccount(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final data = snapshot.data() ?? {};
+    // Initialize with an empty map if null
+    try {
+      return PartnerModel(
+        partnerId: snapshot.id,
+        partnerName: data['partner']['partner_name'],
+        partnerEmail: data['partner']['partner_email'],
+        partnerPhoneNumber: data['partner']['partner_phone_number'],
+        partnerImageUrl: data['partner']['partner_image_url'],
+        partnerAddress: data['partner']['partner_address'],
+        partnerStatus: data['partner']['partner_status'],
+        partnerJoinDate:
+            (data['partner']['partner_join_date'] as Timestamp?)?.toDate(),
+        partnerCreatedBy: data['partner']['partner_created_by'],
+        partnerCreatedDate:
+            (data['partner']['partner_created_date'] as Timestamp?)?.toDate(),
+        partnerUpdatedBy: data['partner']['partner_updated_date'],
+        partnerUpdatedDate:
+            (data['partner']['partner_updated_date'] as Timestamp?)?.toDate(),
+        partnerDeletedBy: data['partner']['partner_deleted_by'],
+        partnerDeletedDate:
+            (data['partner']['partner_deleted_date'] as Timestamp?)?.toDate(),
+        partnerIsDeleted: data['partner']['partner_is_deleted'] ?? false,
+      );
+    } catch (e) {
+      debugPrint('Error in fromFirestore: $e');
+      rethrow; // Rethrow the exception for better debugging
+    }
+  }
+
   List<PartnerEntity> convertModelListToEntityList(List<PartnerModel> models) {
     return models.map((model) => model.toEntity()).toList();
   }

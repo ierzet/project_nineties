@@ -103,6 +103,7 @@ class UserRepositoryImpl implements UserRepository {
       final result = queryData.docs
           .map((doc) => UserAccountModel.fromFirestore(doc))
           .toList();
+
       return Right(result);
     } catch (e) {
       // Handle exceptions and return appropriate failure
@@ -130,6 +131,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<QuerySnapshot<Map<String, dynamic>>> fetchUsers() async {
     try {
       final result = await instance.collection('user_account').get();
+
       return result;
     } on FirebaseException catch (e) {
       throw FireBaseCatchFailure.fromCode(e.code);
@@ -149,9 +151,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     try {
       await instance
           .collection('user_account')
-          .doc(params.userId)
+          .doc(params.user.id)
           .set(params.approvalUser());
-      return 'user ${params.name} has been approval';
+      return 'user ${params.user.name} has been approval';
     } on FirebaseException catch (e) {
       throw FireBaseCatchFailure.fromCode(e.code);
     } catch (_) {

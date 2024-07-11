@@ -40,7 +40,7 @@ class PartnerCustomTextField extends StatelessWidget {
         partnerJoinDate: partnerParams.partnerJoinDate != DateTime(1970, 1, 1)
             ? partnerParams.partnerJoinDate
             : DateTime.now(),
-        partnerCreatedBy: currentUser.id,
+        partnerCreatedBy: currentUser.user.id,
         partnerCreatedDate: partnerParams.partnerCreatedDate ?? DateTime.now(),
         partnerIsDeleted: partnerParams.partnerIsDeleted ?? false,
       );

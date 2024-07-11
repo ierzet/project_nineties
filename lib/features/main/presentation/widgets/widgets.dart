@@ -48,11 +48,11 @@ class AccountWidget extends StatelessWidget {
                   ),
                   CircleAvatar(
                     backgroundImage:
-                        appBloc.photo != null && appBloc.photo!.isNotEmpty
+                        appBloc.user.photo != null && appBloc.user.photo!.isNotEmpty
                             ? NetworkImage(userModel.photo!)
                             : null,
                     radius: 100,
-                    child: appBloc.photo == null || appBloc.photo!.isEmpty
+                    child: appBloc.user.photo == null || appBloc.user.photo!.isEmpty
                         ? const Text(
                             'Failed to load image',
                             textAlign: TextAlign.center,
@@ -66,9 +66,9 @@ class AccountWidget extends StatelessWidget {
               const SizedBox(height: 8),
               Text('Email: ${userModel.email}'),
               const SizedBox(height: 16),
-              Text('Name bloc: ${appBloc.name}'),
+              Text('Name bloc: ${appBloc.user.name}'),
               const SizedBox(height: 16),
-              Text('Email bloc: ${appBloc.email}'),
+              Text('Email bloc: ${appBloc.user.email}'),
               const SizedBox(height: 16),
               Text('ID Bloc: ${userModel.id}'),
               const SizedBox(height: 16),

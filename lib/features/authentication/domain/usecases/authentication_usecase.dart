@@ -23,7 +23,7 @@ class AuthenticationUseCase {
     final registerResult =
         authenticationRepository.signUpEmailAndPassword(params);
     return registerResult;
-    //
+    // print('params: $params');
     // return Right('params: $params');
   }
 

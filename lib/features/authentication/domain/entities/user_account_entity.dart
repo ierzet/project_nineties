@@ -1,13 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
 class UserAccountEntity extends Equatable {
-  final String userId;
-  final String? email;
-  final String? name;
-  final String? phoneNumber;
+  final UserEntity user;
+
   final DateTime? joinDate;
-  final String? photo;
   final bool? isActive;
   final PartnerEntity partner;
   final String? roleId;
@@ -22,12 +20,8 @@ class UserAccountEntity extends Equatable {
   final bool? isDeleted;
 
   const UserAccountEntity({
-    required this.userId,
-    this.email,
-    this.name,
-    this.phoneNumber,
+    required this.user,
     this.joinDate,
-    this.photo,
     this.isActive,
     required this.partner,
     this.roleId,
@@ -43,12 +37,8 @@ class UserAccountEntity extends Equatable {
   });
 
   UserAccountEntity copyWith({
-    String? userId,
-    String? email,
-    String? name,
-    String? phoneNumber,
+    UserEntity? user,
     DateTime? joinDate,
-    String? photo,
     bool? isActive,
     PartnerEntity? partner,
     String? roleId,
@@ -63,12 +53,8 @@ class UserAccountEntity extends Equatable {
     bool? isDeleted,
   }) {
     return UserAccountEntity(
-      userId: userId ?? this.userId,
-      email: email ?? this.email,
-      name: name ?? this.name,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      user: user ?? this.user,
       joinDate: joinDate ?? this.joinDate,
-      photo: photo ?? this.photo,
       isActive: isActive ?? this.isActive,
       partner: partner ?? this.partner,
       roleId: roleId ?? this.roleId,
@@ -85,18 +71,14 @@ class UserAccountEntity extends Equatable {
   }
 
   static const empty =
-      UserAccountEntity(userId: '', partner: PartnerEntity.empty);
+      UserAccountEntity(user: UserEntity.empty, partner: PartnerEntity.empty);
 
   bool get isEmpty => this == UserAccountEntity.empty;
   bool get isNotEmpty => this != UserAccountEntity.empty;
 
   @override
   List<Object?> get props => [
-        userId,
-        email,
-        name,
-        phoneNumber,
-        photo,
+        user,
         joinDate,
         isActive,
         partner,
