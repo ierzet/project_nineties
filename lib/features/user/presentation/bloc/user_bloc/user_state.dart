@@ -31,6 +31,14 @@ class UserLoadApprovalSuccess extends UserState {
   List<Object> get props => [message];
 }
 
+class UserLoadRegisterSuccess extends UserState {
+  const UserLoadRegisterSuccess({required this.message});
+
+  final String message;
+  @override
+  List<Object> get props => [message];
+}
+
 class UserLoadFailure extends UserState {
   const UserLoadFailure({required this.message});
 

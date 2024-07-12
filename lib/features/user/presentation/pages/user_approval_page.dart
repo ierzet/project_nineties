@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:project_nineties/features/admin/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:project_nineties/features/admin/presentation/cubit/user_validator_cubit.dart';
-import 'package:project_nineties/features/admin/presentation/widgets/user_listener_notification.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
+import 'package:project_nineties/features/user/presentation/widgets/user_listener_notification.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
@@ -198,7 +198,7 @@ class ApprovalButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {
         final state = context.read<UserValidatorCubit>().state;
-        context.read<UserBloc>().add(UserUpdateData(
+        context.read<UserBloc>().add(UserApproval(
               context: context,
               updatedUser: updatedUser,
               userAccountEntity: state,

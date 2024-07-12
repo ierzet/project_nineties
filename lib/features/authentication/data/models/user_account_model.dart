@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_nineties/features/user/domain/usecases/user_params.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/authentication/data/models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
 class UserAccountModel extends UserAccountEntity {
   const UserAccountModel({
@@ -183,6 +183,37 @@ class UserAccountModel extends UserAccountEntity {
   }
 
   Map<String, dynamic> initiateUserAccountFalseFireStore() {
+    try {
+      return {
+        'user': UserModel.fromEntity(user).toFirestore(),
+        'join_date':
+            joinDate != null ? Timestamp.fromDate(joinDate!) : Timestamp.now(),
+        'is_active': isActive ?? false,
+        'partner': PartnerModel.fromEntity(partner).toFireStore(),
+        'role_id': roleId,
+        'menu_auth': menuAuth,
+        'is_initiate': isInitiate ?? false,
+        'created_by': createdBy,
+        'created_date': createdDate != null
+            ? Timestamp.fromDate(createdDate!)
+            : Timestamp.now(),
+        'updated_by': updatedBy,
+        'updated_date': updatedDate != null
+            ? Timestamp.fromDate(updatedDate!)
+            : Timestamp.now(),
+        'deleted_by': deletedBy,
+        'deleted_date':
+            deletedDate != null ? Timestamp.fromDate(deletedDate!) : null,
+        'is_deleted': isDeleted ?? false,
+      };
+    } catch (e) {
+      debugPrint(
+          'Error in UserAccountModel.initiateUserAccountFalseFireStore: $e');
+      rethrow;
+    }
+  }
+
+  Map<String, dynamic> initiateUserAccountByADminToFireStore() {
     try {
       return {
         'user': UserModel.fromEntity(user).toFirestore(),

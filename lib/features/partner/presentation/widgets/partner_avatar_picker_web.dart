@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
-
 import 'package:universal_html/html.dart';
 
 class PartnerPlatformAvatarPicker extends StatefulWidget {
@@ -30,22 +29,22 @@ class _PartnerPlatformAvatarPickerState
   }
 
   Future<void> _pickImage() async {
+    var scaffoldSnack = ScaffoldMessenger.of(context);
     try {
       final pickedFile = await ImagePickerWeb.getImageAsFile();
       if (pickedFile != null) {
         _webImage = await loadImage(pickedFile);
         setState(() {
-          _webImage = _webImage;
           final currentState =
               context.read<PartnerValidatorBloc>().state.partnerParams;
           context.read<PartnerValidatorBloc>().add(PartnerValidatorForm(
-              partnerParams:
-                  currentState.copyWith(partnerAvatarFileWeb: pickedFile)));
+                partnerParams:
+                    currentState.copyWith(partnerAvatarFileWeb: pickedFile),
+              ));
         });
       }
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldSnack.showSnackBar(
         SnackBar(
           content: Text('Failed to pick image: $e'),
         ),
@@ -59,24 +58,58 @@ class _PartnerPlatformAvatarPickerState
       final currentState =
           context.read<PartnerValidatorBloc>().state.partnerParams;
       context.read<PartnerValidatorBloc>().add(PartnerValidatorForm(
-          partnerParams: currentState.copyWith(partnerAvatarFileWeb: null)));
+            partnerParams: currentState.copyWith(partnerAvatarFileWeb: null),
+          ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final partnerImageUrl = context
+        .read<PartnerValidatorBloc>()
+        .state
+        .partnerParams
+        .partnerImageUrl;
+
+    Widget avatarWidget;
+    if (_webImage != null) {
+      avatarWidget = Image.memory(
+        _webImage!,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+      );
+    } else if (partnerImageUrl.isNotEmpty) {
+      avatarWidget = Image.network(
+        partnerImageUrl,
+        height: 150,
+        width: 150,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+      );
+    } else {
+      avatarWidget = const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.camera_alt,
+            size: 50,
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Tap to add photo",
+          ),
+        ],
+      );
+    }
+
     return GestureDetector(
       onTap: _pickImage,
-      child: _webImage != null
+      child: _webImage != null || partnerImageUrl.isNotEmpty
           ? Stack(
               children: [
                 ClipOval(
-                  child: Image.memory(
-                    _webImage!,
-                    height: 150,
-                    width: 150,
-                    fit: BoxFit.cover,
-                  ),
+                  child: avatarWidget,
                 ),
                 Positioned(
                   top: 0,
@@ -103,19 +136,7 @@ class _PartnerPlatformAvatarPickerState
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.grey[400]!, width: 2),
               ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.camera_alt,
-                    size: 50,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Tap to add photo",
-                  ),
-                ],
-              ),
+              child: avatarWidget,
             ),
     );
   }

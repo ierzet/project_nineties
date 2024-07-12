@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:project_nineties/core/utilities/cache.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 
 class AuthenticationInitiation {
   AuthenticationInitiation({
@@ -34,13 +33,5 @@ extension on firebase_auth.User {
   UserAccountEntity get toUserAccount {
     //update code to return UserAccountEnitity here
     return UserAccountModel.fromFirebaseUser(this).toEntity();
-
-    // return UserAccountEntity(
-    //   id: uid,
-    //   email: email,
-    //   name: displayName,
-    //   photo: photoURL,
-    //   //TODO:tambahin isInitiate
-    // );
   }
 }

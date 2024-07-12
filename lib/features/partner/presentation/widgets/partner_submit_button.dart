@@ -6,17 +6,24 @@ import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 
 class PartnerSubmitButton extends StatelessWidget {
-  const PartnerSubmitButton({super.key});
+  const PartnerSubmitButton({super.key, required this.type});
+  final String type;
 
   @override
   Widget build(BuildContext context) {
     void onSubmit() {
       final partnerParams =
           context.read<PartnerValidatorBloc>().state.partnerParams;
-      context.read<PartnerBloc>().add(AdminRegPartnerClicked(
-            context: context,
-            params: partnerParams,
-          ));
+
+      type == 'register'
+          ? context.read<PartnerBloc>().add(PartnerRegister(
+                context: context,
+                params: partnerParams,
+              ))
+          : context.read<PartnerBloc>().add(PartnerUpdateData(
+                context: context,
+                params: partnerParams,
+              ));
       context
           .read<PartnerValidatorBloc>()
           .add(PartnerClearValidator(context: context));

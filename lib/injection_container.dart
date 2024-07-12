@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:project_nineties/features/admin/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:project_nineties/features/user/data/datasources/user_remote_datasource.dart';
+import 'package:project_nineties/features/user/data/repositories/user_repository_impl.dart';
+import 'package:project_nineties/features/user/domain/repositories/user_repository.dart';
+import 'package:project_nineties/features/user/domain/usecases/user_usecase.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:project_nineties/features/authentication/data/datasources/local/authentication_local_datasource.dart';
 import 'package:project_nineties/features/authentication/data/datasources/remote/authentication_remote_datasoure.dart';
 import 'package:project_nineties/features/authentication/data/repositories/authentication_repository_impl.dart';
@@ -49,7 +53,7 @@ void setupLocator() {
   locator.registerLazySingleton<PartnerRemoteDataSource>(
       () => PartnerRemoteDataSourceImpl(locator(), locator()));
   locator.registerLazySingleton<UserRemoteDataSource>(
-      () => UserRemoteDataSourceImpl(locator()));
+      () => UserRemoteDataSourceImpl(locator(), locator(), locator()));
 
   //external
 

@@ -1,17 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
-import 'dart:io';
+import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
 
-class PlatformAvatarPicker extends StatefulWidget {
-  const PlatformAvatarPicker({super.key});
+class UserPlatformAvatarPicker extends StatefulWidget {
+  const UserPlatformAvatarPicker({super.key});
 
   @override
-  State<PlatformAvatarPicker> createState() => _PlatformAvatarPickerState();
+  State<UserPlatformAvatarPicker> createState() =>
+      _UserPlatformAvatarPickerState();
 }
 
-class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
+class _UserPlatformAvatarPickerState extends State<UserPlatformAvatarPicker> {
   File? _image;
 
   Future<void> _pickImage() async {
@@ -22,11 +24,8 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
         final newImage = File(pickedFile.path);
         setState(() {
           _image = newImage;
-          final currentState =
-              context.read<AuthenticationValidatorBloc>().state.params;
-          context
-              .read<AuthenticationValidatorBloc>()
-              .add(AuthenticationValidatorForm(
+          final currentState = context.read<UserValidatorBloc>().state.params;
+          context.read<UserValidatorBloc>().add(UserValidatorForm(
                   params: currentState.copyWith(
                 avatarFile: _image,
                 isWeb: false,
@@ -46,11 +45,8 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
   void _removeImage() {
     setState(() {
       _image = null;
-      final currentState =
-          context.read<AuthenticationValidatorBloc>().state.params;
-      context
-          .read<AuthenticationValidatorBloc>()
-          .add(AuthenticationValidatorForm(
+      final currentState = context.read<UserValidatorBloc>().state.params;
+      context.read<UserValidatorBloc>().add(UserValidatorForm(
               params: currentState.copyWith(
             avatarFile: null,
             isWeb: false,

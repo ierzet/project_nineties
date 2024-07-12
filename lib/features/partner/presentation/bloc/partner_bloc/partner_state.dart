@@ -24,7 +24,15 @@ final class PartnerLoadSuccess extends PartnerState {
   const PartnerLoadSuccess(this.message);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message];
+}
+
+final class PartnerLoadUpdateSuccess extends PartnerState {
+  final String message;
+  const PartnerLoadUpdateSuccess({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }
 
 final class PartnerLoadFailure extends PartnerState {
@@ -32,7 +40,7 @@ final class PartnerLoadFailure extends PartnerState {
 
   const PartnerLoadFailure(this.message);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message];
 }
 
 final class PartnerLoadDataSuccess extends PartnerState {

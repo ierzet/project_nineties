@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/admin/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:project_nineties/features/admin/presentation/cubit/user_validator_cubit.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 
-class ViewUsersPage extends StatelessWidget {
-  const ViewUsersPage({super.key});
+class UsersViewPage extends StatelessWidget {
+  const UsersViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     context.read<UserBloc>().add(const UserGetData());
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: BlocBuilder<UserBloc, UserState>(
@@ -19,7 +18,7 @@ class ViewUsersPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is UserLoadSuccess) {
             final users = state.data;
-
+            users.sort((a, b) => (a.isActive ?? false) ? 1 : -1);
             return ListView.builder(
               itemCount: users.length,
               itemBuilder: (context, index) {

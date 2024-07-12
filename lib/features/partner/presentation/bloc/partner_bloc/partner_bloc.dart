@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,15 +15,40 @@ part 'partner_state.dart';
 
 class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
   PartnerBloc(this.usecase) : super(const PartnerInitial()) {
-    on<AdminRegPartnerClicked>(_onAdminRegPartnerClicked,
+    on<PartnerRegister>(_onPartnerRegister,
         transformer: debounce(const Duration(milliseconds: 500)));
     on<PartnerGetData>(_onPartnerGetData,
         transformer: debounce(const Duration(milliseconds: 500)));
+    on<PartnerUpdateData>(_onPartnerUpdateData,
+        transformer: debounce(const Duration(milliseconds: 500)));
+
+    on<PartnerSubscriptionSuccsess>(_onPartnerSubscriptionSuccsess,
+        transformer: debounce(const Duration(milliseconds: 500)));
+    on<PartnerSubscriptionFailure>(_onPartnerSubscriptionFailure,
+        transformer: debounce(const Duration(milliseconds: 500)));
+
+    _partnerSubscription = usecase().listen((result) {
+      result.fold(
+        (failure) => add(PartnerSubscriptionFailure(message: failure.message)),
+        (data) => add(PartnerSubscriptionSuccsess(params: data)),
+      );
+    });
   }
   final PartnerUseCase usecase;
+  late final StreamSubscription _partnerSubscription;
 
-  void _onAdminRegPartnerClicked(
-      AdminRegPartnerClicked event, Emitter<PartnerState> emit) async {
+  void _onPartnerSubscriptionSuccsess(
+      PartnerSubscriptionSuccsess event, Emitter<PartnerState> emit) async {
+    emit(PartnerLoadDataSuccess(data: event.params));
+  }
+
+  void _onPartnerSubscriptionFailure(
+      PartnerSubscriptionFailure event, Emitter<PartnerState> emit) async {
+    emit(PartnerLoadFailure(event.message));
+  }
+
+  void _onPartnerRegister(
+      PartnerRegister event, Emitter<PartnerState> emit) async {
     emit(const PartnerLoadInProgress());
 
     if (!event.params.isValid) {
@@ -57,7 +84,35 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
     );
   }
 
+  void _onPartnerUpdateData(
+      PartnerUpdateData event, Emitter<PartnerState> emit) async {
+    emit(const PartnerLoadInProgress());
+
+    if (!event.params.isValid) {
+      emit(const PartnerLoadFailure(AppStrings.dataIsNotValid));
+      return;
+    }
+    final navigatorBloc = event.context.read<NavigationCubit>();
+    final result = await usecase.updateData(event.params);
+    result.fold(
+      (failure) {
+        emit(PartnerLoadFailure(failure.message));
+      },
+      (data) {
+        //back to home
+        navigatorBloc.updateSubMenu('partners_view');
+        emit(PartnerLoadUpdateSuccess(message: data));
+      },
+    );
+  }
+
   EventTransformer<T> debounce<T>(Duration duration) {
     return (events, mapper) => events.debounceTime(duration).flatMap(mapper);
+  }
+
+  @override
+  Future<void> close() {
+    _partnerSubscription.cancel();
+    return super.close();
   }
 }

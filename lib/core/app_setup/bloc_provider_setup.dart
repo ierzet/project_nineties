@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/app_setup/authentication_init.dart';
 import 'package:project_nineties/core/cubit/global_cubit.dart';
-import 'package:project_nineties/features/admin/presentation/bloc/user_bloc/user_bloc.dart';
-import 'package:project_nineties/features/admin/presentation/cubit/user_validator_cubit.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
+import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_usecase.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator/authentication_validator_bloc.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
@@ -49,6 +50,7 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => PartnerJoinDateCubit()),
           BlocProvider(create: (context) => NavigationCubit()),
           BlocProvider(create: (context) => UserValidatorCubit()),
+          BlocProvider(create: (context) => UserValidatorBloc()),
           BlocProvider(
               create: (context) =>
                   GlobalCubit()), //TODO:kalo ga dipake hapus aja

@@ -1,35 +1,45 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
-import 'dart:io';
+import 'package:image_picker_web/image_picker_web.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
+import 'package:universal_html/html.dart';
 
-class PlatformAvatarPicker extends StatefulWidget {
-  const PlatformAvatarPicker({super.key});
+class UserPlatformAvatarPicker extends StatefulWidget {
+  const UserPlatformAvatarPicker({super.key});
 
   @override
-  State<PlatformAvatarPicker> createState() => _PlatformAvatarPickerState();
+  State<UserPlatformAvatarPicker> createState() =>
+      _UserPlatformAvatarPickerState();
 }
 
-class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
-  File? _image;
+class _UserPlatformAvatarPickerState extends State<UserPlatformAvatarPicker> {
+  Uint8List? _webImage;
+
+  Future<Uint8List?> loadImage(File file) async {
+    final reader = FileReader();
+    final completer = Completer<Uint8List>();
+    reader.readAsArrayBuffer(file);
+    reader.onLoadEnd.listen((_) {
+      completer.complete(reader.result as Uint8List);
+    });
+    return completer.future;
+  }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
     try {
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      final pickedFile = await ImagePickerWeb.getImageAsFile();
       if (pickedFile != null) {
-        final newImage = File(pickedFile.path);
+        _webImage = await loadImage(pickedFile);
         setState(() {
-          _image = newImage;
-          final currentState =
-              context.read<AuthenticationValidatorBloc>().state.params;
-          context
-              .read<AuthenticationValidatorBloc>()
-              .add(AuthenticationValidatorForm(
+          _webImage = _webImage;
+          final currentState = context.read<UserValidatorBloc>().state.params;
+          context.read<UserValidatorBloc>().add(UserValidatorForm(
                   params: currentState.copyWith(
-                avatarFile: _image,
-                isWeb: false,
+                avatarFileWeb: pickedFile,
+                isWeb: true,
               )));
         });
       }
@@ -45,15 +55,14 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
 
   void _removeImage() {
     setState(() {
-      _image = null;
-      final currentState =
-          context.read<AuthenticationValidatorBloc>().state.params;
-      context
-          .read<AuthenticationValidatorBloc>()
-          .add(AuthenticationValidatorForm(
+      _webImage = null;
+      // Handle the Cubit state update for web
+      final currentState = context.read<UserValidatorBloc>().state.params;
+
+      context.read<UserValidatorBloc>().add(UserValidatorForm(
               params: currentState.copyWith(
-            avatarFile: null,
-            isWeb: false,
+            avatarFileWeb: null,
+            isWeb: true,
           )));
     });
   }
@@ -62,12 +71,12 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _pickImage,
-      child: _image != null
+      child: _webImage != null
           ? Stack(
               children: [
                 ClipOval(
-                  child: Image.file(
-                    _image!,
+                  child: Image.memory(
+                    _webImage!,
                     height: 150,
                     width: 150,
                     fit: BoxFit.cover,
@@ -80,12 +89,12 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
                     onTap: _removeImage,
                     child: Container(
                       decoration: const BoxDecoration(
-                        // color: Colors.red,
+                        //   color: Colors.red,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
                         Icons.close,
-                        //color: Colors.white,
+                        // color: Colors.white,
                         size: 20,
                       ),
                     ),
@@ -97,7 +106,7 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
               height: 150,
               width: 150,
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                // color: Colors.grey[200],
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.grey[400]!, width: 2),
               ),
@@ -113,7 +122,7 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
                   Text(
                     "Tap to add photo",
                     style: TextStyle(
-                        //  color: Colors.grey[800],
+                        //   color: Colors.grey[800],
                         ),
                   ),
                 ],

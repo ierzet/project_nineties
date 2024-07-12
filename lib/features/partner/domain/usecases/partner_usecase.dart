@@ -6,13 +6,18 @@ import 'package:project_nineties/features/partner/domain/repositories/pertner_re
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 
 class PartnerUseCase {
-  final PartnerRepository repository;
-
   const PartnerUseCase({required this.repository});
+
+  final PartnerRepository repository;
 
   Future<Either<Failure, String>> insertData(PartnerParams params) async {
     final dataModel = PartnerModel.fromParams(params);
     return repository.insertData(dataModel);
+  }
+
+  Future<Either<Failure, String>> updateData(PartnerParams params) async {
+    final dataModel = PartnerModel.fromParams(params);
+    return repository.updateData(dataModel);
   }
 
   Future<Either<Failure, List<PartnerEntity>>> fetchPartners() async {
@@ -21,5 +26,9 @@ class PartnerUseCase {
         .map((models) => models.map((model) => model.toEntity()).toList());
 
     return listEnity;
+  }
+
+  Stream<Either<Failure, List<PartnerEntity>>> call() {
+    return repository.getPartnersStream();
   }
 }

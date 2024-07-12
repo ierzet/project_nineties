@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:universal_html/html.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
@@ -67,6 +68,27 @@ class PartnerParams extends Equatable {
       address,
       joinDate,
     ]);
+  }
+
+  factory PartnerParams.fromPartnerModel(PartnerModel model) {
+    return PartnerParams(
+      partnerName: model.partnerName ?? '',
+      partnerEmail: model.partnerEmail ?? '',
+      partnerPhoneNumber: model.partnerPhoneNumber ?? '',
+      partnerImageUrl: model.partnerImageUrl ?? '',
+      partnerAddress: model.partnerAddress ?? '',
+      partnerStatus: model.partnerStatus ?? '',
+      partnerJoinDate: model.partnerJoinDate ?? DateTime.now(),
+      partnerCreatedBy: model.partnerCreatedBy,
+      partnerCreatedDate: model.partnerCreatedDate,
+      partnerUpdatedBy: model.partnerUpdatedBy,
+      partnerUpdatedDate: model.partnerUpdatedDate,
+      partnerDeletedBy: model.partnerDeletedBy,
+      partnerDeletedDate: model.partnerDeletedDate,
+      partnerIsDeleted: model.partnerIsDeleted,
+      partnerAvatarFile: model.partnerAvatarFile,
+      partnerAvatarFileWeb: model.partnerAvatarFileWeb,
+    );
   }
 
   PartnerParams copyWith({

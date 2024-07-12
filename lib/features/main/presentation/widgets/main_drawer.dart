@@ -29,42 +29,69 @@ class MainDrawer extends StatelessWidget {
                 left: 16.0), // Optional for better alignment
             children: [
               ListTile(
+                leading: const Icon(Icons.approval),
+                title: Text(
+                  'Register User',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context
+                      .read<NavigationCubit>()
+                      .updateSubMenu('register_user_admin');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.view_list),
                 title: Text(
                   'View Users',
                   style: AppStyles.drawerItemText,
                 ),
                 onTap: () {
-                  context.read<NavigationCubit>().updateSubMenu('view_users');
-                  Scaffold.of(context).closeDrawer();
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.approval),
-                title: Text(
-                  'User Approvals',
-                  style: AppStyles.drawerItemText,
-                ),
-                onTap: () {
-                  context
-                      .read<NavigationCubit>()
-                      .updateSubMenu('user_approvals');
+                  context.read<NavigationCubit>().updateSubMenu('users_view');
                   Scaffold.of(context).closeDrawer();
                 },
               ),
             ],
           ),
-          ListTile(
+          ///////
+          ExpansionTile(
             leading: const Icon(Icons.business),
             title: Text(
               'Partner',
               style: AppStyles.drawerItemText,
             ),
-            onTap: () {
-              context.read<NavigationCubit>().updateSubMenu('partner');
-              Scaffold.of(context).closeDrawer();
-            },
+            childrenPadding: const EdgeInsets.only(
+                left: 16.0), // Optional for better alignment
+            children: [
+              ListTile(
+                leading: const Icon(Icons.approval),
+                title: Text(
+                  'Register Partner',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context.read<NavigationCubit>().updateSubMenu('partner');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.view_list),
+                title: Text(
+                  'View Partners',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context
+                      .read<NavigationCubit>()
+                      .updateSubMenu('partners_view');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+            ],
           ),
+          //////
+
           ListTile(
             leading: const Icon(Icons.people),
             title: Text(

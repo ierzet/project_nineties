@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
+import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
 
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+class UserCustomTextField extends StatelessWidget {
+  const UserCustomTextField({
     super.key,
     required this.controller,
     required this.type,
@@ -20,8 +20,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void onChanged(value) {
-      final currentState =
-          context.read<AuthenticationValidatorBloc>().state.params;
+      final currentState = context.read<UserValidatorBloc>().state.params;
       final email = type == InputType.email ? value : currentState.email;
       final password =
           type == InputType.password ? value : currentState.password;
@@ -31,17 +30,13 @@ class CustomTextField extends StatelessWidget {
           : currentState.confirmedPassword;
 
       authFormType == AuthenticationFormType.signin
-          ? context
-              .read<AuthenticationValidatorBloc>()
-              .add(AuthenticationValidatorForm(
+          ? context.read<UserValidatorBloc>().add(UserValidatorForm(
                   params: currentState.copyWith(
                 email: email,
                 password: password,
               )))
           : authFormType == AuthenticationFormType.signup
-              ? context
-                  .read<AuthenticationValidatorBloc>()
-                  .add(AuthenticationValidatorForm(
+              ? context.read<UserValidatorBloc>().add(UserValidatorForm(
                       params: currentState.copyWith(
                     email: email,
                     password: password,
@@ -51,9 +46,7 @@ class CustomTextField extends StatelessWidget {
                     avatarFileWeb: currentState.avatarFileWeb,
                     isWeb: currentState.isWeb,
                   )))
-              : context
-                  .read<AuthenticationValidatorBloc>()
-                  .add(AuthenticationValidatorForm(
+              : context.read<UserValidatorBloc>().add(UserValidatorForm(
                       params: currentState.copyWith(
                     email: email,
                   )));
@@ -105,8 +98,7 @@ class CustomTextField extends StatelessWidget {
       hintStyle: const TextStyle(
           // color: AppColors.textColor,
           ),
-      suffixIcon: BlocBuilder<AuthenticationValidatorBloc,
-          AuthenticationValidatorState>(
+      suffixIcon: BlocBuilder<UserValidatorBloc, UserValidatorState>(
         builder: (context, state) {
           final isValid = type == InputType.name
               ? state.params.isNameValid

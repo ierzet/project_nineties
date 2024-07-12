@@ -17,6 +17,12 @@ class ListenerNotificationPartner extends StatelessWidget {
               content: Text(state.message),
             ),
           );
+        } else if (state is PartnerLoadUpdateSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
         } else if (state is PartnerLoadFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
