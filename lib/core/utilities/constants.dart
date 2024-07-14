@@ -51,7 +51,7 @@ class AppStrings {
   static const String userName = 'Username';
   static const String password = 'Password';
   static const String signUp = 'Sign Up';
-    static const String dataIsNotValid = 'Data is not valid';
+  static const String dataIsNotValid = 'Data is not valid';
 
   //signup page
   static const String name = 'Name';
@@ -59,6 +59,18 @@ class AppStrings {
 
   //forgot password page
   static const String email = 'Email';
+}
+
+String toTitleCase(String text) {
+  if (text.isEmpty) {
+    return text;
+  }
+  return text
+      .split(' ')
+      .map((word) => word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : word)
+      .join(' ');
 }
 
 class AppStyles {
@@ -123,7 +135,25 @@ class AppPath {
   static const String facebookIcon = 'assets/images/facebook.png';
 }
 
-enum InputType { name, email, password, confirmedPassword, phone, date, address }
+enum InputType {
+  name,
+  email,
+  password,
+  confirmedPassword,
+  phone,
+  gender,
+  date,
+  joinDate,
+  expiredDate,
+  dOBDate,
+  vehicleType,
+  vehicleNo,
+  vehicleColor,
+  address,
+  memberType,
+  statusMember,
+  text,
+}
 
 enum AuthenticationFormType { signin, signup, forgotPassword }
 

@@ -44,7 +44,7 @@ class AccountWidget extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 userModel.name ?? 'Unknown User',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -52,7 +52,7 @@ class AccountWidget extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 userModel.email ?? 'No Email',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.grey,
                 ),
@@ -169,7 +169,8 @@ class MembershipCard extends StatelessWidget {
   final String qrData;
   final String? photoUrl;
 
-  MembershipCard({
+  const MembershipCard({
+    super.key,
     required this.name,
     required this.cardId,
     required this.expiryDate,
@@ -189,7 +190,7 @@ class MembershipCard extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [Colors.amber, Colors.brown],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -212,7 +213,7 @@ class MembershipCard extends StatelessWidget {
                         : null,
                   ),
                   const SizedBox(width: 12),
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -237,26 +238,26 @@ class MembershipCard extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 'Name: $name',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                 ),
               ),
               Text(
                 'Card ID: $cardId',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                 ),
               ),
               Text(
                 'Expiry Date: $expiryDate',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -264,6 +265,7 @@ class MembershipCard extends StatelessWidget {
                     data: qrData,
                     version: QrVersions.auto,
                     size: 50.0,
+                    // ignore: deprecated_member_use
                     foregroundColor: Colors.white,
                   ),
                   BarcodeWidget(
@@ -271,7 +273,7 @@ class MembershipCard extends StatelessWidget {
                     data: cardId,
                     width: 80,
                     height: 30,
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                     color: Colors.white,
                   ),
                 ],

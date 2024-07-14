@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_nineties/features/customer/presentation/pages/customer_register_page.dart';
+import 'package:project_nineties/features/customer/presentation/pages/customer_update_page.dart';
+import 'package:project_nineties/features/customer/presentation/pages/customer_view_page.dart';
 import 'package:project_nineties/features/partner/presentation/pages/partner_update_page.dart';
 import 'package:project_nineties/features/partner/presentation/pages/partners_view_page.dart';
 import 'package:project_nineties/features/user/presentation/pages/user_approval_page.dart';
@@ -48,10 +51,14 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
         return const UserRegisterAdminPage();
       case 'users_view':
         return const UsersViewPage();
+      case 'customer_register':
+        return const CustomerRegistrationPage();
+      case 'customer_view':
+        return const CustomersViewPage();
+      case 'customer_update':
+        return const CustomerUpdatePage();
       case 'user_approval':
-        return UserApprovalPage(
-            user: state
-                .userAccountEntity!); // Gunakan parameter UserAccountEntity
+        return UserApprovalPage(user: state.userAccountEntity!);
       default:
         return widgetOptions[state.indexBotNavBar];
     }

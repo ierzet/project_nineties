@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:project_nineties/features/customer/data/datasources/customer_remote_datasource.dart';
+import 'package:project_nineties/features/customer/data/repositories/customer_repository_impl.dart';
+import 'package:project_nineties/features/customer/domain/repositories/customer_repository.dart';
+import 'package:project_nineties/features/customer/domain/usecases/customer_usecase.dart';
+import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
 import 'package:project_nineties/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:project_nineties/features/user/data/repositories/user_repository_impl.dart';
 import 'package:project_nineties/features/user/domain/repositories/user_repository.dart';
@@ -29,11 +34,13 @@ void setupLocator() {
       authenticationUseCase: locator(), authenticationInitiation: locator()));
   locator.registerFactory<PartnerBloc>(() => PartnerBloc(locator()));
   locator.registerFactory<UserBloc>(() => UserBloc(usecase: locator()));
+  locator.registerFactory<CustomerBloc>(() => CustomerBloc(useCase: locator()));
 
 //usecase
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));
   locator.registerLazySingleton(() => PartnerUseCase(repository: locator()));
   locator.registerLazySingleton(() => UserUseCase(repository: locator()));
+  locator.registerLazySingleton(() => CustomerUseCase(repository: locator()));
 
   //repository
   locator.registerLazySingleton<AuthenticationRepository>(() =>
@@ -44,6 +51,8 @@ void setupLocator() {
       () => PartnerRepositoryImpl(remoteDataSource: locator()));
   locator.registerLazySingleton<UserRepository>(
       () => UserRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<CustomerRepository>(
+      () => CustomerRepositoryImpl(remoteDataSource: locator()));
 
   //data source
   locator.registerLazySingleton<AuthenticationRemoteDataSource>(() =>
@@ -54,6 +63,8 @@ void setupLocator() {
       () => PartnerRemoteDataSourceImpl(locator(), locator()));
   locator.registerLazySingleton<UserRemoteDataSource>(
       () => UserRemoteDataSourceImpl(locator(), locator(), locator()));
+  locator.registerLazySingleton<CustomerRemoteDataSource>(
+      () => CustomerRemoteDataSourceImpl(locator()));
 
   //external
 

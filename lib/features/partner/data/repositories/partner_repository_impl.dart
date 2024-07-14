@@ -77,9 +77,9 @@ class PartnerRepositoryImpl implements PartnerRepository {
   }
 
   @override
-  Future<Either<Failure, List<PartnerModel>>> fetchPartners() async {
+  Future<Either<Failure, List<PartnerModel>>> fetchData() async {
     try {
-      final queryData = await remoteDataSource.fetchPartners();
+      final queryData = await remoteDataSource.fetchData();
       final result =
           queryData.docs.map((doc) => PartnerModel.fromFirestore(doc)).toList();
       return Right(result);

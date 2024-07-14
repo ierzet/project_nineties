@@ -91,14 +91,42 @@ class MainDrawer extends StatelessWidget {
             ],
           ),
           //////
-
-          ListTile(
+          ExpansionTile(
             leading: const Icon(Icons.people),
             title: Text(
-              'Customers',
+              'Customer',
               style: AppStyles.drawerItemText,
             ),
-            onTap: () {},
+            childrenPadding: const EdgeInsets.only(
+                left: 16.0), // Optional for better alignment
+            children: [
+              ListTile(
+                leading: const Icon(Icons.approval),
+                title: Text(
+                  'Register Customer',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context
+                      .read<NavigationCubit>()
+                      .updateSubMenu('customer_register');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.view_list),
+                title: Text(
+                  'View Customers',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context
+                      .read<NavigationCubit>()
+                      .updateSubMenu('customer_view');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+            ],
           ),
         ],
       ),

@@ -21,7 +21,6 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<PartnerUpdateData>(_onPartnerUpdateData,
         transformer: debounce(const Duration(milliseconds: 500)));
-
     on<PartnerSubscriptionSuccsess>(_onPartnerSubscriptionSuccsess,
         transformer: debounce(const Duration(milliseconds: 500)));
     on<PartnerSubscriptionFailure>(_onPartnerSubscriptionFailure,
@@ -73,7 +72,7 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
       PartnerGetData event, Emitter<PartnerState> emit) async {
     emit(const PartnerLoadInProgress());
 
-    final result = await usecase.fetchPartners();
+    final result = await usecase.fetchData();
     result.fold(
       (failure) {
         emit(PartnerLoadFailure(failure.message));

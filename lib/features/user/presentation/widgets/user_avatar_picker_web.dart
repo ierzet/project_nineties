@@ -29,6 +29,7 @@ class _UserPlatformAvatarPickerState extends State<UserPlatformAvatarPicker> {
   }
 
   Future<void> _pickImage() async {
+    var scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       final pickedFile = await ImagePickerWeb.getImageAsFile();
       if (pickedFile != null) {
@@ -44,8 +45,7 @@ class _UserPlatformAvatarPickerState extends State<UserPlatformAvatarPicker> {
         });
       }
     } catch (e) {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text('Failed to pick image: $e'),
         ),

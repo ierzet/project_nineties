@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_nineties/features/user/domain/usecases/user_params.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';

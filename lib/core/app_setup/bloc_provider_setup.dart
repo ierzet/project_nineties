@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/app_setup/authentication_init.dart';
+import 'package:project_nineties/core/cubit/date_picker_cubit.dart';
 import 'package:project_nineties/core/cubit/global_cubit.dart';
+import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/customer/presentation/bloc/customer_validator_bloc/customer_validator_bloc.dart';
+import 'package:project_nineties/features/customer/presentation/cubit/customer_dob_date_cubit.dart';
+import 'package:project_nineties/features/customer/presentation/cubit/customer_expired_date_cubit.dart';
+import 'package:project_nineties/features/customer/presentation/cubit/customer_join_date_cubit.dart';
+import 'package:project_nineties/features/customer/presentation/cubit/customer_step_cubit.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
 import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
@@ -44,10 +51,21 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => AuthenticationValidatorBloc()),
           BlocProvider(create: (context) => di.locator<PartnerBloc>()),
           BlocProvider(create: (context) => di.locator<UserBloc>()),
+          BlocProvider(create: (context) => di.locator<CustomerBloc>()),
 
           //cubit
           BlocProvider(create: (context) => PartnerValidatorBloc()),
           BlocProvider(create: (context) => PartnerJoinDateCubit()),
+          BlocProvider(create: (context) => DatePickerCubit()),
+
+          BlocProvider(create: (context) => CustomerValidatorBloc()),
+          BlocProvider(create: (context) => CustomerJoinDateCubit()),
+          BlocProvider(create: (context) => CustomerDOBDateCubit()),
+          BlocProvider(create: (context) => CustomerExpiredDateCubit()),
+
+          //BlocProvider(create: (context) => CustomerJoinDateCubit()),
+          BlocProvider(create: (context) => CustomerStepCubit()),
+
           BlocProvider(create: (context) => NavigationCubit()),
           BlocProvider(create: (context) => UserValidatorCubit()),
           BlocProvider(create: (context) => UserValidatorBloc()),

@@ -149,7 +149,7 @@ class PartnerModel extends PartnerEntity {
         partnerCreatedBy: data['partner_created_by'] ?? '',
         partnerCreatedDate:
             (data['partner_created_date'] as Timestamp?)?.toDate(),
-        partnerUpdatedBy: data['partner_updated_date'] ?? '',
+        partnerUpdatedBy: data['partner_updated_by'] ?? '',
         partnerUpdatedDate:
             (data['partner_updated_date'] as Timestamp?)?.toDate(),
         partnerDeletedBy: data['partner_deleted_by'] ?? '',

@@ -11,7 +11,7 @@ abstract class PartnerRemoteDataSource {
   Future<String> insertData(PartnerModel dataModel);
   Future<String> updateData(PartnerModel dataModel);
   Future<String> uploadImage(PartnerModel dataModel);
-  Future<QuerySnapshot<Map<String, dynamic>>> fetchPartners();
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchData();
   Stream<List<PartnerEntity>> getPartnersStream();
 }
 
@@ -120,7 +120,7 @@ class PartnerRemoteDataSourceImpl implements PartnerRemoteDataSource {
   }
 
   @override
-  Future<QuerySnapshot<Map<String, dynamic>>> fetchPartners() async {
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchData() async {
     try {
       final result = await instance.collection('partner').get();
       return result;

@@ -20,9 +20,9 @@ class PartnerUseCase {
     return repository.updateData(dataModel);
   }
 
-  Future<Either<Failure, List<PartnerEntity>>> fetchPartners() async {
-    final listModelResulut = await repository.fetchPartners();
-    final listEnity = listModelResulut
+  Future<Either<Failure, List<PartnerEntity>>> fetchData() async {
+    final listModelResult = await repository.fetchData();
+    final listEnity = listModelResult
         .map((models) => models.map((model) => model.toEntity()).toList());
 
     return listEnity;

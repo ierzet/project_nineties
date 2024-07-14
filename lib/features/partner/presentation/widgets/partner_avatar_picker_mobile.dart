@@ -18,6 +18,7 @@ class _PartnerPlatformAvatarPickerState
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
+    var scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
@@ -32,7 +33,7 @@ class _PartnerPlatformAvatarPickerState
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text('Failed to pick image: $e'),
         ),
@@ -121,9 +122,12 @@ class _PartnerPlatformAvatarPickerState
               height: 150,
               width: 150,
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                // color: Colors.grey[200],
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey[400]!, width: 2),
+                border: Border.all(
+                  color: Colors.grey[400]!,
+                  width: 2,
+                ),
               ),
               child: avatarWidget,
             ),
