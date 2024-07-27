@@ -121,13 +121,13 @@ class _PartnerPlatformAvatarPickerState
           : Container(
               height: 150,
               width: 150,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 // color: Colors.grey[200],
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.grey[400]!,
-                  width: 2,
-                ),
+                // border: Border.all(
+                //   color: Colors.grey[400]!,
+                //   width: 2,
+                // ),
               ),
               child: avatarWidget,
             ),

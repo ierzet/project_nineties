@@ -25,6 +25,8 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<CustomerSubscriptionFailure>(_onCustomerSubscriptionFailure,
         transformer: debounce(const Duration(milliseconds: 500)));
+    on<CustomerSearchEvent>(_onCustomerSearchEvent,
+        transformer: debounce(const Duration(milliseconds: 500)));
 
     _customerSubscription = useCase().listen((result) {
       result.fold(
@@ -33,11 +35,14 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       );
     });
   }
+
   final CustomerUseCase useCase;
   late final StreamSubscription _customerSubscription;
+  List<CustomerEntity> _originalData = []; // Store original data
 
   void _onCustomerSubscriptionSuccsess(
       CustomerSubscriptionSuccsess event, Emitter<CustomerState> emit) async {
+    _originalData = event.params; // Store original data
     emit(CustomerLoadDataSuccess(data: event.params));
   }
 
@@ -51,11 +56,6 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     emit(const CustomerLoadInProgress());
 
     if (!event.params.isValid) {
-      // print('email valid: ${event.params.isEmailValid}');
-      // print('name valid: ${event.params.isNameValid}');
-      // print('phone valid: ${event.params.isPhoneValid}');
-      // print('no vehicle valid: ${event.params.isNoVehicleValid}');
-      // print('type of vehicle valid: ${event.params.isNoVehicleValid}');
       emit(const CustomerLoadFailure(message: AppStrings.dataIsNotValid));
       return;
     }
@@ -86,6 +86,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         emit(CustomerLoadFailure(message: failure.message));
       },
       (data) {
+        _originalData = data; // Store original data
         emit(CustomerLoadDataSuccess(data: data));
       },
     );
@@ -111,6 +112,16 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         emit(CustomerLoadUpdateSuccess(message: data));
       },
     );
+  }
+
+  void _onCustomerSearchEvent(
+      CustomerSearchEvent event, Emitter<CustomerState> emit) async {
+    final filteredCustomers = _originalData.where((customer) {
+      final name = customer.customerName?.toLowerCase() ??
+          ''; // Handle nullable customerName
+      return name.contains(event.query.toLowerCase());
+    }).toList();
+    emit(CustomerLoadDataSuccess(data: filteredCustomers));
   }
 
   @override

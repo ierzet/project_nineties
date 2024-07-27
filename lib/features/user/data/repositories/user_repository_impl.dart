@@ -14,6 +14,21 @@ class UserRepositoryImpl implements UserRepository {
 
   final UserRemoteDataSource remoteDataSource;
 
+  // @override
+  // Stream<Either<Failure, List<UserAccountEntity>>> getUsersStream() {
+  //   return remoteDataSource
+  //       .getUsersStream()
+  //       .map<Either<Failure, List<UserAccountEntity>>>(
+  //     (users) {
+  //       return Right(users);
+  //     },
+  //   ).handleError((error) {
+  //     return Left(ServerFailure(error.toString()));
+
+  //   });
+  //   //TODO:rapihin handler error nya
+  // }
+
   @override
   Stream<Either<Failure, List<UserAccountEntity>>> getUsersStream() {
     return remoteDataSource
@@ -23,9 +38,25 @@ class UserRepositoryImpl implements UserRepository {
         return Right(users);
       },
     ).handleError((error) {
-      return Left(ServerFailure(error.toString()));
+      if (error is FirebaseException) {
+        switch (error.code) {
+          case 'permission-denied':
+            return const Left(FirebaseStorageFailure(
+                'User does not have permission to access this data.'));
+          case 'unavailable':
+            return const Left(ConnectionFailure('Network is unavailable.'));
+          case 'cancelled':
+            return const Left(FirebaseStorageFailure('Request was cancelled.'));
+          default:
+            return Left(
+                ServerFailure('An unknown error occurred: ${error.message}'));
+        }
+      } else if (error is SocketException) {
+        return const Left(ConnectionFailure('No Internet connection.'));
+      } else {
+        return Left(ServerFailure(error.toString()));
+      }
     });
-    //TODO:rapihin handler error nya
   }
 
   @override

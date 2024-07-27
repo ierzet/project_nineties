@@ -4,7 +4,7 @@ import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/data/datasources/local/authentication_local_datasource.dart';
 import 'package:project_nineties/features/authentication/data/datasources/remote/authentication_remote_datasoure.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
-import 'package:project_nineties/features/authentication/data/models/user_model.dart';
+import 'package:project_nineties/features/user/data/models/user_model.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_params.dart';

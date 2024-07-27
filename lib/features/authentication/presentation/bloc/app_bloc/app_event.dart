@@ -16,16 +16,16 @@ class AppUserChanged extends AppEvent {
   List<Object> get props => [user];
 }
 
-class NavigateToSignup extends AppEvent {
-  const NavigateToSignup();
+// class NavigateToSignup extends AppEvent {
+//   const NavigateToSignup();
 
-  @override
-  List<Object> get props => [];
-}
+//   @override
+//   List<Object> get props => [];
+// }
 
-class NavigateToForgotPassword extends AppEvent {
-  const NavigateToForgotPassword();
+// class NavigateToForgotPassword extends AppEvent {
+//   const NavigateToForgotPassword();
 
-  @override
-  List<Object> get props => [];
-}
+//   @override
+//   List<Object> get props => [];
+// }

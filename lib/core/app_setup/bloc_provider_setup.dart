@@ -9,6 +9,9 @@ import 'package:project_nineties/features/customer/presentation/cubit/customer_d
 import 'package:project_nineties/features/customer/presentation/cubit/customer_expired_date_cubit.dart';
 import 'package:project_nineties/features/customer/presentation/cubit/customer_join_date_cubit.dart';
 import 'package:project_nineties/features/customer/presentation/cubit/customer_step_cubit.dart';
+import 'package:project_nineties/features/settings/presentation/cubit/theme_cubit.dart';
+import 'package:project_nineties/features/settings/presentation/pages/settings_page.dart';
+import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
 import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
@@ -52,6 +55,7 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => di.locator<PartnerBloc>()),
           BlocProvider(create: (context) => di.locator<UserBloc>()),
           BlocProvider(create: (context) => di.locator<CustomerBloc>()),
+          BlocProvider(create: (context) => di.locator<TransactionBloc>()),
 
           //cubit
           BlocProvider(create: (context) => PartnerValidatorBloc()),
@@ -62,6 +66,7 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => CustomerJoinDateCubit()),
           BlocProvider(create: (context) => CustomerDOBDateCubit()),
           BlocProvider(create: (context) => CustomerExpiredDateCubit()),
+          BlocProvider(create: (context) => ThemeCubit()),
 
           //BlocProvider(create: (context) => CustomerJoinDateCubit()),
           BlocProvider(create: (context) => CustomerStepCubit()),

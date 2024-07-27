@@ -27,6 +27,20 @@ class UserEntity extends Equatable {
       phoneNumber: firebaseUser.phoneNumber ?? '',
     );
   }
+  factory UserEntity.transactionFromFirebaseUser() {
+    //TODO:harusnya ke model dulu baru ke entity
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser == null) {
+      return UserEntity.empty;
+    }
+    return UserEntity(
+      id: firebaseUser.uid,
+      email: firebaseUser.email,
+      name: firebaseUser.displayName,
+      photo: firebaseUser.photoURL,
+      phoneNumber: firebaseUser.phoneNumber,
+    );
+  }
 
   static const empty = UserEntity(id: '');
 

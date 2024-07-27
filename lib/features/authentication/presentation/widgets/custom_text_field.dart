@@ -83,28 +83,29 @@ class CustomTextField extends StatelessWidget {
                 : AppStrings.confirmedPassword;
 
     final inputDecoration = InputDecoration(
-      enabledBorder: const OutlineInputBorder(
+      enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
-            // color: AppColors.primary,
-            ),
+          color: Theme.of(context).colorScheme.outline,
+        ),
       ),
-      focusedBorder: const OutlineInputBorder(
+      focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
-            //  color: AppColors.accent,
-            ),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
       ),
-      errorBorder: const OutlineInputBorder(
+      errorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-            //  color: AppColors.secondary,
-            ),
+          color: Theme.of(context).colorScheme.error,
+        ),
       ),
       labelText: labelText,
-      labelStyle: AppStyles.bodyText,
-      //fillColor: AppColors.background,
+      labelStyle: AppStyles.bodyText
+          .copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer),
+      fillColor: Theme.of(context).colorScheme.primaryContainer,
       filled: true,
-      hintStyle: const TextStyle(
-          // color: AppColors.textColor,
-          ),
+      hintStyle: TextStyle(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
       suffixIcon: BlocBuilder<AuthenticationValidatorBloc,
           AuthenticationValidatorState>(
         builder: (context, state) {
@@ -117,9 +118,9 @@ class CustomTextField extends StatelessWidget {
                       : state.params.isConfirmedPasswordValid;
 
           return isValid
-              ? const Icon(
+              ? Icon(
                   Icons.verified,
-                  // color: AppColors.accent,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 )
               : const SizedBox.shrink();
         },

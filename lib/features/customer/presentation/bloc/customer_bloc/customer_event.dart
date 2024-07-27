@@ -48,3 +48,12 @@ class CustomerSubscriptionFailure extends CustomerEvent {
   @override
   List<Object> get props => [message];
 }
+
+class CustomerSearchEvent extends CustomerEvent {
+  final String query;
+
+  const CustomerSearchEvent(this.query);
+
+  @override
+  List<Object> get props => [query];
+}

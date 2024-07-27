@@ -58,6 +58,8 @@ class UserPrimaryButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onSubmit,
         style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.primary,
           padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
@@ -68,10 +70,13 @@ class UserPrimaryButton extends StatelessWidget {
           child: BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               return state is UserLoadInProgress
-                  ? const CircularProgressIndicator(
-                      // color: AppColors.background,
-                      )
-                  : Text(AppStrings.signUp, style: AppStyles.buttonText);
+                  ? CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    )
+                  : Text(AppStrings.signUp,
+                      style: AppStyles.buttonText.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ));
             },
           ),
         ),

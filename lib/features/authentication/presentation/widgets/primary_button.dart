@@ -15,11 +15,6 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // const gradient = LinearGradient(
-    //   colors: [AppColors.accent, AppColors.primary],
-    //   begin: Alignment.topLeft,
-    //   end: Alignment.bottomRight,
-    // );
     void onSubmit() {
       final currentState =
           context.read<AuthenticationValidatorBloc>().state.params;
@@ -31,11 +26,10 @@ class PrimaryButton extends StatelessWidget {
           : authFormType == AuthenticationFormType.signup
               ? authBloc.add(AuthUserSignUp(params: currentState))
               : authBloc.add(AuthResetPassword(email: currentState.email));
+
       context
           .read<AuthenticationValidatorBloc>()
           .add(const AuthenticationClearValidator());
-
-      //TODO: Fix bug: skenario klik button signup namun terkendala validasi. validator cubit jadi missmatch
     }
 
     return Padding(
@@ -48,22 +42,25 @@ class PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
           ),
           elevation: AppPadding.halfPadding.r / 2,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
         ),
         child: Center(
           child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return state is AuthenticationLoading ||
                       state is AuthenticationRegistering
-                  ? const CircularProgressIndicator(
-                      // color: AppColors.background,
-                      )
+                  ? CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    )
                   : Text(
                       authFormType == AuthenticationFormType.signin
                           ? AppStrings.signIn
                           : authFormType == AuthenticationFormType.signup
                               ? AppStrings.signUp
-                              : AppStrings.forgotPassword,
-                      style: AppStyles.buttonText,
+                              : AppStrings.send,
+                      style: AppStyles.buttonText.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary),
                     );
             },
           ),

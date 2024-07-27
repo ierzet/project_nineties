@@ -2,97 +2,112 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
+import 'package:project_nineties/features/customer/presentation/widgets/customer_qrcode.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class AccountWidget extends StatelessWidget {
-  const AccountWidget({super.key});
+// class AccountWidget extends StatelessWidget {
+//   const AccountWidget({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+//   @override
+//   Widget build(BuildContext context) {
+//     final user = FirebaseAuth.instance.currentUser;
 
-    if (user == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('User not authenticated'),
-        ),
-      );
-    }
-    final userModel = UserEntity.fromFirebaseUser(user);
-    final appBloc = context.read<AppBloc>().state.user;
+//     if (user == null) {
+//       return const Scaffold(
+//         body: Center(
+//           child: Text('User not authenticated'),
+//         ),
+//       );
+//     }
+//     final userModel = UserEntity.fromFirebaseUser(user);
+//     final appBloc = context.read<AppBloc>().state.user;
 
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                backgroundImage:
-                    userModel.photo != null && userModel.photo!.isNotEmpty
-                        ? NetworkImage(userModel.photo!)
-                        : null,
-                radius: 50,
-                child: userModel.photo == null || userModel.photo!.isEmpty
-                    ? const Icon(Icons.person, size: 50)
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                userModel.name ?? 'Unknown User',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                userModel.email ?? 'No Email',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 16),
-              MembershipCard(
-                name: userModel.name ?? 'Unknown User',
-                cardId: appBloc.user.id,
-                expiryDate: '2024-12-31',
-                qrData: 'https://example.com/qr-code-data',
-                photoUrl: userModel.photo,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: () {
-                  context
-                      .read<AuthenticationValidatorBloc>()
-                      .add(const AuthenticationClearValidator());
-                  context
-                      .read<AuthenticationBloc>()
-                      .add(const AuthUserLogOut());
-                },
-                child: const Text('Sign out'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//     return SafeArea(
+//       child: SingleChildScrollView(
+//         child: Center(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               CircleAvatar(
+//                 backgroundImage:
+//                     userModel.photo != null && userModel.photo!.isNotEmpty
+//                         ? NetworkImage(userModel.photo!)
+//                         : null,
+//                 radius: 50,
+//                 child: userModel.photo == null || userModel.photo!.isEmpty
+//                     ? const Icon(Icons.person, size: 50)
+//                     : null,
+//               ),
+//               const SizedBox(height: 16),
+//               Text(
+//                 userModel.name ?? 'Unknown User',
+//                 style: const TextStyle(
+//                   fontSize: 24,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//               const SizedBox(height: 8),
+//               Text(
+//                 userModel.email ?? 'No Email',
+//                 style: const TextStyle(
+//                   fontSize: 16,
+//                   color: Colors.grey,
+//                 ),
+//               ),
+//               const SizedBox(height: 16),
+//               MembershipCard(
+//                 name: userModel.name ?? 'Unknown User',
+//                 cardId: appBloc.user.id,
+//                 expiryDate: '2024-12-31',
+//                 qrData: 'https://example.com/qr-code-data',
+//                 photoUrl: userModel.photo,
+//               ),
+//               const SizedBox(height: 24),
+//               ElevatedButton(
+//                 onPressed: () {
+//                   context
+//                       .read<AuthenticationValidatorBloc>()
+//                       .add(const AuthenticationClearValidator());
+//                   context
+//                       .read<AuthenticationBloc>()
+//                       .add(const AuthUserLogOut());
+//                 },
+//                 child: const Text('Sign out'),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class MessagesWidget extends StatelessWidget {
   const MessagesWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Messages Screen'),
+    return const SingleChildScrollView(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Messages Screen'),
+            CustomerQRCode(
+              customerId: 'BvFHIJPgR9gtFLUg2rar',
+            ),
+            SizedBox(
+              height: 34,
+            ),
+            CustomerQRCode(
+              customerId: 'PFoFdEpxRwWZgRgbCb52',
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -25,7 +25,7 @@ class SummaryCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          //color: color.withOpacity(0.1), // Subtle background color
+          //color: color.withOpacity(0.1),
           borderRadius: BorderRadius.circular(10.r),
         ),
         padding: EdgeInsets.all(16.0.r),

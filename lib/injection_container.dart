@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project_nineties/features/customer/data/datasources/customer_remote_datasource.dart';
 import 'package:project_nineties/features/customer/data/repositories/customer_repository_impl.dart';
 import 'package:project_nineties/features/customer/domain/repositories/customer_repository.dart';
 import 'package:project_nineties/features/customer/domain/usecases/customer_usecase.dart';
 import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/transaction/data/datasources/transaction_remote_datasource.dart';
+import 'package:project_nineties/features/transaction/data/repositories/transaction_repository_impl.dart';
+import 'package:project_nineties/features/transaction/domain/repositories/transaction_repository.dart';
+import 'package:project_nineties/features/transaction/domain/usecases/transaction_usecase.dart';
+import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
 import 'package:project_nineties/features/user/data/datasources/user_remote_datasource.dart';
 import 'package:project_nineties/features/user/data/repositories/user_repository_impl.dart';
 import 'package:project_nineties/features/user/domain/repositories/user_repository.dart';
@@ -35,12 +41,16 @@ void setupLocator() {
   locator.registerFactory<PartnerBloc>(() => PartnerBloc(locator()));
   locator.registerFactory<UserBloc>(() => UserBloc(usecase: locator()));
   locator.registerFactory<CustomerBloc>(() => CustomerBloc(useCase: locator()));
+  locator.registerFactory<TransactionBloc>(
+      () => TransactionBloc(useCase: locator()));
 
 //usecase
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));
   locator.registerLazySingleton(() => PartnerUseCase(repository: locator()));
   locator.registerLazySingleton(() => UserUseCase(repository: locator()));
   locator.registerLazySingleton(() => CustomerUseCase(repository: locator()));
+  locator
+      .registerLazySingleton(() => TransactionUseCase(repository: locator()));
 
   //repository
   locator.registerLazySingleton<AuthenticationRepository>(() =>
@@ -53,10 +63,17 @@ void setupLocator() {
       () => UserRepositoryImpl(remoteDataSource: locator()));
   locator.registerLazySingleton<CustomerRepository>(
       () => CustomerRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<TransactionRepository>(
+      () => TransactionRepositoryImpl(remoteDataSource: locator()));
 
   //data source
-  locator.registerLazySingleton<AuthenticationRemoteDataSource>(() =>
-      AuthenticationRemoteDataSourceImpl(locator(), locator(), locator()));
+  locator.registerLazySingleton<AuthenticationRemoteDataSource>(
+      () => AuthenticationRemoteDataSourceImpl(
+            locator(),
+            locator(),
+            locator(),
+            //locator(),
+          ));
   locator.registerLazySingleton<AuthenticationLocalDataSource>(
       () => AuthenticationLocalDataSourceImpl(locator()));
   locator.registerLazySingleton<PartnerRemoteDataSource>(
@@ -65,10 +82,13 @@ void setupLocator() {
       () => UserRemoteDataSourceImpl(locator(), locator(), locator()));
   locator.registerLazySingleton<CustomerRemoteDataSource>(
       () => CustomerRemoteDataSourceImpl(locator()));
+  locator.registerLazySingleton<TransactionRemoteDataSource>(
+      () => TransactionRemoteDataSourceImpl(locator()));
 
   //external
 
   locator.registerLazySingleton(() => firebase_auth.FirebaseAuth.instance);
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
   locator.registerLazySingleton(() => FirebaseStorage.instance);
+  locator.registerLazySingleton(() => GoogleSignIn.standard());
 }

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_bar_chart_sample1.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_customer_growth_box_chart.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample2.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_total_items_grid.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample1.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_transaction_trend_chart.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_user_activities_piechart.dart';
 
@@ -17,54 +20,69 @@ class HomeDashboard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Dashboard',
-              style: AppStyles.chartTitle, // Using AppStyles
-            ),
+            const ChartHeader(title: AppStrings.dashboard),
             SizedBox(height: AppPadding.defaultPadding.h),
             const HomeTotalItemsGrid(),
             SizedBox(height: AppPadding.defaultPadding.h),
-            Text(
-              'Transaction Trends',
-              style: AppStyles.chartTitle,
+            const ChartHeader(title: AppStrings.transactionTrends),
+            SizedBox(height: AppPadding.defaultPadding.h),
+            SizedBox(
+              height: AppPadding.triplePadding.h * 4,
+              child: const LineChartSample1(),
             ),
             SizedBox(height: AppPadding.defaultPadding.h),
             SizedBox(
-              height: 200.h,
-              child: const HomeTransactionTrendChart(),
+              height: AppPadding.triplePadding.h * 4,
+              child: const LineChartSample2(),
             ),
+            //SizedBox(height: AppPadding.defaultPadding.h),
+            // SizedBox(
+            //   height: AppPadding.triplePadding.h * 4,
+            //   child: BarChartSample1(),
+            // ),
+            //BarChartSample1(),
             SizedBox(height: AppPadding.defaultPadding.h),
-            Text(
-              'Transaction Trends 2',
-              style: AppStyles.chartTitle,
-            ),
+            const ChartHeader(title: '${AppStrings.transactionTrends} 2'),
             SizedBox(height: AppPadding.halfPadding.h),
             SizedBox(
-              height: 200.h,
+              height: AppPadding.triplePadding.h * 4,
               child: const TransactionTrendChart2(),
             ),
             SizedBox(height: AppPadding.defaultPadding.h),
-            Text(
-              'Customer Growth',
-              style: AppStyles.chartTitle, // Using AppStyles
-            ),
+            const ChartHeader(title: AppStrings.customerGrowth),
             SizedBox(height: AppPadding.halfPadding.h),
             SizedBox(
-              height: 200.h,
+              height: AppPadding.triplePadding.h * 4,
               child: const HomeCustomerGrowthBoxChart(),
             ),
             SizedBox(height: AppPadding.defaultPadding.h),
-            Text(
-              'User Activities',
-              style: AppStyles.chartTitle, // Using AppStyles
-            ),
+            const ChartHeader(title: AppStrings.userActivities),
             SizedBox(height: AppPadding.halfPadding.h),
             SizedBox(
-              height: 200.h,
+              height: AppPadding.triplePadding.h * 4,
               child: const HomeUserActivitisPieChart(),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ChartHeader extends StatelessWidget {
+  final String title;
+
+  const ChartHeader({
+    super.key,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: AppStyles.chartTitle.copyWith(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
     );
   }

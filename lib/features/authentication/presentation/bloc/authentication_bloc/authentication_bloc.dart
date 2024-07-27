@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_params.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/authentication_usecase.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/confirmed_password.dart';
@@ -128,6 +129,7 @@ class AuthenticationBloc
       },
       (data) {
         emit(AuthenticationRegistered(data));
+        
       },
     );
   }

@@ -10,15 +10,14 @@ import 'package:project_nineties/features/authentication/presentation/widgets/li
 import 'package:project_nineties/features/authentication/presentation/widgets/primary_button.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-
-  ForgotPasswordPage({super.key});
+  const ForgotPasswordPage({super.key});
   static Page<void> page() => MaterialPage<void>(child: ForgotPasswordPage());
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
     return Scaffold(
-      //backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: ResponsiveLayout(
         desktopBody: const Center(
           child: Text('Desktop Body'),
@@ -32,61 +31,60 @@ class ForgotPasswordPage extends StatelessWidget {
                   SizedBox(height: AppPadding.doublePadding.h),
                   Icon(
                     Icons.lock_reset,
-                    size: 100.r,
-                    //color: AppColors.primary,
+                    size: AppPadding.triplePadding.r * 2,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   SizedBox(height: AppPadding.doublePadding.h),
                   Text(
-                    'Forgot Password?',
-                    style: AppStyles.header.copyWith(fontSize: 24),
+                    AppStrings.forgotPassword,
+                    style: AppStyles.header.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                   ),
                   SizedBox(height: AppPadding.defaultPadding.h),
                   Text(
-                    'Enter your email to receive a reset link',
-                    style: AppStyles.bodyText,
+                    AppStrings.enterYourEmail,
+                    style: AppStyles.bodyText.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                   ),
-                  SizedBox(height: AppPadding.defaultPadding.h * 2),
+                  SizedBox(height: AppPadding.defaultPadding.h),
                   CustomTextField(
                     controller: emailController,
                     type: InputType.email,
                     authFormType: AuthenticationFormType.forgotPassword,
                   ),
-                  SizedBox(height: AppPadding.defaultPadding),
+                  SizedBox(height: AppPadding.doublePadding.h),
                   const PrimaryButton(
                     authFormType: AuthenticationFormType.forgotPassword,
-                    // onPressed: () async {
-                    //   try {
-                    //     await FirebaseAuth.instance.sendPasswordResetEmail(
-                    //         email: emailController.text.trim());
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       SnackBar(
-                    //         content: Text('Password reset email sent'),
-                    //       ),
-                    //     );
-                    //   } catch (e) {
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       SnackBar(
-                    //         content: Text('Error: ${e.toString()}'),
-                    //       ),
-                    //     );
-                    //   }
-                    // },
                   ),
-                  SizedBox(height: AppPadding.triplePadding.h),
+                  SizedBox(height: AppPadding.defaultPadding.h),
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Remember your password?',
-                          style: AppStyles.bodyText,
+                          AppStrings.rememberYourPassword,
+                          style: AppStyles.bodyText.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
                         ),
                         SizedBox(width: AppPadding.halfPadding.h / 2),
                         GestureDetector(
-                          onTap: () => context
-                              .read<AppBloc>()
-                              .add(const AppUserChanged(UserAccountEntity.empty)),
-                          child: Text('Sign In', style: AppStyles.accentText),
+                          // onTap: () => context.read<AppBloc>().add(
+                          //     const AppUserChanged(UserAccountEntity.empty)),
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Text(
+                            AppStrings.signIn,
+                            style: AppStyles.accentText.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
                         ),
                       ],
                     ),

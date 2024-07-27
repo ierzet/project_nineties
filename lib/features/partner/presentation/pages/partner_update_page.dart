@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/cubit/partner_join_date_cubit.dart';
 import 'package:project_nineties/features/partner/presentation/widgets/listener_notify_partner.dart';
@@ -30,18 +31,13 @@ class PartnerUpdatePage extends StatelessWidget {
     );
 
     return Scaffold(
+      appBar: const MainAppBarNoAvatar(),
       // backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: AppPadding.doublePadding.h),
-              Icon(
-                Icons.business,
-                size: 100.r,
-                // color: AppColors.primary,
-              ),
               SizedBox(height: AppPadding.doublePadding.h),
               const PartnerAvatarPicker(), // Ensure this is styled well
               SizedBox(height: AppPadding.defaultPadding.h),

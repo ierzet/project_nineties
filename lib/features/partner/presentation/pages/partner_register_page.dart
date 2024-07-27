@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/partner/presentation/cubit/partner_join_date_cubit.dart';
 import 'package:project_nineties/features/partner/presentation/widgets/listener_notify_partner.dart';
 import 'package:project_nineties/features/partner/presentation/widgets/partner_avatar_picker.dart';
@@ -21,20 +22,14 @@ class PartnerRegistrationPage extends StatelessWidget {
     final TextEditingController joinDateController = TextEditingController();
 
     return Scaffold(
+      appBar: const MainAppBarNoAvatar(),
       //backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: AppPadding.doublePadding.h),
-              Icon(
-                Icons.business,
-
-                size: 100.r,
-                //color: AppColors.primary,
-              ),
-              SizedBox(height: AppPadding.doublePadding.h),
+              SizedBox(height: AppPadding.defaultPadding.h),
               const PartnerAvatarPicker(), // Ensure this is styled well
               SizedBox(height: AppPadding.defaultPadding.h),
               Text(

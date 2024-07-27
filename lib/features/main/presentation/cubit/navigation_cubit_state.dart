@@ -5,12 +5,10 @@ class NavigationCubitState extends Equatable {
   const NavigationCubitState({
     required this.indexBotNavBar,
     this.subMenuProfileOpt,
-    this.userAccountEntity, // Tambahkan ini
   });
 
   final int indexBotNavBar;
   final String? subMenuProfileOpt;
-  final UserAccountEntity? userAccountEntity; // Tambahkan ini
 
   static NavigationCubitState initial =
       const NavigationCubitState(indexBotNavBar: 0);
@@ -23,12 +21,12 @@ class NavigationCubitState extends Equatable {
     return NavigationCubitState(
       indexBotNavBar: indexBotNavBar ?? this.indexBotNavBar,
       subMenuProfileOpt: subMenuProfileOpt ?? this.subMenuProfileOpt,
-      userAccountEntity:
-          userAccountEntity ?? this.userAccountEntity, // Tambahkan ini
     );
   }
 
   @override
-  List<Object?> get props =>
-      [indexBotNavBar, subMenuProfileOpt, userAccountEntity];
+  List<Object?> get props => [
+        indexBotNavBar,
+        subMenuProfileOpt,
+      ];
 }

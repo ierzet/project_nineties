@@ -92,7 +92,7 @@ class CustomerModel extends CustomerEntity {
       'customer_join_date': customerJoinDate,
       'customer_expired_date': customerExpiredDate,
       'customer_created_by': customerCreatedBy,
-      'customer_creadted_date': customerCreatedDate,
+      'customer_created_date': customerCreatedDate,
       'customer_updated_by': customerUpdatedBy,
       'customer_updated_date': customerUpdatedDate,
       'customer_deleted_by': customerDeletedBy,
@@ -103,7 +103,7 @@ class CustomerModel extends CustomerEntity {
 
   Map<String, dynamic> toFireStore() {
     return {
-      // 'customer_id': customerId,
+      'customer_id': customerId,
       'customer_name': customerName,
       'customer_email': customerEmail,
       'customer_phone_number': customerPhoneNumber,
@@ -117,7 +117,7 @@ class CustomerModel extends CustomerEntity {
       'customer_join_date': customerJoinDate,
       'customer_expired_date': customerExpiredDate,
       'customer_created_by': customerCreatedBy,
-      'customer_creadted_date': customerCreatedDate,
+      'customer_created_date': customerCreatedDate,
       'customer_updated_by': customerUpdatedBy,
       'customer_updated_date': customerUpdatedDate,
       'customer_deleted_by': customerDeletedBy,
@@ -127,28 +127,38 @@ class CustomerModel extends CustomerEntity {
   }
 
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
-    return CustomerModel(
-      customerId: json['customer_id'] ?? '',
-      customerName: json['customer_name'] ?? '',
-      customerEmail: json['customer_email'] ?? '',
-      customerPhoneNumber: json['customer_phone_number'] ?? '',
-      customerGender: json['customer_gender'] ?? '',
-      customerDateOfBirth: json['customer_date_of_birth'] as DateTime?,
-      customerNoVehicle: json['customer_no_vehicle'] ?? '',
-      customerTypeOfVehicle: json['customer_type_of_vehicle'] ?? '',
-      customerColorOfVehicle: json['customer_color_of_vehicle'] ?? '',
-      customerTypeOfMember: json['customer_type_of_member'] ?? '',
-      customerStatusMember: json['customer_status_member'],
-      customerJoinDate: json['customer_join_date'] as DateTime?,
-      customerExpiredDate: json['customer_expired_date'] as DateTime?,
-      customerCreatedBy: json['customer_created_by'] ?? '',
-      customerCreatedDate: json['customer_created_date'] as DateTime?,
-      customerUpdatedBy: json['customer_updated_by'] ?? '',
-      customerUpdatedDate: json['customer_updated_date'] as DateTime?,
-      customerDeletedBy: json['customer_deleted_by'] ?? '',
-      customerDeletedDate: json['customer_deleted_date'] as DateTime?,
-      customerIsDeleted: json['customer_is_deleted'] ?? false,
-    );
+    try {
+      return CustomerModel(
+        customerId: json['customer_id'],
+        customerName: json['customer_name'],
+        customerEmail: json['customer_email'],
+        customerPhoneNumber: json['customer_phone_number'],
+        customerGender: json['customer_gender'],
+        customerDateOfBirth:
+            (json['customer_date_of_birth'] as Timestamp?)?.toDate(),
+        customerNoVehicle: json['customer_no_vehicle'],
+        customerTypeOfVehicle: json['customer_type_of_vehicle'],
+        customerColorOfVehicle: json['customer_color_of_vehicle'],
+        customerTypeOfMember: json['customer_type_of_member'],
+        customerStatusMember: json['customer_status_member'],
+        customerJoinDate: (json['customer_join_date'] as Timestamp?)?.toDate(),
+        customerExpiredDate:
+            (json['customer_expired_date'] as Timestamp?)?.toDate(),
+        customerCreatedBy: json['customer_created_by'],
+        customerCreatedDate:
+            (json['customer_created_date'] as Timestamp?)?.toDate(),
+        customerUpdatedBy: json['customer_updated_by'],
+        customerUpdatedDate:
+            (json['customer_updated_date'] as Timestamp?)?.toDate(),
+        customerDeletedBy: json['customer_deleted_by'],
+        customerDeletedDate:
+            (json['customer_deleted_date'] as Timestamp?)?.toDate(),
+        customerIsDeleted: json['customer_is_deleted'] ?? false,
+      );
+    } catch (e) {
+      debugPrint('Error in CustomerModel.fromJson: $e');
+      rethrow; // Rethrow the exception for better debugging
+    }
   }
 
   factory CustomerModel.fromFirestore(

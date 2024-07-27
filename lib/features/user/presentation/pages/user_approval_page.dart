@@ -1,152 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
 import 'package:project_nineties/features/user/presentation/widgets/user_listener_notification.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
+import 'package:project_nineties/features/user/presentation/widgets/user_partner_dd.dart';
+import 'package:project_nineties/features/user/presentation/widgets/user_role_dd.dart';
 
 class UserApprovalPage extends StatelessWidget {
-  final UserAccountEntity user;
-
-  const UserApprovalPage({required this.user, super.key});
+  const UserApprovalPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     context.read<PartnerBloc>().add(const PartnerGetData());
-    final roleController = TextEditingController();
-    final ddlMitraController = TextEditingController();
-    String? partnerId;
-    String? selectedRole;
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 16),
-            const Text(
-              'User Approval',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            CircleAvatar(
-              backgroundImage:
-                  user.user.photo != null && user.user.photo!.isNotEmpty
-                      ? NetworkImage(user.user.photo!)
-                      : const AssetImage('assets/images/profile_empty.png')
-                          as ImageProvider,
-              radius: 50,
-            ),
-            const SizedBox(height: 32),
-            Text(
-              user.user.name ?? 'No Name',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+    final user = context.read<UserValidatorCubit>().state;
+    return Scaffold(
+      appBar: const MainAppBarNoAvatar(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(AppPadding.defaultPadding.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: AppPadding.defaultPadding.h),
+              CircleAvatar(
+                backgroundImage:
+                    user.user.photo != null && user.user.photo!.isNotEmpty
+                        ? NetworkImage(user.user.photo!)
+                        : const AssetImage('assets/images/profile_empty.png')
+                            as ImageProvider,
+                radius: AppPadding.triplePadding.r * 3 / 2,
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              user.user.email ?? 'No Email',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
+              SizedBox(height: AppPadding.defaultPadding.h),
+              Text(
+                user.user.name ?? 'No Name',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Registration Date: ${DateFormat('yyyy-MM-dd').format(user.joinDate!)}',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 32),
-            BlocBuilder<PartnerBloc, PartnerState>(
-              builder: (context, state) {
-                if (state is PartnerLoadDataSuccess) {
-                  List<DropdownMenuEntry<String>> ddlMitra =
-                      state.data.map((partner) {
-                    return DropdownMenuEntry<String>(
-                      value: partner.partnerId,
-                      label: partner.partnerName ?? '',
-                    );
-                  }).toList();
-                  return DropdownMenu<String>(
-                    controller: ddlMitraController,
-                    label: const Text('Mitra'),
-                    enableFilter: true,
-                    enableSearch: false,
-                    dropdownMenuEntries: ddlMitra,
-                    inputDecorationTheme: const InputDecorationTheme(
-                      filled: true,
+              SizedBox(height: AppPadding.halfPadding.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.email,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    user.user.email ?? 'No Email',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
                     ),
-                    onSelected: (selectedPartnerId) {
-                      // final currentState = context
-                      //     .read<AuthenticationValidatorBloc>()
-                      //     .state
-                      //     .params;
-                      partnerId = selectedPartnerId ?? '';
-                      // print('partnerId: $partnerId');
-
-                      final selectedPartner = state.data.firstWhere(
-                          (partner) => partner.partnerId == selectedPartnerId);
-                      //print('selectedPartner: $selectedPartner');
-                      //print('currentState: $currentState');
-                      context
-                          .read<UserValidatorCubit>()
-                          .updatePartner(partner: selectedPartner);
-                      // print(
-                      //     "Selected PartnerId: $selectedPartnerId, Label: ${selectedPartner.partnerName}");
-                    },
-                  );
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            DropdownMenu<String>(
-              controller: roleController,
-              label: const Text('Role'),
-              enableFilter: true,
-              enableSearch: false,
-              dropdownMenuEntries: const [
-                DropdownMenuEntry<String>(
-                  value: 'User',
-                  label: 'User',
-                ),
-                DropdownMenuEntry<String>(
-                  value: 'Admin',
-                  label: 'Admin',
-                ),
-              ],
-              inputDecorationTheme: const InputDecorationTheme(
-                filled: true,
+                  ),
+                ],
               ),
-              onSelected: (selectedRoleId) {
-                selectedRole = selectedRoleId;
-                context
-                    .read<UserValidatorCubit>()
-                    .updateRole(role: selectedRoleId);
-              },
-            ),
-            const SizedBox(height: 32),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ApprovalButton(),
-                SizedBox(width: 16),
-                RejectButton(),
-              ],
-            ),
-            const UserListenerNotification(),
-          ],
+              SizedBox(height: AppPadding.halfPadding.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.calendar_today,
+                      color: Theme.of(context).colorScheme.primary),
+                  SizedBox(width: AppPadding.halfPadding.w),
+                  Text(
+                    'Registration Date: ${DateFormat('yyyy-MM-dd').format(user.joinDate!)}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+              Divider(height: AppPadding.doublePadding.h),
+              UserPartnerDd(
+                initialValue: user.partner.partnerId,
+                dropDownType: DropDownType.update,
+              ),
+              SizedBox(height: AppPadding.defaultPadding.h),
+              UserRoleDd(
+                initialValue: user.roleId ?? 'User',
+                dropDownType: DropDownType.update,
+              ),
+              Divider(height: AppPadding.doublePadding.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const ApprovalButton(),
+                  SizedBox(width: AppPadding.defaultPadding.w),
+                  const RejectButton(),
+                ],
+              ),
+              const UserListenerNotification(),
+            ],
+          ),
         ),
       ),
     );
@@ -154,9 +108,7 @@ class UserApprovalPage extends StatelessWidget {
 }
 
 class RejectButton extends StatelessWidget {
-  const RejectButton({
-    super.key,
-  });
+  const RejectButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -166,6 +118,7 @@ class RejectButton extends StatelessWidget {
         Navigator.pop(context);
       },
       style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -180,20 +133,11 @@ class RejectButton extends StatelessWidget {
 }
 
 class ApprovalButton extends StatelessWidget {
-  const ApprovalButton({
-    super.key,
-  });
+  const ApprovalButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final updatedUserRead = context.read<AppBloc>().state.user;
-    // final updatedUserWatch = context.watch<AppBloc>().state.user;
-    // final updatedUserProvider = BlocProvider.of<AppBloc>(context).state.user;
     final updatedUser = context.watch<AppBloc>().state.user.user.id;
-    // print('updatedUser watch: $updatedUserWatch');
-    // print('updatedUser read: $updatedUserRead');
-    // print('updatedUser provider: $updatedUserProvider');
-    // print('updatedUser: $updatedUser');
 
     return ElevatedButton(
       onPressed: () {
@@ -206,14 +150,18 @@ class ApprovalButton extends StatelessWidget {
         context.read<UserValidatorCubit>().clearValidation();
       },
       style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      child: const Text(
+      child: Text(
         'Approve',
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(
+          fontSize: 16,
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
       ),
     );
   }

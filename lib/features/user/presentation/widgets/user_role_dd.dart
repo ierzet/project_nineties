@@ -3,12 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
+import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
 
 class UserRoleDd extends StatelessWidget {
-  const UserRoleDd({super.key, required this.initialValue});
+  const UserRoleDd({
+    super.key,
+    required this.initialValue,
+    this.dropDownType,
+  });
 
   final String initialValue;
-
+  final DropDownType? dropDownType;
   @override
   Widget build(BuildContext context) {
     String selectedRole = initialValue;
@@ -20,10 +25,14 @@ class UserRoleDd extends StatelessWidget {
         value: selectedRole,
         onChanged: (newValue) {
           final userValidatorState = userValidatorBloc.state.params;
+          final userValidatorCubit = context.read<UserValidatorCubit>();
+
           if (newValue != null) {
             selectedRole = newValue;
-            userValidatorBloc.add(UserValidatorForm(
-                params: userValidatorState.copyWith(roleId: selectedRole)));
+            dropDownType == DropDownType.update
+                ? userValidatorCubit.updateRole(role: selectedRole)
+                : userValidatorBloc.add(UserValidatorForm(
+                    params: userValidatorState.copyWith(roleId: selectedRole)));
           }
         },
         items: <String>['Admin', 'User', 'Superadmin']

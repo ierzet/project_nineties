@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:flutter/foundation.dart';
+import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({
@@ -67,6 +68,22 @@ class UserModel extends UserEntity {
       phoneNumber: json['user']['phone_number'] as String,
     );
   }
+
+  factory UserModel.fromTransactionJson(Map<String, dynamic> json) {
+    try {
+      return UserModel(
+        id: json['id'],
+        email: json['email'],
+        name: json['name'],
+        photo: json['photo'],
+        phoneNumber: json['phone_number'],
+      );
+    } catch (e) {
+      debugPrint('Error in UserModel.fromTransactionJson: $e');
+      rethrow;
+    }
+  }
+
   factory UserModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data() ?? {};

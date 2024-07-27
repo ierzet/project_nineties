@@ -1,10 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
 class UserAccountEntity extends Equatable {
   final UserEntity user;
-
   final DateTime? joinDate;
   final bool? isActive;
   final PartnerEntity partner;

@@ -15,6 +15,7 @@ class MainDashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAdmin = context.read<AppBloc>().state.user.roleId;
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: const MainAppBar(),
       drawer: isAdmin == 'Admin' || isAdmin == 'Superadmin'
           ? const MainDrawer()

@@ -36,11 +36,13 @@ class AuthenticationRemoteDataSourceImpl
 
   final FirebaseFirestore _firestore;
   final FirebaseStorage _firebaseStorage;
+  //final GoogleSignIn? _googleSignIn;
 
   AuthenticationRemoteDataSourceImpl(
     this._firebaseAuth,
     this._firestore,
     this._firebaseStorage,
+    // this._googleSignIn,
   );
 
   @override
@@ -89,6 +91,8 @@ class AuthenticationRemoteDataSourceImpl
         photoURL: downloadUrl.isNotEmpty ? downloadUrl : null,
       );
     } on FirebaseAuthException catch (e) {
+      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+    } on FirebaseException catch (e) {
       throw FirebaseStorageFailure.fromCode(e.code);
     } catch (e) {
       if (e is FirebaseStorageFailure) {
@@ -336,6 +340,11 @@ class AuthenticationRemoteDataSourceImpl
   Future<String> onLogOut() async {
     try {
       await _firebaseAuth.signOut();
+      if (!kIsWeb) {
+        final GoogleSignIn googleSignIn = GoogleSignIn();
+        await googleSignIn.signOut();
+        await googleSignIn.disconnect();
+      }
 
       return 'LogOut Succed';
     } on firebase_auth.FirebaseAuthException catch (e) {

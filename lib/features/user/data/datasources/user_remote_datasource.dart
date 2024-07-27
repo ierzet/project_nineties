@@ -8,7 +8,7 @@ import 'package:project_nineties/features/user/domain/usecases/user_params.dart'
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
 import 'package:universal_html/html.dart' as html;
 
 abstract class UserRemoteDataSource {
@@ -25,10 +25,25 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final FirebaseStorage _firebaseStorage;
 
+  // @override
+  // Stream<List<UserAccountEntity>> getUsersStream() {
+  //   var result =
+  //       instance.collection('user_account').snapshots().map((snapshot) {
+  //     try {
+  //       final users = snapshot.docs.map((doc) {
+  //         return UserAccountModel.fromFirestore(doc).toEntity();
+  //       }).toList();
+  //       return users;
+  //     } catch (e) {
+  //       throw ServerFailure(e.toString());
+  //     }
+  //   });
+  //   //TODO:rapihin handler error nya
+  //   return result;
+  // }
   @override
   Stream<List<UserAccountEntity>> getUsersStream() {
-    var result =
-        instance.collection('user_account').snapshots().map((snapshot) {
+    return instance.collection('user_account').snapshots().map((snapshot) {
       try {
         final users = snapshot.docs.map((doc) {
           return UserAccountModel.fromFirestore(doc).toEntity();
@@ -37,9 +52,25 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       } catch (e) {
         throw ServerFailure(e.toString());
       }
+    }).handleError((error) {
+      if (error is FirebaseException) {
+        switch (error.code) {
+          case 'permission-denied':
+            throw const FirebaseStorageFailure(
+                'User does not have permission to access this data.');
+          case 'unavailable':
+            throw const ConnectionFailure('Network is unavailable.');
+          case 'cancelled':
+            throw const FirebaseStorageFailure('Request was cancelled.');
+          default:
+            throw ServerFailure('An unknown error occurred: ${error.message}');
+        }
+      } else if (error is SocketException) {
+        throw const ConnectionFailure('No Internet connection.');
+      } else {
+        throw ServerFailure(error.toString());
+      }
     });
-    //TODO:rapihin handler error nya
-    return result;
   }
 
   @override

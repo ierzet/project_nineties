@@ -9,9 +9,9 @@ class AuthenticationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      //backgroundColor: AppColors.background, // Background Color
-      body: ResponsiveLayout(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: const ResponsiveLayout(
         desktopBody: Center(
           child: Text('Desktop Body'),
         ),

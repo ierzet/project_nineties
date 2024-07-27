@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
 
 class UserDynamic extends Equatable {
   final UserEntity userEntity;

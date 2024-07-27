@@ -110,26 +110,31 @@ class PartnerModel extends PartnerEntity {
   }
 
   factory PartnerModel.fromJson(Map<String, dynamic> json) {
-    return PartnerModel(
-      partnerId: json['partner_id'] ?? '',
-      partnerName: json['partner_name'] ?? '',
-      partnerEmail: json['partner_email'] ?? '',
-      partnerPhoneNumber: json['partner_phone_number'] ?? '',
-      partnerImageUrl: json['partner_image_url'] ?? '',
-      partnerAddress: json['partner_address'] ?? '',
-      partnerStatus: json['partner_status'] ?? '',
-      partnerJoinDate: (json['partner_join_date'] as Timestamp?)?.toDate(),
-      partnerCreatedBy: json['partner_created_by'] ?? '',
-      partnerCreatedDate:
-          (json['partner_created_date'] as Timestamp?)?.toDate(),
-      partnerUpdatedBy: json['partner_updated_by'] ?? '',
-      partnerUpdatedDate:
-          (json['partner_updated_date'] as Timestamp?)?.toDate(),
-      partnerDeletedBy: json['partner_deleted_by'] ?? '',
-      partnerDeletedDate:
-          (json['partner_deleted_date'] as Timestamp?)?.toDate(),
-      partnerIsDeleted: json['partner_is_deleted'] ?? false,
-    );
+    try {
+      return PartnerModel(
+        partnerId: json['partner_id'],
+        partnerName: json['partner_name'],
+        partnerEmail: json['partner_email'],
+        partnerPhoneNumber: json['partner_phone_number'],
+        partnerImageUrl: json['partner_image_url'],
+        partnerAddress: json['partner_address'],
+        partnerStatus: json['partner_status'],
+        partnerJoinDate: (json['partner_join_date'] as Timestamp?)?.toDate(),
+        partnerCreatedBy: json['partner_created_by'],
+        partnerCreatedDate:
+            (json['partner_created_date'] as Timestamp?)?.toDate(),
+        partnerUpdatedBy: json['partner_updated_by'],
+        partnerUpdatedDate:
+            (json['partner_updated_date'] as Timestamp?)?.toDate(),
+        partnerDeletedBy: json['partner_deleted_by'],
+        partnerDeletedDate:
+            (json['partner_deleted_date'] as Timestamp?)?.toDate(),
+        partnerIsDeleted: json['partner_is_deleted'] ?? false,
+      );
+    } catch (e) {
+      debugPrint('Error in PartnerModel.fromJson: $e');
+      rethrow;
+    }
   }
 
   factory PartnerModel.fromFirestore(

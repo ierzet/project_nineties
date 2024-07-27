@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/pages/authentication_page.dart';
-import 'package:project_nineties/features/authentication/presentation/pages/forgot_password_page.dart';
-import 'package:project_nineties/features/authentication/presentation/pages/signup_page.dart';
 import 'package:project_nineties/features/main/presentation/pages/main_dashboard.dart';
 
 List<Page<dynamic>> onGenerateAppViewPages(
@@ -14,11 +12,10 @@ List<Page<dynamic>> onGenerateAppViewPages(
       return [MainDashboardPage.page()];
     case AppStatus.unauthenticated:
       return [AuthenticationPage.page()];
-    case AppStatus.signup:
-      return [SignupPage.page()];
-    case AppStatus.forgotPassword:
-      return [ForgotPasswordPage.page()];
-
+    // case AppStatus.signup:
+    //   return [SignupPage.page()];
+    // case AppStatus.forgotPassword:
+    //   return [ForgotPasswordPage.page()];
     case AppStatus.loading:
       return [LoadingPage.page()]; // Add loading state handling
     default:

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
 import 'dart:io';
 
@@ -15,6 +17,7 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
   File? _image;
 
   Future<void> _pickImage() async {
+    final colorScheme = Theme.of(context).colorScheme;
     final picker = ImagePicker();
     try {
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -37,7 +40,13 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to pick image: $e'),
+          backgroundColor: colorScheme.error,
+          content: Text(
+            '${AppStrings.failedToPickImage}: $e',
+            style: TextStyle(
+              color: colorScheme.onError,
+            ),
+          ),
         ),
       );
     }
@@ -68,8 +77,8 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
                 ClipOval(
                   child: Image.file(
                     _image!,
-                    height: 150,
-                    width: 150,
+                    height: AppPadding.triplePadding.h * 3,
+                    width: AppPadding.triplePadding.w * 3,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -83,10 +92,10 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
                         // color: Colors.red,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.close,
                         //color: Colors.white,
-                        size: 20,
+                        size: AppPadding.halfPadding.r * 3,
                       ),
                     ),
                   ),
@@ -94,27 +103,26 @@ class _PlatformAvatarPickerState extends State<PlatformAvatarPicker> {
               ],
             )
           : Container(
-              height: 150,
-              width: 150,
+              height: AppPadding.triplePadding.h * 3,
+              width: AppPadding.triplePadding.w * 3,
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.grey[400]!, width: 2),
               ),
-              child: const Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.camera_alt,
-                    // color: AppColors.secondary,
-                    size: 50,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: AppPadding.triplePadding.h,
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: AppPadding.halfPadding.h),
                   Text(
-                    "Tap to add photo",
+                    "ambil gambar",
                     style: TextStyle(
-                        //  color: Colors.grey[800],
-                        ),
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
                 ],
               ),

@@ -4,12 +4,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
+import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
 
 class UserPartnerDd extends StatelessWidget {
-  const UserPartnerDd({super.key, this.initialValue});
+  const UserPartnerDd({
+    super.key,
+    this.initialValue,
+    this.dropDownType,
+  });
 
   final String? initialValue;
-
+  final DropDownType? dropDownType;
   @override
   Widget build(BuildContext context) {
     final userValidatorBloc = context.read<UserValidatorBloc>();
@@ -20,18 +25,24 @@ class UserPartnerDd extends StatelessWidget {
         builder: (context, state) {
           if (state is PartnerLoadDataSuccess) {
             String selectedPartnerId =
-                initialValue ?? state.data.first.partnerId;
+                (initialValue == null || initialValue!.isEmpty)
+                    ? state.data.first.partnerId
+                    : initialValue!;
             return DropdownButtonFormField<String>(
               value: selectedPartnerId,
               onChanged: (newValue) {
                 final userValidatorState = userValidatorBloc.state.params;
+                final userValidatorCubit = context.read<UserValidatorCubit>();
                 if (newValue != null) {
                   selectedPartnerId = newValue;
                   final selectedPartner = state.data.firstWhere(
                       (partner) => partner.partnerId == selectedPartnerId);
-                  userValidatorBloc.add(UserValidatorForm(
-                      params: userValidatorState.copyWith(
-                          partner: selectedPartner)));
+                  dropDownType == DropDownType.update
+                      ? userValidatorCubit.updatePartner(
+                          partner: selectedPartner)
+                      : userValidatorBloc.add(UserValidatorForm(
+                          params: userValidatorState.copyWith(
+                              partner: selectedPartner)));
                 }
               },
               items: state.data.map<DropdownMenuItem<String>>((partner) {

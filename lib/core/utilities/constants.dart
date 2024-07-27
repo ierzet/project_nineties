@@ -41,24 +41,47 @@ class AppColors {
 // }
 
 class AppStrings {
-  //authetication page
-  static const String welcomeMessage = "Welcome back you've been missed!";
-  static const String forgotPassword = 'Forgot Password?';
-  static const String signIn = 'Sign In';
-  static const String notAMember = 'Not a member?';
-  static const String registerNow = 'Register now';
-  static const String orContinueWith = 'Or continue with';
-  static const String userName = 'Username';
-  static const String password = 'Password';
-  static const String signUp = 'Sign Up';
-  static const String dataIsNotValid = 'Data is not valid';
+  static const String appName = '90s Car Wash';
 
-  //signup page
-  static const String name = 'Name';
-  static const String confirmedPassword = 'Confirmed password';
+  //halaman autentikasi
+  static const String welcomeMessage = "Selamat datang kembali!";
+  static const String forgotPassword = 'Lupa Kata Sandi?';
+  static const String signIn = 'Masuk';
+  static const String notAMember = 'Belum menjadi anggota?';
+  static const String registerNow = 'Daftar sekarang';
+  static const String orContinueWith = 'atau lanjutkan dengan';
+  static const String userName = 'Nama Pengguna';
+  static const String password = 'Kata Sandi';
+  static const String signUp = 'Daftar';
+  static const String dataIsNotValid = 'Data tidak valid';
 
-  //forgot password page
+  //halaman pendaftaran
+  static const String name = 'Nama';
+  static const String confirmedPassword = 'Konfirmasi kata sandi';
+  static const String joinUs = 'Bergabunglah untuk pengalaman terbaik!';
+  static const String failedToPickImage = 'Gagal memilih gambar';
+  static const String alreadyHaveAnAccount = 'Apakah Anda sudah memliki akun';
+
+  //halaman lupa kata sandi
   static const String email = 'Email';
+
+  static const String pleaseEnterAValidInformation =
+      'Harap masukkan informasi yang valid.';
+
+  //halaman lupa password
+  static const String enterYourEmail =
+      'Masukkan email Anda untuk menerima tautan reset';
+  static const String rememberYourPassword = 'Ingat kata sandi Anda?';
+  static const String send = 'Kirim';
+
+  //halaman dashboard
+  static const String dashboard = 'Dashboard';
+  static const String transactionTrends = 'Transaction Trends';
+  static const String customerGrowth = 'Customer Growth';
+  static const String userActivities = 'User Activities';
+
+  //drawer
+  static const String adminMenu = 'Admin Menu';
 }
 
 String toTitleCase(String text) {
@@ -74,8 +97,8 @@ String toTitleCase(String text) {
 }
 
 class AppStyles {
-  static final TextStyle header = GoogleFonts.montserrat(
-    fontSize: 16,
+  static final TextStyle header = GoogleFonts.lato(
+    fontSize: 24,
     // color: AppColors.primary,
     fontWeight: FontWeight.bold,
   );
@@ -98,25 +121,25 @@ class AppStyles {
     fontWeight: FontWeight.w600,
   );
 
-  static final TextStyle buttonText = GoogleFonts.montserrat(
+  static final TextStyle buttonText = GoogleFonts.lato(
     fontSize: 16,
     // color: AppColors.background,
     fontWeight: FontWeight.bold,
   );
-  static final TextStyle appBarTitle = GoogleFonts.montserrat(
-    fontSize: 20,
-    // color: AppColors.background,
+  static final TextStyle appBarTitle = GoogleFonts.lato(
+    fontSize: 24,
+    color: AppColors.background,
     fontWeight: FontWeight.bold,
   );
   // New style for chart titles
-  static final TextStyle chartTitle = GoogleFonts.montserrat(
-    fontSize: 24,
+  static final TextStyle chartTitle = GoogleFonts.lato(
+    fontSize: 22,
     //  color: AppColors.primary,
     fontWeight: FontWeight.bold,
   );
   // New style for drawer header text
-  static final TextStyle drawerHeaderText = GoogleFonts.montserrat(
-    fontSize: 24,
+  static final TextStyle drawerHeaderText = GoogleFonts.lato(
+    fontSize: 22,
     //color: Colors.white,
     fontWeight: FontWeight.bold,
   );
@@ -156,6 +179,8 @@ enum InputType {
 }
 
 enum AuthenticationFormType { signin, signup, forgotPassword }
+
+enum DropDownType { register, update }
 
 enum ColorSelectionMethod {
   colorSeed,
@@ -198,9 +223,6 @@ enum ColorImageProvider {
   final String label;
   final String url;
 }
-
-
-
 
 // TextTheme(
 //           headlineLarge: TextStyle(

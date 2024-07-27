@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 abstract class Failure extends Equatable {
   final String message;
@@ -252,6 +253,9 @@ class FirebaseStorageFailure extends Failure {
 
   factory FirebaseStorageFailure.fromCode(String code) {
     switch (code) {
+      case 'unauthorized':
+        return const FirebaseStorageFailure(
+            'User is not authorized to store image. Please contact your administrator.');
       case 'storage/unknown':
         return const FirebaseStorageFailure('An unknown error occurred.');
       case 'storage/object-not-found':

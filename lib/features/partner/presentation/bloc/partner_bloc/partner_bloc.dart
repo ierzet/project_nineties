@@ -99,7 +99,7 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
       },
       (data) {
         //back to home
-        navigatorBloc.updateSubMenu('partners_view');
+        navigatorBloc.updateSubMenu('transaction_view');
         emit(PartnerLoadUpdateSuccess(message: data));
       },
     );

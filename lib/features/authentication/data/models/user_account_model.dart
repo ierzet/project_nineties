@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_entity.dart';
+import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
-import 'package:project_nineties/features/authentication/data/models/user_model.dart';
+import 'package:project_nineties/features/user/data/models/user_model.dart';
 
 class UserAccountModel extends UserAccountEntity {
   const UserAccountModel({

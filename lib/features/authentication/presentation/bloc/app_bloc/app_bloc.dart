@@ -22,8 +22,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         ) {
     on<AppUserChanged>(_onUserChanged,
         transformer: debounce(const Duration(milliseconds: 500)));
-    on<NavigateToSignup>(_onNavigateToSignup);
-    on<NavigateToForgotPassword>(_onNavigateToForgotPassword);
+    // on<NavigateToSignup>(_onNavigateToSignup);
+    // on<NavigateToForgotPassword>(_onNavigateToForgotPassword);
 
     _userSubscription = _authenticationInitiation.user.listen(
       (user) => add(AppUserChanged(user)),
@@ -58,14 +58,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     }
   }
 
-  void _onNavigateToSignup(NavigateToSignup event, Emitter<AppState> emit) {
-    emit(const AppState.signup());
-  }
+  // void _onNavigateToSignup(NavigateToSignup event, Emitter<AppState> emit) {
+  //   emit(const AppState.signup());
+  // }
 
-  void _onNavigateToForgotPassword(
-      NavigateToForgotPassword event, Emitter<AppState> emit) {
-    emit(const AppState.forgotPassword());
-  }
+  // void _onNavigateToForgotPassword(
+  //     NavigateToForgotPassword event, Emitter<AppState> emit) {
+  //   emit(const AppState.forgotPassword());
+  // }
 
   @override
   Future<void> close() {

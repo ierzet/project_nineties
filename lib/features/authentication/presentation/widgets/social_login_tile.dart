@@ -24,14 +24,15 @@ class SocialLoginTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => action(loginType),
       child: Card(
+        color: Theme.of(context).colorScheme.primaryContainer,
         // shape: RoundedRectangleBorder(
         //   borderRadius: BorderRadius.circular(16),
         //   side: const BorderSide(
-        //       // color: AppColors.primary,
-        //       ),
+        //     color: AppColors.primary,
+        //   ),
         // ),
         elevation: AppPadding.halfPadding.r / 2,
-        // shadowColor: AppColors.primary,
+        shadowColor: Theme.of(context).colorScheme.shadow,
         child: Padding(
           padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
           child: Image.asset(

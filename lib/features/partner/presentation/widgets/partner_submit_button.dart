@@ -34,6 +34,7 @@ class PartnerSubmitButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onSubmit,
         style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
           padding: EdgeInsets.all(AppPadding.halfPadding.r * 3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppPadding.defaultPadding.r),
@@ -54,7 +55,9 @@ class PartnerSubmitButton extends StatelessWidget {
                       )
                   : Text(
                       'Submit',
-                      style: AppStyles.buttonText,
+                      style: AppStyles.buttonText.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                     );
             },
           ),
