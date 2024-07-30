@@ -25,22 +25,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final FirebaseStorage _firebaseStorage;
 
-  // @override
-  // Stream<List<UserAccountEntity>> getUsersStream() {
-  //   var result =
-  //       instance.collection('user_account').snapshots().map((snapshot) {
-  //     try {
-  //       final users = snapshot.docs.map((doc) {
-  //         return UserAccountModel.fromFirestore(doc).toEntity();
-  //       }).toList();
-  //       return users;
-  //     } catch (e) {
-  //       throw ServerFailure(e.toString());
-  //     }
-  //   });
-  //   //TODO:rapihin handler error nya
-  //   return result;
-  // }
   @override
   Stream<List<UserAccountEntity>> getUsersStream() {
     return instance.collection('user_account').snapshots().map((snapshot) {

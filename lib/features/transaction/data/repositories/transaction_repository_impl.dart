@@ -1,18 +1,22 @@
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
+import 'package:excel/excel.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
-import 'package:project_nineties/features/transaction/data/datasources/transaction_remote_datasource.dart';
+import 'package:project_nineties/features/transaction/data/datasources/local/transaction_local_datasource.dart';
+import 'package:project_nineties/features/transaction/data/datasources/remote/transaction_remote_datasource.dart';
 import 'package:project_nineties/features/transaction/data/models/transaction_model.dart';
 import 'package:project_nineties/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:project_nineties/features/transaction/domain/repositories/transaction_repository.dart';
 
 class TransactionRepositoryImpl implements TransactionRepository {
-  const TransactionRepositoryImpl({required this.remoteDataSource});
+  const TransactionRepositoryImpl({required this.remoteDataSource, required this.localDataSource});
 
   final TransactionRemoteDataSource remoteDataSource;
+    final TransactionLocalDataSource localDataSource;
 
   @override
   Stream<Either<Failure, List<TransactionEntity>>> getTransactionsStream() {
@@ -78,6 +82,26 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return const Left(
         ConnectionFailure('failed connect to the network'),
       );
+    }
+  }
+
+   @override
+  Future<Either<Failure, String>> exportToExcel(Excel params) async {
+    try {
+      final result = await localDataSource.exportToExcel(params);
+      return Right(result);
+    } catch (e) {
+      return Left(ExportToExcel(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> exportToCSV(Uint8List params) async {
+    try {
+      final result = await localDataSource.exportToCSV(params);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

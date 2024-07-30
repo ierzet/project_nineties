@@ -25,6 +25,10 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<PartnerSubscriptionFailure>(_onPartnerSubscriptionFailure,
         transformer: debounce(const Duration(milliseconds: 500)));
+    on<PartnerExportToExcel>(_onPartnerExportToExcel,
+        transformer: debounce(const Duration(milliseconds: 500)));
+    on<PartnerExportToCSV>(_onPartnerExportToCSV,
+        transformer: debounce(const Duration(milliseconds: 500)));
 
     _partnerSubscription = usecase().listen((result) {
       result.fold(
@@ -43,7 +47,7 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
 
   void _onPartnerSubscriptionFailure(
       PartnerSubscriptionFailure event, Emitter<PartnerState> emit) async {
-    emit(PartnerLoadFailure(event.message));
+    emit(PartnerLoadFailure(message: event.message));
   }
 
   void _onPartnerRegister(
@@ -51,19 +55,19 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
     emit(const PartnerLoadInProgress());
 
     if (!event.params.isValid) {
-      emit(const PartnerLoadFailure(AppStrings.dataIsNotValid));
+      emit(const PartnerLoadFailure(message: AppStrings.dataIsNotValid));
       return;
     }
     final navigatorBloc = event.context.read<NavigationCubit>();
     final result = await usecase.insertData(event.params);
     result.fold(
       (failure) {
-        emit(PartnerLoadFailure(failure.message));
+        emit(PartnerLoadFailure(message: failure.message));
       },
       (data) {
         //back to home
         navigatorBloc.updateIndex(0);
-        emit(PartnerLoadSuccess(data));
+        emit(PartnerLoadSuccess(message: data));
       },
     );
   }
@@ -75,7 +79,7 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
     final result = await usecase.fetchData();
     result.fold(
       (failure) {
-        emit(PartnerLoadFailure(failure.message));
+        emit(PartnerLoadFailure(message: failure.message));
       },
       (data) {
         emit(PartnerLoadDataSuccess(data: data));
@@ -88,19 +92,51 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
     emit(const PartnerLoadInProgress());
 
     if (!event.params.isValid) {
-      emit(const PartnerLoadFailure(AppStrings.dataIsNotValid));
+      emit(const PartnerLoadFailure(message: AppStrings.dataIsNotValid));
       return;
     }
     final navigatorBloc = event.context.read<NavigationCubit>();
     final result = await usecase.updateData(event.params);
     result.fold(
       (failure) {
-        emit(PartnerLoadFailure(failure.message));
+        emit(PartnerLoadFailure(message: failure.message));
       },
       (data) {
         //back to home
         navigatorBloc.updateSubMenu('transaction_view');
         emit(PartnerLoadUpdateSuccess(message: data));
+      },
+    );
+  }
+
+  void _onPartnerExportToExcel(
+      PartnerExportToExcel event, Emitter<PartnerState> emit) async {
+    emit(const PartnerLoadInProgress());
+
+    final result = await usecase.exportToExcel(event.param);
+    result.fold(
+      (failure) {
+        emit(PartnerLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(PartnerLoadSuccess(message: data));
+        emit(PartnerLoadDataSuccess(data: event.param));
+      },
+    );
+  }
+
+  void _onPartnerExportToCSV(
+      PartnerExportToCSV event, Emitter<PartnerState> emit) async {
+    emit(const PartnerLoadInProgress());
+
+    final result = await usecase.exportToCSV(event.param);
+    result.fold(
+      (failure) {
+        emit(PartnerLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(PartnerLoadSuccess(message: data));
+        emit(PartnerLoadDataSuccess(data: event.param));
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excel/excel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
@@ -300,6 +301,87 @@ class UserAccountModel extends UserAccountEntity {
   static List<UserAccountEntity> convertListToEntity(
       List<UserAccountModel> models) {
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  // Adding the methods for text and CSV representations
+  List<TextCellValue> toTextCellValueHeader() {
+    return [
+      const TextCellValue('User Id'),
+      const TextCellValue('Email'),
+      const TextCellValue('Name'),
+      const TextCellValue('Phone Number'),
+      const TextCellValue('Join Date'),
+      const TextCellValue('Is Active'),
+      const TextCellValue('Partner Id'),
+      const TextCellValue('Role ID'),
+      const TextCellValue('Created By'),
+      const TextCellValue('Created Date'),
+      const TextCellValue('Updated By'),
+      const TextCellValue('Updated Date'),
+      const TextCellValue('Deleted By'),
+      const TextCellValue('Deleted Date'),
+      const TextCellValue('Is Deleted'),
+    ];
+  }
+
+  List<TextCellValue> toTextCellValueList() {
+    return [
+      TextCellValue(user.id),
+      TextCellValue(user.email ?? ''),
+      TextCellValue(user.name ?? ''),
+      TextCellValue(user.phoneNumber ?? ''),
+      TextCellValue(joinDate?.toIso8601String() ?? ''),
+      TextCellValue(isActive.toString()),
+      TextCellValue(partner.partnerId),
+      TextCellValue(roleId ?? ''),
+      TextCellValue(createdBy ?? ''),
+      TextCellValue(createdDate?.toIso8601String() ?? ''),
+      TextCellValue(updatedBy ?? ''),
+      TextCellValue(updatedDate?.toIso8601String() ?? ''),
+      TextCellValue(deletedBy ?? ''),
+      TextCellValue(deletedDate?.toIso8601String() ?? ''),
+      TextCellValue(isDeleted.toString())
+    ];
+  }
+
+  List<String> toCSVHeader() {
+    return [
+      'user_id',
+      'email',
+      'name',
+      'phone_number',
+      'join_date',
+      'is_active',
+      'partner_id',
+      'role_id',
+      'created_by',
+      'created_date',
+      'updated_by',
+      'updated_date',
+      'deleted_by',
+      'deleted_date',
+      'is_deleted',
+    ];
+  }
+
+  List<String> toCSVList() {
+    return [
+      user.id,
+      user.email ?? '',
+      user.name ?? '',
+      user.phoneNumber ?? '',
+      joinDate?.toIso8601String() ?? '',
+      isActive.toString(),
+      partner.partnerId,
+      roleId ?? '',
+      createdBy ?? '',
+      createdDate?.toIso8601String() ?? '',
+      updatedBy ?? '',
+      updatedDate?.toIso8601String() ?? '',
+      deletedBy ?? '',
+      deletedDate?.toIso8601String() ?? '',
+      isDeleted.toString()
+    ];
   }
 
   @override

@@ -11,7 +11,13 @@ class ListenerNotificationTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<TransactionBloc, TransactionState>(
       listener: (context, state) {
-        if (state is TransactionLoadAddedSuccess) {
+        if (state is TransactionLoadSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+        } else if (state is TransactionLoadAddedSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),

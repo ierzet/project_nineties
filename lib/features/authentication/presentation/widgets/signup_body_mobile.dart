@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/avatar_picker.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/custom_text_field.dart';
@@ -22,7 +20,6 @@ class SignupBodyMobile extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController confirmedPasswordController =
         TextEditingController();
-    final ddlMitraController = TextEditingController();
     return SafeArea(
       child: SingleChildScrollView(
         child: Center(
@@ -77,11 +74,6 @@ class SignupBodyMobile extends StatelessWidget {
                     SizedBox(width: AppPadding.halfPadding.w / 2),
                     GestureDetector(
                       onTap: () {
-                        // Create an empty user to represent unauthenticated state
-                        // const emptyUser = UserAccountEntity.empty;
-                        // context
-                        //     .read<AppBloc>()
-                        //     .add(const AppUserChanged(emptyUser));
                         Navigator.of(context).pop();
                         context
                             .read<AuthenticationValidatorBloc>()

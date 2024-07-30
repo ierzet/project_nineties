@@ -14,7 +14,6 @@ import 'package:project_nineties/features/customer/presentation/widgets/customer
 import 'package:project_nineties/features/customer/presentation/widgets/customer_status_member_dd.dart';
 import 'package:project_nineties/features/customer/presentation/widgets/customer_submit_button.dart';
 import 'package:project_nineties/features/customer/presentation/widgets/listener_notify_customer.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 
 class CustomerUpdatePage extends StatelessWidget {

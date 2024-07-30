@@ -160,9 +160,8 @@ class MainDrawer extends StatelessWidget {
                   style: AppStyles.drawerItemText,
                 ),
                 onTap: () {
-                  context
-                      .read<NavigationCubit>()
-                      .updateSubMenu('transaction_view');
+                  context.read<NavigationCubit>().updateSubMenuWithAnimated(
+                      context: context, subMenu: 'transaction_view');
                   Scaffold.of(context).closeDrawer();
                 },
               ),

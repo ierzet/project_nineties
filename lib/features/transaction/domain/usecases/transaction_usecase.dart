@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:csv/csv.dart';
 import 'package:dartz/dartz.dart';
+import 'package:excel/excel.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
@@ -40,5 +44,51 @@ class TransactionUseCase {
     );
     final result = repository.addTransaction(paramModel);
     return result;
+  }
+
+  Future<Either<Failure, String>> exportToExcel(
+      List<TransactionEntity> params) async {
+    // Create a new Excel document
+    final excel = Excel.createExcel();
+    final sheetObject = excel['Transaction View Details'];
+    final cellStyle = CellStyle(fontFamily: getFontFamily(FontFamily.Calibri));
+    cellStyle.underline = Underline.Single;
+
+    // Adding header row
+    sheetObject.appendRow(
+        TransactionModel.fromEntity(TransactionEntity.empty).toTextCellValueHeader());
+
+    // Adding data rows
+    for (var transaction in params) {
+      var transactionModel = TransactionModel.fromEntity(transaction);
+      sheetObject.appendRow(transactionModel.toTextCellValueList());
+    }
+
+    return await repository.exportToExcel(excel);
+  }
+
+  Future<Either<Failure, String>> exportToCSV(
+      List<TransactionEntity> transactions) async {
+    try {
+      List<List<dynamic>> rows = [];
+
+      // Add headers.
+      rows.add(TransactionModel.fromEntity(TransactionEntity.empty).toCSVHeader());
+
+      // Add data.
+      for (var transaction in transactions) {
+        rows.add(TransactionModel.fromEntity(transaction).toCSVList());
+      }
+
+      // Convert rows to CSV.
+      String csv = const ListToCsvConverter().convert(rows);
+
+      // Convert CSV string to Uint8List.
+      final Uint8List csvData = Uint8List.fromList(csv.codeUnits);
+
+      return await repository.exportToCSV(csvData);
+    } catch (e) {
+      return left(const ExportToCSV('Failed to export to CSV'));
+    }
   }
 }

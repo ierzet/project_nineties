@@ -24,6 +24,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<UserSubscriptionFailure>(_onUserSubscriptionFailure,
         transformer: debounce(const Duration(milliseconds: 500)));
+    on<UserExportToExcel>(_onUserExportToExcel,
+        transformer: debounce(const Duration(milliseconds: 500)));
+    on<UserExportToCSV>(_onUserExportToCSV,
+        transformer: debounce(const Duration(milliseconds: 500)));
 
     _userSubscription = usecase().listen((result) {
       result.fold(
@@ -37,7 +41,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _onUserSubscriptionSuccess(
       UserSubscriptionSuccess event, Emitter<UserState> emit) async {
-    emit(UserLoadSuccess(data: event.params));
+    emit(UserLoadDataSuccess(data: event.params));
   }
 
   void _onUserSubscriptionFailure(
@@ -54,7 +58,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserLoadFailure(message: failure.message));
       },
       (data) {
-        emit(UserLoadSuccess(data: data));
+        emit(UserLoadDataSuccess(data: data));
       },
     );
   }
@@ -116,6 +120,38 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       },
       (data) {
         emit(const UserLoadRegisterSuccess(message: ''));
+      },
+    );
+  }
+
+  void _onUserExportToExcel(
+      UserExportToExcel event, Emitter<UserState> emit) async {
+    emit(const UserLoadInProgress());
+
+    final result = await usecase.exportToExcel(event.param);
+    result.fold(
+      (failure) {
+        emit(UserLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(UserLoadSuccess(message: data));
+        emit(UserLoadDataSuccess(data: event.param));
+      },
+    );
+  }
+
+  void _onUserExportToCSV(
+      UserExportToCSV event, Emitter<UserState> emit) async {
+    emit(const UserLoadInProgress());
+
+    final result = await usecase.exportToCSV(event.param);
+    result.fold(
+      (failure) {
+        emit(UserLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(UserLoadSuccess(message: data));
+        emit(UserLoadDataSuccess(data: event.param));
       },
     );
   }

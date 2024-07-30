@@ -85,6 +85,11 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
     if (subMenu == 'settings') {
       Navigator.of(context).push(createPageRoute(const SettingsPage()));
     }
+
+    //transaction
+    if (subMenu == 'transaction_view') {
+      Navigator.of(context).push(createPageRoute(const TransactionViewPage()));
+    }
   }
 
   List<Widget> get widgetOptions => [
@@ -117,8 +122,8 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
       //   return const CustomersViewPage();
       // case 'customer_update':
       //   return const CustomerUpdatePage();
-      case 'transaction_view':
-        return const TransactionViewPage();
+      // case 'transaction_view':
+      //   return const TransactionViewPage();
       case 'message':
         return ChatGroupPage();
       default:

@@ -23,6 +23,10 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<TransactionSubscriptionFailure>(_onTransactionSubscriptionFailure,
         transformer: debounce(const Duration(milliseconds: 500)));
+    on<TransactionExportToExcel>(_onTransactionExportToExcel,
+        transformer: debounce(const Duration(milliseconds: 500)));
+    on<TransactionExportToCSV>(_onTransactionExportToCSV,
+        transformer: debounce(const Duration(milliseconds: 500)));
 
     _transactionSubscription = useCase().listen((result) {
       result.fold(
@@ -91,6 +95,38 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
       },
       (data) {
         emit(TransactionLoadAddedSuccess(message: data));
+      },
+    );
+  }
+
+  void _onTransactionExportToExcel(
+      TransactionExportToExcel event, Emitter<TransactionState> emit) async {
+    emit(const TransactionLoadInProgress());
+
+    final result = await useCase.exportToExcel(event.param);
+    result.fold(
+      (failure) {
+        emit(TransactionLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(TransactionLoadSuccess(message: data));
+        emit(TransactionLoadDataSuccess(data: event.param));
+      },
+    );
+  }
+
+  void _onTransactionExportToCSV(
+      TransactionExportToCSV event, Emitter<TransactionState> emit) async {
+    emit(const TransactionLoadInProgress());
+
+    final result = await useCase.exportToCSV(event.param);
+    result.fold(
+      (failure) {
+        emit(TransactionLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(TransactionLoadSuccess(message: data));
+        emit(TransactionLoadDataSuccess(data: event.param));
       },
     );
   }

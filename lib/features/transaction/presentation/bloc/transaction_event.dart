@@ -51,3 +51,19 @@ class TransactionSubscriptionFailure extends TransactionEvent {
   @override
   List<Object> get props => [message];
 }
+
+class TransactionExportToExcel extends TransactionEvent {
+  const TransactionExportToExcel({required this.param});
+  final List<TransactionEntity> param;
+
+  @override
+  List<Object> get props => [param];
+}
+
+class TransactionExportToCSV extends TransactionEvent {
+  const TransactionExportToCSV({required this.param});
+
+  final List<TransactionEntity> param;
+  @override
+  List<Object> get props => [param];
+}

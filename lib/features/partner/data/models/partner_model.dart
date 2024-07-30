@@ -1,6 +1,7 @@
 import 'dart:io' as io;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
@@ -202,6 +203,86 @@ class PartnerModel extends PartnerEntity {
 
   List<PartnerEntity> convertModelListToEntityList(List<PartnerModel> models) {
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  List<TextCellValue> toTextCellValueHeader() {
+    return [
+      const TextCellValue('Partner Id'),
+      const TextCellValue('Partner Name'),
+      const TextCellValue('Partner Email'),
+      const TextCellValue('Partner Phone Number'),
+      const TextCellValue('Partner Image URL'),
+      const TextCellValue('Partner Address'),
+      const TextCellValue('Partner Status'),
+      const TextCellValue('Partner Join Date'),
+      const TextCellValue('Partner Created By'),
+      const TextCellValue('Partner Created Date'),
+      const TextCellValue('Partner Updated By'),
+      const TextCellValue('Partner Updated Date'),
+      const TextCellValue('Partner Deleted By'),
+      const TextCellValue('Partner Deleted Date'),
+      const TextCellValue('Partner Is Deleted'),
+    ];
+  }
+
+  List<TextCellValue> toTextCellValueList() {
+    return [
+      TextCellValue(partnerId),
+      TextCellValue(partnerName ?? ''),
+      TextCellValue(partnerEmail ?? ''),
+      TextCellValue(partnerPhoneNumber ?? ''),
+      TextCellValue(partnerImageUrl ?? ''),
+      TextCellValue(partnerAddress ?? ''),
+      TextCellValue(partnerStatus ?? ''),
+      TextCellValue(partnerJoinDate?.toIso8601String() ?? ''),
+      TextCellValue(partnerCreatedBy ?? ''),
+      TextCellValue(partnerCreatedDate?.toIso8601String() ?? ''),
+      TextCellValue(partnerUpdatedBy ?? ''),
+      TextCellValue(partnerUpdatedDate?.toIso8601String() ?? ''),
+      TextCellValue(partnerDeletedBy ?? ''),
+      TextCellValue(partnerDeletedDate?.toIso8601String() ?? ''),
+      TextCellValue(partnerIsDeleted.toString()),
+    ];
+  }
+
+  List<String> toCSVHeader() {
+    return [
+      'partner_id',
+      'partner_name',
+      'partner_email',
+      'partner_phone_number',
+      'partner_image_url',
+      'partner_address',
+      'partner_status',
+      'partner_join_date',
+      'partner_created_by',
+      'partner_created_date',
+      'partner_updated_by',
+      'partner_updated_date',
+      'partner_deleted_by',
+      'partner_deleted_date',
+      'partner_is_deleted',
+    ];
+  }
+
+  List<String> toCSVList() {
+    return [
+      partnerId,
+      partnerName ?? '',
+      partnerEmail ?? '',
+      partnerPhoneNumber ?? '',
+      partnerImageUrl ?? '',
+      partnerAddress ?? '',
+      partnerStatus ?? '',
+      partnerJoinDate?.toIso8601String() ?? '',
+      partnerCreatedBy ?? '',
+      partnerCreatedDate?.toIso8601String() ?? '',
+      partnerUpdatedBy ?? '',
+      partnerUpdatedDate?.toIso8601String() ?? '',
+      partnerDeletedBy ?? '',
+      partnerDeletedDate?.toIso8601String() ?? '',
+      partnerIsDeleted.toString(),
+    ];
   }
 
   @override

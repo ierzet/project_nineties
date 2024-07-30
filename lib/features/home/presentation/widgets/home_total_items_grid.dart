@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
 import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_summary_card.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
@@ -25,7 +26,7 @@ class HomeTotalItemsGrid extends StatelessWidget {
           builder: (context, state) {
             String itemCount = '0';
 
-            if (state is UserLoadSuccess) {
+            if (state is UserLoadDataSuccess) {
               itemCount = state.data.length
                   .toString(); // Assuming data is a list of users
             }
@@ -56,16 +57,22 @@ class HomeTotalItemsGrid extends StatelessWidget {
         BlocBuilder<CustomerBloc, CustomerState>(
           builder: (context, state) {
             String itemCount = '0';
-
+            List<CustomerEntity> param = [];
             if (state is CustomerLoadDataSuccess) {
-              itemCount = state.data.length
-                  .toString(); // Assuming data is a list of users
+              itemCount = state.data.length.toString();
+              param.addAll(state.data); // Assuming data is a list of users
             }
             return SummaryCard(
               title: 'Total Customers',
               value: itemCount,
               icon: Icons.people,
-              color: AppColors.accent, // Using AppColors
+              color: AppColors.accent,
+              onExportToExcel: () => context
+                  .read<CustomerBloc>()
+                  .add(CustomerExportToExcel(param: param)),
+              onExportToCSV: () => context
+                  .read<CustomerBloc>()
+                  .add(CustomerExportToCSV(param: param)),
             );
           },
         ),

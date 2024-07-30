@@ -16,7 +16,14 @@ class UserLoadInProgress extends UserState {
 }
 
 class UserLoadSuccess extends UserState {
-  const UserLoadSuccess({required this.data});
+  const UserLoadSuccess({required this.message});
+  final String message;
+  @override
+  List<Object> get props => [];
+}
+
+class UserLoadDataSuccess extends UserState {
+  const UserLoadDataSuccess({required this.data});
 
   final List<UserAccountEntity> data;
   @override

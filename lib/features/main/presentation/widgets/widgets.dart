@@ -1,11 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/authentication_validator_bloc/authentication_validator_bloc.dart';
 import 'package:project_nineties/features/customer/presentation/widgets/customer_qrcode.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 

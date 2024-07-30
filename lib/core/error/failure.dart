@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 abstract class Failure extends Equatable {
   final String message;
@@ -35,6 +34,14 @@ class DatabaseFailure extends Failure {
 
 class SharedPreferenceFailure extends Failure {
   const SharedPreferenceFailure(super.message);
+}
+
+class ExportToExcel extends Failure {
+  const ExportToExcel(super.message);
+}
+
+class ExportToCSV extends Failure {
+  const ExportToCSV(super.message);
 }
 
 class LogInWithEmailAndPasswordFailure extends Failure {

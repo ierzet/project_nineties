@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/home/presentation/widgets/home_bar_chart_sample1.dart';
+import 'package:project_nineties/features/customer/presentation/widgets/listener_notify_customer.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_customer_growth_box_chart.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample2.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_total_items_grid.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample1.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_transaction_trend_chart.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_user_activities_piechart.dart';
+import 'package:project_nineties/features/partner/presentation/widgets/listener_notify_partner.dart';
+import 'package:project_nineties/features/transaction/presentation/widgets/listener_notification_transaction.dart';
+import 'package:project_nineties/features/user/presentation/widgets/user_listener_notification.dart';
 
 class HomeDashboard extends StatelessWidget {
   const HomeDashboard({super.key});
@@ -62,6 +65,10 @@ class HomeDashboard extends StatelessWidget {
               height: AppPadding.triplePadding.h * 4,
               child: const HomeUserActivitisPieChart(),
             ),
+            const ListenerNotificationCustomer(),
+            const ListenerNotificationPartner(),
+            const ListenerNotificationTransaction(),
+            const UserListenerNotification(),
           ],
         ),
       ),

@@ -1,33 +1,23 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
+import 'package:excel/excel.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:project_nineties/core/error/failure.dart';
-import 'package:project_nineties/features/user/data/datasources/user_remote_datasource.dart';
+import 'package:project_nineties/features/user/data/datasources/local/user_local_datasource.dart';
+import 'package:project_nineties/features/user/data/datasources/remote/user_remote_datasource.dart';
 import 'package:project_nineties/features/user/domain/repositories/user_repository.dart';
 import 'package:project_nineties/features/user/domain/usecases/user_params.dart';
 import 'package:project_nineties/features/authentication/data/models/user_account_model.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  const UserRepositoryImpl({required this.remoteDataSource});
+  const UserRepositoryImpl(
+      {required this.remoteDataSource, required this.localDataSource});
 
   final UserRemoteDataSource remoteDataSource;
-
-  // @override
-  // Stream<Either<Failure, List<UserAccountEntity>>> getUsersStream() {
-  //   return remoteDataSource
-  //       .getUsersStream()
-  //       .map<Either<Failure, List<UserAccountEntity>>>(
-  //     (users) {
-  //       return Right(users);
-  //     },
-  //   ).handleError((error) {
-  //     return Left(ServerFailure(error.toString()));
-
-  //   });
-  //   //TODO:rapihin handler error nya
-  // }
+  final UserLocalDataSource localDataSource;
 
   @override
   Stream<Either<Failure, List<UserAccountEntity>>> getUsersStream() {
@@ -105,6 +95,26 @@ class UserRepositoryImpl implements UserRepository {
       return const Left(
         ConnectionFailure('failed connect to the network'),
       );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> exportToExcel(Excel params) async {
+    try {
+      final result = await localDataSource.exportToExcel(params);
+      return Right(result);
+    } catch (e) {
+      return Left(ExportToExcel(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> exportToCSV(Uint8List params) async {
+    try {
+      final result = await localDataSource.exportToCSV(params);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

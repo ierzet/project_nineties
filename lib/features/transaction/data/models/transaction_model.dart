@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/user/data/models/user_model.dart';
 import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
@@ -256,6 +257,90 @@ class TransactionModel extends TransactionEntity {
     createdDate: DateTime(1970, 1, 1),
     isDeleted: false,
   );
+
+  List<TextCellValue> toTextCellValueHeader() {
+    return [
+      const TextCellValue('Transaction Id'),
+      const TextCellValue('Customer'),
+      const TextCellValue('Partner Id'),
+      const TextCellValue('User Id'),
+      const TextCellValue('Transaction Type'),
+      const TextCellValue('Transaction Date'),
+      const TextCellValue('Transaction Amount'),
+      const TextCellValue('Transaction Description'),
+      const TextCellValue('Transaction Status'),
+      const TextCellValue('Created By'),
+      const TextCellValue('Created Date'),
+      const TextCellValue('Updated By'),
+      const TextCellValue('Updated Date'),
+      const TextCellValue('Deleted By'),
+      const TextCellValue('Deleted Date'),
+      const TextCellValue('Is Deleted'),
+    ];
+  }
+
+  List<TextCellValue> toTextCellValueList() {
+    return [
+      TextCellValue(transactionId),
+      TextCellValue(customer.customerId),
+      TextCellValue(partner.partnerId),
+      TextCellValue(user.id),
+      TextCellValue(transactionType),
+      TextCellValue(transactionDate.toIso8601String()),
+      TextCellValue(transactionAmount?.toString() ?? ''),
+      TextCellValue(transactionDescription ?? ''),
+      TextCellValue(transactionStatus),
+      TextCellValue(createdBy),
+      TextCellValue(createdDate.toIso8601String()),
+      TextCellValue(updatedBy ?? ''),
+      TextCellValue(updatedDate?.toIso8601String() ?? ''),
+      TextCellValue(deletedBy ?? ''),
+      TextCellValue(deletedDate?.toIso8601String() ?? ''),
+      TextCellValue(isDeleted.toString()),
+    ];
+  }
+
+  List<String> toCSVHeader() {
+    return [
+      'transaction_id',
+      'customer_id',
+      'partner_id',
+      'user_id',
+      'transaction_type',
+      'transaction_date',
+      'transaction_amount',
+      'transaction_description',
+      'transaction_status',
+      'created_by',
+      'created_date',
+      'updated_by',
+      'updated_date',
+      'deleted_by',
+      'deleted_date',
+      'is_deleted',
+    ];
+  }
+
+  List<String> toCSVList() {
+    return [
+      transactionId,
+      customer.customerId,
+      partner.partnerId,
+      user.id,
+      transactionType,
+      transactionDate.toIso8601String(),
+      transactionAmount?.toString() ?? '',
+      transactionDescription ?? '',
+      transactionStatus,
+      createdBy,
+      createdDate.toIso8601String(),
+      updatedBy ?? '',
+      updatedDate?.toIso8601String() ?? '',
+      deletedBy ?? '',
+      deletedDate?.toIso8601String() ?? '',
+      isDeleted.toString(),
+    ];
+  }
 
   @override
   bool get isEmpty => this == TransactionModel.empty;

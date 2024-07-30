@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
 import 'package:project_nineties/features/customer/presentation/bloc/customer_validator_bloc/customer_validator_bloc.dart';
+import 'package:project_nineties/features/customer/presentation/widgets/customer_search.dart';
+import 'package:project_nineties/features/customer/presentation/widgets/listener_notify_customer.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 
@@ -18,14 +20,12 @@ class CustomersViewPage extends StatelessWidget {
       appBar: const MainAppBarNoAvatar(),
       body: Column(
         children: [
-          const CustomerSearchWidget(),
+          const CustomerSearch(),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(
-                top: AppPadding.defaultPadding.r,
-                bottom: AppPadding.defaultPadding.r,
-                right: AppPadding.defaultPadding.r,
-                left: AppPadding.defaultPadding.r,
+              padding: EdgeInsets.symmetric(
+                vertical: AppPadding.defaultPadding.r,
+                horizontal: AppPadding.defaultPadding.r,
               ),
               child: BlocBuilder<CustomerBloc, CustomerState>(
                 builder: (context, state) {
@@ -81,61 +81,43 @@ class CustomersViewPage extends StatelessWidget {
               ),
             ),
           ),
+          const ListenerNotificationCustomer(),
         ],
       ),
-    );
-  }
-}
-
-class CustomerSearchWidget extends StatefulWidget {
-  const CustomerSearchWidget({super.key});
-
-  @override
-  _CustomerSearchWidgetState createState() => _CustomerSearchWidgetState();
-}
-
-class _CustomerSearchWidgetState extends State<CustomerSearchWidget> {
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      context
-          .read<CustomerBloc>()
-          .add(CustomerSearchEvent(_searchController.text));
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: AppPadding.doublePadding.r,
-        bottom: 0,
-        right: AppPadding.defaultPadding.r,
-        left: AppPadding.defaultPadding.r,
-      ),
-      child: TextField(
-        controller: _searchController,
-        decoration: const InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BlocBuilder<CustomerBloc, CustomerState>(
+            builder: (context, state) {
+              if (state is CustomerLoadDataSuccess) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                        icon: const Icon(Icons.table_chart),
+                        label: const Text('Export to Excel'),
+                        onPressed: () {
+                          context
+                              .read<CustomerBloc>()
+                              .add(CustomerExportToExcel(param: state.data));
+                        }),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.file_present),
+                      label: const Text('Export to CSV'),
+                      onPressed: () {
+                        context
+                            .read<CustomerBloc>()
+                            .add(CustomerExportToCSV(param: state.data));
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
           ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(),
-          ),
-          hintText: 'Search ...',
-          hintStyle: TextStyle(),
-          prefixIcon: Icon(Icons.search),
-          border: OutlineInputBorder(),
-          filled: true,
         ),
       ),
     );

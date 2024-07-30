@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
 
@@ -198,6 +199,106 @@ class CustomerModel extends CustomerEntity {
     }
   }
 
+  List<TextCellValue> toTextCellValueHeader() {
+    return [
+      const TextCellValue('ID'),
+      const TextCellValue('Name'),
+      const TextCellValue('Email'),
+      const TextCellValue('Phone Number'),
+      const TextCellValue('Gender'),
+      const TextCellValue('Date of Birth'),
+      const TextCellValue('No Vehicle'),
+      const TextCellValue('Type of Vehicle'),
+      const TextCellValue('Color of Vehicle'),
+      const TextCellValue('Type of Member'),
+      const TextCellValue('Status Member'),
+      const TextCellValue('Join Date'),
+      const TextCellValue('Expired Date'),
+      const TextCellValue('Created By'),
+      const TextCellValue('Created Date'),
+      const TextCellValue('Updated By'),
+      const TextCellValue('Updated Date'),
+      const TextCellValue('Deleted By'),
+      const TextCellValue('Deleted Date'),
+      const TextCellValue('Is Deleted')
+    ];
+  }
+
+  List<TextCellValue> toTextCellValueList() {
+    return [
+      TextCellValue(customerId),
+      TextCellValue(customerName ?? ''),
+      TextCellValue(customerEmail ?? ''),
+      TextCellValue(customerPhoneNumber ?? ''),
+      TextCellValue(customerGender ?? ''),
+      TextCellValue(customerDateOfBirth?.toIso8601String() ?? ''),
+      TextCellValue(customerNoVehicle ?? ''),
+      TextCellValue(customerTypeOfVehicle ?? ''),
+      TextCellValue(customerColorOfVehicle ?? ''),
+      TextCellValue(customerTypeOfMember ?? ''),
+      TextCellValue(customerStatusMember?.toString() ?? ''),
+      TextCellValue(customerJoinDate?.toIso8601String() ?? ''),
+      TextCellValue(customerExpiredDate?.toIso8601String() ?? ''),
+      TextCellValue(customerCreatedBy ?? ''),
+      TextCellValue(customerCreatedDate?.toIso8601String() ?? ''),
+      TextCellValue(customerUpdatedBy ?? ''),
+      TextCellValue(customerUpdatedDate?.toIso8601String() ?? ''),
+      TextCellValue(customerDeletedBy ?? ''),
+      TextCellValue(customerDeletedDate?.toIso8601String() ?? ''),
+      TextCellValue(customerIsDeleted.toString())
+    ];
+  }
+
+  List<String> toCSVHeader() {
+    return [
+      'ID',
+      'Name',
+      'Email',
+      'Phone Number',
+      'Gender',
+      'Date of Birth',
+      'No Vehicle',
+      'Type of Vehicle',
+      'Color of Vehicle',
+      'Type of Member',
+      'Status Member',
+      'Join Date',
+      'Expired Date',
+      'Created By',
+      'Created Date',
+      'Updated By',
+      'Updated Date',
+      'Deleted By',
+      'Deleted Date',
+      'Is Deleted'
+    ];
+  }
+
+  List<String> toCSVList() {
+    return [
+      customerId,
+      customerName ?? '',
+      customerEmail ?? '',
+      customerPhoneNumber ?? '',
+      customerGender ?? '',
+      customerDateOfBirth?.toIso8601String() ?? '',
+      customerNoVehicle ?? '',
+      customerTypeOfVehicle ?? '',
+      customerColorOfVehicle ?? '',
+      customerTypeOfMember ?? '',
+      customerStatusMember?.toString() ?? '',
+      customerJoinDate?.toIso8601String() ?? '',
+      customerExpiredDate?.toIso8601String() ?? '',
+      customerCreatedBy ?? '',
+      customerCreatedDate?.toIso8601String() ?? '',
+      customerUpdatedBy ?? '',
+      customerUpdatedDate?.toIso8601String() ?? '',
+      customerDeletedBy ?? '',
+      customerDeletedDate?.toIso8601String() ?? '',
+      customerIsDeleted.toString()
+    ];
+  }
+
   @override
   CustomerModel copyWith({
     String? customerId,
@@ -246,36 +347,6 @@ class CustomerModel extends CustomerEntity {
       customerIsDeleted: customerIsDeleted ?? this.customerIsDeleted,
     );
   }
-
-  // factory CustomerModel.fromParams(CustomerParams params) {
-  //   final newCustomerExpiredDate = DateTime(
-  //     params.customerJoinDate.year,
-  //     params.customerJoinDate.month + int.parse(params.customerDuration),
-  //     params.customerJoinDate.day,
-  //   );
-  //   return CustomerModel(
-  //     customerId: 'param',
-  //     customerName: params.customerName,
-  //     customerEmail: params.customerEmail,
-  //     customerPhoneNumber: params.customerPhoneNumber,
-  //     customerGender: params.customerGender,
-  //     customerDateOfBirth: params.customerDateOfBirth,
-  //     customerNoVehicle: params.customerNoVehicle,
-  //     customerTypeOfVehicle: params.customerTypeOfVehicle,
-  //     customerColorOfVehicle: params.customerColorOfVehicle,
-  //     customerTypeOfMember: params.customerTypeOfMember,
-  //     customerStatusMember: params.customerStatusMember,
-  //     customerJoinDate: params.customerJoinDate,
-  //     customerExpiredDate: newCustomerExpiredDate,
-  //     customerCreatedBy: params.customerCreatedBy,
-  //     customerCreatedDate: DateTime.now(),
-  //     customerUpdatedBy: params.customerUpdatedBy,
-  //     customerUpdatedDate: params.customerUpdatedDate,
-  //     customerDeletedBy: params.customerDeletedBy,
-  //     customerDeletedDate: params.customerDeletedDate,
-  //     customerIsDeleted: params.customerIsDeleted ?? false,
-  //   );
-  // }
 
   static const empty = CustomerModel(customerId: '');
   @override

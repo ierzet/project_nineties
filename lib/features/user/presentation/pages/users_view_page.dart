@@ -17,11 +17,38 @@ class UsersViewPage extends StatelessWidget {
       appBar: const MainAppBarNoAvatar(),
       body: Padding(
         padding: EdgeInsets.all(AppPadding.defaultPadding),
-        child: BlocBuilder<UserBloc, UserState>(
+        child: BlocConsumer<UserBloc, UserState>(
+          listener: (context, state) {
+            if (state is UserLoadSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is UserLoadApprovalSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is UserLoadRegisterSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is UserLoadFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            }
+          },
           builder: (context, state) {
             if (state is UserLoadInProgress) {
               return const Center(child: CircularProgressIndicator());
-            } else if (state is UserLoadSuccess) {
+            } else if (state is UserLoadDataSuccess) {
               final users = state.data;
               users.sort((a, b) => (a.isActive ?? false) ? 1 : -1);
               return ListView.builder(
@@ -84,6 +111,42 @@ class UsersViewPage extends StatelessWidget {
               return const Center(child: Text('No data available'));
             }
           },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is UserLoadDataSuccess) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                        icon: const Icon(Icons.table_chart),
+                        label: const Text('Export to Excel'),
+                        onPressed: () {
+                          context
+                              .read<UserBloc>()
+                              .add(UserExportToExcel(param: state.data));
+                        }),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.file_present),
+                      label: const Text('Export to CSV'),
+                      onPressed: () {
+                        context
+                            .read<UserBloc>()
+                            .add(UserExportToCSV(param: state.data));
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
         ),
       ),
     );

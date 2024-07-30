@@ -51,3 +51,19 @@ class UserSubscriptionFailure extends UserEvent {
   @override
   List<Object> get props => [message];
 }
+
+class UserExportToExcel extends UserEvent {
+  const UserExportToExcel({required this.param});
+  final List<UserAccountEntity> param;
+
+  @override
+  List<Object> get props => [param];
+}
+
+class UserExportToCSV extends UserEvent {
+  const UserExportToCSV({required this.param});
+
+  final List<UserAccountEntity> param;
+  @override
+  List<Object> get props => [param];
+}

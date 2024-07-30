@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/core/utilities/responsive_display.dart';
-import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/custom_text_field.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/listener_notify_login.dart';
 import 'package:project_nineties/features/authentication/presentation/widgets/primary_button.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
-  static Page<void> page() => MaterialPage<void>(child: ForgotPasswordPage());
+  static Page<void> page() => const MaterialPage<void>(child: ForgotPasswordPage());
 
   @override
   Widget build(BuildContext context) {

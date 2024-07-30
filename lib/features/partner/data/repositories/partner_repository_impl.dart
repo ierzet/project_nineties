@@ -1,17 +1,21 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
+import 'package:excel/excel.dart';
 import 'package:project_nineties/core/error/failure.dart';
-import 'package:project_nineties/features/partner/data/datasources/partner_remote_datasource.dart';
+import 'package:project_nineties/features/partner/data/datasources/local/partner_local_datasource.dart';
+import 'package:project_nineties/features/partner/data/datasources/remote/partner_remote_datasource.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/partner/domain/repositories/pertner_repository.dart';
 
 class PartnerRepositoryImpl implements PartnerRepository {
   final PartnerRemoteDataSource remoteDataSource;
+  final PartnerLocalDataSource localDataSource;
 
   PartnerRepositoryImpl({
-    required this.remoteDataSource,
+    required this.remoteDataSource,required this.localDataSource,
   });
 
   @override
@@ -91,6 +95,26 @@ class PartnerRepositoryImpl implements PartnerRepository {
       return const Left(
         ConnectionFailure('failed connect to the network'),
       );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> exportToExcel(Excel params) async {
+    try {
+      final result = await localDataSource.exportToExcel(params);
+      return Right(result);
+    } catch (e) {
+      return Left(ExportToExcel(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> exportToCSV(Uint8List params) async {
+    try {
+      final result = await localDataSource.exportToCSV(params);
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

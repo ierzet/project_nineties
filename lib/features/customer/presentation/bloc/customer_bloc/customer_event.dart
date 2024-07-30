@@ -57,3 +57,19 @@ class CustomerSearchEvent extends CustomerEvent {
   @override
   List<Object> get props => [query];
 }
+
+class CustomerExportToExcel extends CustomerEvent {
+  const CustomerExportToExcel({required this.param});
+  final List<CustomerEntity> param;
+
+  @override
+  List<Object> get props => [param];
+}
+
+class CustomerExportToCSV extends CustomerEvent {
+  const CustomerExportToCSV({required this.param});
+
+  final List<CustomerEntity> param;
+  @override
+  List<Object> get props => [param];
+}

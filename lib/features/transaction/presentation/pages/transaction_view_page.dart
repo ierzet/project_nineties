@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
+import 'package:project_nineties/features/transaction/presentation/widgets/listener_notification_transaction.dart';
 
 class TransactionViewPage extends StatelessWidget {
   const TransactionViewPage({super.key});
@@ -10,51 +12,91 @@ class TransactionViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<TransactionBloc>().add(const TransactionGetData());
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(AppPadding.defaultPadding),
-            child: Text(
-              'My order',
-              style: AppStyles.chartTitle,
+    return Scaffold(
+      appBar: const MainAppBarNoAvatar(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(AppPadding.defaultPadding),
+              child: Text(
+                'My order',
+                style: AppStyles.chartTitle,
+              ),
             ),
-          ),
-          DefaultTabController(
-            length: 3,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: TabBar(
-                    indicatorColor:
-                        Theme.of(context).colorScheme.onPrimaryContainer,
-                    labelColor:
-                        Theme.of(context).colorScheme.onPrimaryContainer,
-                    unselectedLabelColor:
-                        Theme.of(context).colorScheme.onPrimaryContainer,
-                    tabs: const [
-                      Tab(text: 'Delivered'),
-                      Tab(text: 'Processing'),
-                      Tab(text: 'Canceled'),
-                    ],
+            DefaultTabController(
+              length: 3,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: TabBar(
+                      indicatorColor:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                      labelColor:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                      unselectedLabelColor:
+                          Theme.of(context).colorScheme.onPrimaryContainer,
+                      tabs: const [
+                        Tab(text: 'Delivered'),
+                        Tab(text: 'Processing'),
+                        Tab(text: 'Canceled'),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 700, // Adjust the height as needed
-                  child: TabBarView(
-                    children: [
-                      BuildOrderList(status: 'Delivered'),
-                      Center(child: Text('Processing Orders')),
-                      Center(child: Text('Canceled Orders')),
-                    ],
+                  const SizedBox(
+                    height: 700, // Adjust the height as needed
+                    child: TabBarView(
+                      children: [
+                        BuildOrderList(status: 'Delivered'),
+                        Center(child: Text('Processing Orders')),
+                        Center(child: Text('Canceled Orders')),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            const ListenerNotificationTransaction(),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BlocBuilder<TransactionBloc, TransactionState>(
+            builder: (context, state) {
+              if (state is TransactionLoadDataSuccess) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                        icon: const Icon(Icons.table_chart),
+                        label: const Text('Export to Excel'),
+                        onPressed: () {
+                          context
+                              .read<TransactionBloc>()
+                              .add(TransactionExportToExcel(param: state.data));
+                        }),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.file_present),
+                      label: const Text('Export to CSV'),
+                      onPressed: () {
+                        context
+                            .read<TransactionBloc>()
+                            .add(TransactionExportToCSV(param: state.data));
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
           ),
-        ],
+        ),
       ),
     );
   }

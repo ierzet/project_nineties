@@ -28,6 +28,11 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     on<CustomerSearchEvent>(_onCustomerSearchEvent,
         transformer: debounce(const Duration(milliseconds: 500)));
 
+    on<CustomerExportToExcel>(_onCustomerExportToExcel,
+        transformer: debounce(const Duration(milliseconds: 500)));
+    on<CustomerExportToCSV>(_onCustomerExportToCSV,
+        transformer: debounce(const Duration(milliseconds: 500)));
+
     _customerSubscription = useCase().listen((result) {
       result.fold(
         (failure) => add(CustomerSubscriptionFailure(message: failure.message)),
@@ -122,6 +127,38 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       return name.contains(event.query.toLowerCase());
     }).toList();
     emit(CustomerLoadDataSuccess(data: filteredCustomers));
+  }
+
+  void _onCustomerExportToExcel(
+      CustomerExportToExcel event, Emitter<CustomerState> emit) async {
+    emit(const CustomerLoadInProgress());
+
+    final result = await useCase.exportToExcel(event.param);
+    result.fold(
+      (failure) {
+        emit(CustomerLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(CustomerLoadSuccess(message: data));
+        emit(CustomerLoadDataSuccess(data: event.param));
+      },
+    );
+  }
+
+  void _onCustomerExportToCSV(
+      CustomerExportToCSV event, Emitter<CustomerState> emit) async {
+    emit(const CustomerLoadInProgress());
+
+    final result = await useCase.exportToCSV(event.param);
+    result.fold(
+      (failure) {
+        emit(CustomerLoadFailure(message: failure.message));
+      },
+      (data) {
+        emit(CustomerLoadSuccess(message: data));
+        emit(CustomerLoadDataSuccess(data: event.param));
+      },
+    );
   }
 
   @override

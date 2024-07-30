@@ -53,3 +53,19 @@ class PartnerSubscriptionFailure extends PartnerEvent {
   @override
   List<Object> get props => [message];
 }
+
+class PartnerExportToExcel extends PartnerEvent {
+  const PartnerExportToExcel({required this.param});
+  final List<PartnerEntity> param;
+
+  @override
+  List<Object> get props => [param];
+}
+
+class PartnerExportToCSV extends PartnerEvent {
+  const PartnerExportToCSV({required this.param});
+
+  final List<PartnerEntity> param;
+  @override
+  List<Object> get props => [param];
+}

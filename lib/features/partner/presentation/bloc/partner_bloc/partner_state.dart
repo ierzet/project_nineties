@@ -21,7 +21,7 @@ final class PartnerLoadInProgress extends PartnerState {
 
 final class PartnerLoadSuccess extends PartnerState {
   final String message;
-  const PartnerLoadSuccess(this.message);
+  const PartnerLoadSuccess({required this.message});
 
   @override
   List<Object> get props => [message];
@@ -38,7 +38,7 @@ final class PartnerLoadUpdateSuccess extends PartnerState {
 final class PartnerLoadFailure extends PartnerState {
   final String message;
 
-  const PartnerLoadFailure(this.message);
+  const PartnerLoadFailure({required this.message});
   @override
   List<Object> get props => [message];
 }

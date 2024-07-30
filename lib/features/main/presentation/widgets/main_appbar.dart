@@ -105,27 +105,6 @@ class MainAppBarNoAvatar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AppBloc>().state.user;
-    void onSelected(BuildContext context, int item) {
-      switch (item) {
-        case 0:
-          try {
-            context.read<NavigationCubit>().updateSubMenuWithAnimated(
-                context: context, subMenu: 'profile');
-          } catch (e) {
-            debugPrint('error push: $e');
-          }
-          break;
-        case 1:
-          context
-              .read<NavigationCubit>()
-              .updateSubMenuWithAnimated(context: context, subMenu: 'settings');
-          break;
-        case 2:
-          // Sign Outs
-          context.read<AuthenticationBloc>().add(const AuthUserLogOut());
-          break;
-      }
-    }
 
     return AppBar(
       title: BlocBuilder<NavigationCubit, NavigationCubitState>(

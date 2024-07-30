@@ -6,7 +6,6 @@ import 'package:project_nineties/features/partner/data/models/partner_model.dart
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
-import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 
 class PartnersViewPage extends StatelessWidget {
   const PartnersViewPage({super.key});
@@ -18,7 +17,28 @@ class PartnersViewPage extends StatelessWidget {
       appBar: const MainAppBarNoAvatar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: BlocBuilder<PartnerBloc, PartnerState>(
+        child: BlocConsumer<PartnerBloc, PartnerState>(
+          listener: (context, state) {
+            if (state is PartnerLoadSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is PartnerLoadUpdateSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is PartnerLoadFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            }
+          },
           builder: (context, state) {
             if (state is PartnerLoadInProgress) {
               return const Center(child: CircularProgressIndicator());
@@ -62,12 +82,49 @@ class PartnersViewPage extends StatelessWidget {
                   );
                 },
               );
-            } else if (state is UserLoadFailure) {
-              return Center(child: Text('Failed to load users: $state'));
+            } else if (state is PartnerLoadFailure) {
+              return Center(
+                  child: Text('Failed to load partners: ${state.message}'));
             } else {
               return const Center(child: Text('No data available'));
             }
           },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BlocBuilder<PartnerBloc, PartnerState>(
+            builder: (context, state) {
+              if (state is PartnerLoadDataSuccess) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                        icon: const Icon(Icons.table_chart),
+                        label: const Text('Export to Excel'),
+                        onPressed: () {
+                          context
+                              .read<PartnerBloc>()
+                              .add(PartnerExportToExcel(param: state.data));
+                        }),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.file_present),
+                      label: const Text('Export to CSV'),
+                      onPressed: () {
+                        context
+                            .read<PartnerBloc>()
+                            .add(PartnerExportToCSV(param: state.data));
+                      },
+                    ),
+                  ],
+                );
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
         ),
       ),
     );

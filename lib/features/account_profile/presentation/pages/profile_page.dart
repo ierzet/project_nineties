@@ -5,7 +5,6 @@ import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
-import 'package:project_nineties/features/main/presentation/widgets/main_bottom_nav_bar.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

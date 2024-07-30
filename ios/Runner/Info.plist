@@ -76,11 +76,20 @@
     <string>We need access to your camera to allow you to take photos for uploading.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>We need access to your microphone to allow you to record videos with audio.</string>
-
+    
     <!-- Add these entries -->
+    <key>LSSupportsOpeningDocumentsInPlace</key>
+    <true/>
+    <key>UIFileSharingEnabled</key>
+    <true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+    <key>NSAllowsArbitraryLoads</key>
+    <true/>
+    </dict>
     <key>io.flutter.embedded_views_preview</key>
     <true/>
-    <key>NSCameraUsageDescription</key>
-    <string>This app needs camera access to scan QR codes</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs access to your photo library to pick files</string>
 </dict>
 </plist>

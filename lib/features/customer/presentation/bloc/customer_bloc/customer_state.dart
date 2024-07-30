@@ -27,6 +27,14 @@ class CustomerLoadSuccess extends CustomerState {
   List<Object> get props => [message];
 }
 
+class CustomerLoadToExcelSuccess extends CustomerState {
+  const CustomerLoadToExcelSuccess({required this.message});
+
+  final String message;
+  @override
+  List<Object> get props => [message];
+}
+
 class CustomerLoadUpdateSuccess extends CustomerState {
   const CustomerLoadUpdateSuccess({required this.message});
 

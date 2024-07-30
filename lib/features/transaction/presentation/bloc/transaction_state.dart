@@ -19,6 +19,14 @@ class TransactionLoadInProgress extends TransactionState {
   List<Object> get props => [];
 }
 
+class TransactionLoadSuccess extends TransactionState {
+  const TransactionLoadSuccess({required this.message});
+
+  final String message;
+  @override
+  List<Object> get props => [message];
+}
+
 class TransactionLoadCustomerSuccess extends TransactionState {
   const TransactionLoadCustomerSuccess({required this.data});
 
@@ -42,7 +50,6 @@ class TransactionLoadFailure extends TransactionState {
   @override
   List<Object> get props => [message];
 }
-
 
 final class TransactionLoadDataSuccess extends TransactionState {
   final List<TransactionEntity> data;

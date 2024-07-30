@@ -14,7 +14,13 @@ class UserListenerNotification extends StatelessWidget {
         //notification user
         BlocListener<UserBloc, UserState>(
           listener: (context, state) {
-            if (state is UserLoadApprovalSuccess) {
+            if (state is UserLoadSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            } else if (state is UserLoadApprovalSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
