@@ -8,6 +8,7 @@ import 'package:project_nineties/features/customer/data/repositories/customer_re
 import 'package:project_nineties/features/customer/domain/repositories/customer_repository.dart';
 import 'package:project_nineties/features/customer/domain/usecases/customer_usecase.dart';
 import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/message/presentation/bloc/message_bloc.dart';
 import 'package:project_nineties/features/partner/data/datasources/local/partner_local_datasource.dart';
 import 'package:project_nineties/features/transaction/data/datasources/local/transaction_local_datasource.dart';
 import 'package:project_nineties/features/transaction/data/datasources/remote/transaction_remote_datasource.dart';
@@ -47,6 +48,7 @@ void setupLocator() {
   locator.registerFactory<CustomerBloc>(() => CustomerBloc(useCase: locator()));
   locator.registerFactory<TransactionBloc>(
       () => TransactionBloc(useCase: locator()));
+  locator.registerFactory<MessageBloc>(() => MessageBloc(useCase: locator()));
 
 //usecase
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));
@@ -55,6 +57,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => CustomerUseCase(repository: locator()));
   locator
       .registerLazySingleton(() => TransactionUseCase(repository: locator()));
+  locator.registerLazySingleton(() => MessageUseCase(repository: locator()));
 
   //repository
   locator.registerLazySingleton<AuthenticationRepository>(() =>
@@ -71,6 +74,8 @@ void setupLocator() {
   locator.registerLazySingleton<TransactionRepository>(() =>
       TransactionRepositoryImpl(
           remoteDataSource: locator(), localDataSource: locator()));
+  locator.registerLazySingleton<MessageRepository>(
+      () => MessageRepositoryImpl(remoteDataSource: locator()));
 
   //data source
   locator.registerLazySingleton<AuthenticationRemoteDataSource>(
@@ -98,6 +103,8 @@ void setupLocator() {
       () => TransactionRemoteDataSourceImpl(locator()));
   locator.registerLazySingleton<TransactionLocalDataSource>(
       () => TransactionLocalDataSourceImpl());
+  locator.registerLazySingleton<MessaggeRemoteDataSource>(
+      () => MessaggeRemoteDataSourceImpl(locator()));
 
   //external
 

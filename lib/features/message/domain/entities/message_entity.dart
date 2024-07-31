@@ -1,4 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
+class MessageEntity extends Equatable {
+  final String id;
+  final String senderId;
+  final String senderName;
+  final String senderAvatarUrl;
+  final String content;
+  final DateTime timestamp;
+  final bool isMe;
+  final Map<String, bool> readBy;
+  const MessageEntity({
+    required this.id,
+    required this.senderId,
+    required this.senderName,
+    required this.senderAvatarUrl,
+    required this.content,
+    required this.timestamp,
+    required this.isMe,
+    this.readBy = const {}, // Initialize with an empty map
+  });
+  static final empty = MessageEntity(
+    id: '',
+    senderId: '',
+    senderName: '',
+    senderAvatarUrl: '',
+    content: '',
+    timestamp: DateTime(1970, 1, 1), // A default timestamp value
+    isMe: false,
+    readBy: const {},
+  );
+
+  @override
+  List<Object?> get props => [
+        id,
+        senderId,
+        senderName,
+        senderAvatarUrl,
+        content,
+        timestamp,
+        isMe,
+        readBy,
+      ];
+}
 
 class Message {
   final String id;
@@ -8,6 +52,7 @@ class Message {
   final String content;
   final DateTime timestamp;
   final bool isMe;
+  final Map<String, bool> readBy; // Add readBy field
 
   Message({
     required this.id,
@@ -17,6 +62,7 @@ class Message {
     required this.content,
     required this.timestamp,
     required this.isMe,
+    this.readBy = const {}, // Initialize with an empty map
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +74,7 @@ class Message {
       'content': content,
       'timestamp': timestamp.millisecondsSinceEpoch,
       'isMe': isMe,
+      'readBy': readBy, // Add to map
     };
   }
 
@@ -41,18 +88,7 @@ class Message {
       content: data['content'] ?? '',
       timestamp: DateTime.fromMillisecondsSinceEpoch(data['timestamp'] ?? 0),
       isMe: data['isMe'] ?? false,
+      readBy: Map<String, bool>.from(data['readBy'] ?? {}),
     );
   }
-}
-
-Stream<List<Message>> getMessages() {
-  final messagesCollection = FirebaseFirestore.instance.collection('messages');
-  return messagesCollection.orderBy('timestamp').snapshots().map((snapshot) {
-    return snapshot.docs.map((doc) => Message.fromFirestore(doc)).toList();
-  });
-}
-
-Future<void> addMessage(Message message) {
-  final messagesCollection = FirebaseFirestore.instance.collection('messages');
-  return messagesCollection.add(message.toMap());
 }

@@ -5,7 +5,8 @@ import 'package:project_nineties/features/account_profile/presentation/pages/pro
 import 'package:project_nineties/features/customer/presentation/pages/customer_register_page.dart';
 import 'package:project_nineties/features/customer/presentation/pages/customer_update_page.dart';
 import 'package:project_nineties/features/customer/presentation/pages/customer_view_page.dart';
-import 'package:project_nineties/features/message/presentation/pages/message.dart';
+import 'package:project_nineties/features/message/presentation/pages/message_page.dart';
+
 import 'package:project_nineties/features/partner/presentation/pages/partner_update_page.dart';
 import 'package:project_nineties/features/partner/presentation/pages/partners_view_page.dart';
 import 'package:project_nineties/features/settings/presentation/pages/settings_page.dart';
@@ -95,7 +96,7 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
   List<Widget> get widgetOptions => [
         const HomeDashboard(),
         const CustomerQRView(),
-        ChatGroupPage(),
+        MessagesPage(),
       ];
 
   Widget getCurrentWidget() {
@@ -125,7 +126,7 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
       // case 'transaction_view':
       //   return const TransactionViewPage();
       case 'message':
-        return ChatGroupPage();
+        return MessagesPage();
       default:
         return widgetOptions[state.indexBotNavBar];
     }
