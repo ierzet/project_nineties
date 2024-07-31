@@ -8,6 +8,10 @@ import 'package:project_nineties/features/customer/data/repositories/customer_re
 import 'package:project_nineties/features/customer/domain/repositories/customer_repository.dart';
 import 'package:project_nineties/features/customer/domain/usecases/customer_usecase.dart';
 import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/message/data/datasources/message_remote_datasoource.dart';
+import 'package:project_nineties/features/message/data/repositories/message_repository_impl.dart';
+import 'package:project_nineties/features/message/domain/repositories/message_repository.dart';
+import 'package:project_nineties/features/message/domain/usecases/message_usecase.dart';
 import 'package:project_nineties/features/message/presentation/bloc/message_bloc.dart';
 import 'package:project_nineties/features/partner/data/datasources/local/partner_local_datasource.dart';
 import 'package:project_nineties/features/transaction/data/datasources/local/transaction_local_datasource.dart';
