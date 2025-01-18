@@ -1,6 +1,6 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:project_nineties/features/customer/presentation/widgets/customer_qrcode.dart';
+import 'package:project_nineties/features/member/presentation/widgets/member_qrcode.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 // class AccountWidget extends StatelessWidget {
@@ -91,14 +91,14 @@ class MessagesWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Messages Screen'),
-            CustomerQRCode(
-              customerId: 'BvFHIJPgR9gtFLUg2rar',
+            MemberQRCode(
+              memberId: 'BvFHIJPgR9gtFLUg2rar',
             ),
             SizedBox(
               height: 34,
             ),
-            CustomerQRCode(
-              customerId: 'PFoFdEpxRwWZgRgbCb52',
+            MemberQRCode(
+              memberId: 'PFoFdEpxRwWZgRgbCb52',
             ),
           ],
         ),
@@ -120,14 +120,14 @@ class TransactionsWidget extends StatelessWidget {
   }
 }
 
-class CustomersWidget extends StatelessWidget {
-  const CustomersWidget({super.key});
+class MembersWidget extends StatelessWidget {
+  const MembersWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Customers Screen'),
+        child: Text('Members Screen'),
       ),
     );
   }

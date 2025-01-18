@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_bloc/member_bloc.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -89,22 +89,22 @@ class SummaryCard extends StatelessWidget {
   }
 
   void onSelected(BuildContext context, int item, String title) {
-    if (title == 'Total Customers') {
-      final customerBloc = context.read<CustomerBloc>();
-      final customerState = customerBloc.state;
+    if (title == 'Total Members') {
+      final memberBloc = context.read<MemberBloc>();
+      final memberState = memberBloc.state;
       switch (item) {
         case 0:
           context.read<NavigationCubit>().updateSubMenuWithAnimated(
-              context: context, subMenu: 'customer_view');
+              context: context, subMenu: 'member_view');
           break;
         case 1:
-          if (customerState is CustomerLoadDataSuccess) {
-            customerBloc.add(CustomerExportToExcel(param: customerState.data));
+          if (memberState is MemberLoadDataSuccess) {
+            memberBloc.add(MemberExportToExcel(param: memberState.data));
           }
           break;
         case 2:
-          if (customerState is CustomerLoadDataSuccess) {
-            customerBloc.add(CustomerExportToCSV(param: customerState.data));
+          if (memberState is MemberLoadDataSuccess) {
+            memberBloc.add(MemberExportToCSV(param: memberState.data));
           }
           break;
       }

@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
-import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
+import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
 class TransactionEntity extends Equatable {
   final String transactionId;
-  final CustomerEntity customer;
+  final MemberEntity member;
   final PartnerEntity partner;
   final UserEntity user;
   final String transactionType;
@@ -23,7 +23,7 @@ class TransactionEntity extends Equatable {
 
   const TransactionEntity({
     required this.transactionId,
-    required this.customer,
+    required this.member,
     required this.partner,
     required this.user,
     required this.transactionType,
@@ -42,7 +42,7 @@ class TransactionEntity extends Equatable {
 
   static final empty = TransactionEntity(
     transactionId: '',
-    customer: CustomerEntity.empty,
+    member: MemberEntity.empty,
     partner: PartnerEntity.empty,
     user: UserEntity.empty,
     transactionType: '',
@@ -58,7 +58,7 @@ class TransactionEntity extends Equatable {
 
   TransactionEntity copyWith({
     String? transactionId,
-    CustomerEntity? customer,
+    MemberEntity? member,
     PartnerEntity? partner,
     UserEntity? user,
     String? transactionType,
@@ -76,7 +76,7 @@ class TransactionEntity extends Equatable {
   }) {
     return TransactionEntity(
       transactionId: transactionId ?? this.transactionId,
-      customer: customer ?? this.customer,
+      member: member ?? this.member,
       partner: partner ?? this.partner,
       user: user ?? this.user,
       transactionType: transactionType ?? this.transactionType,
@@ -98,7 +98,7 @@ class TransactionEntity extends Equatable {
   @override
   List<Object?> get props => [
         transactionId,
-        customer,
+        member,
         partner,
         user,
         transactionType,

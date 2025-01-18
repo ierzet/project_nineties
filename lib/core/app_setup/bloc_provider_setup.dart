@@ -3,15 +3,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/app_setup/authentication_init.dart';
 import 'package:project_nineties/core/cubit/date_picker_cubit.dart';
 import 'package:project_nineties/core/cubit/global_cubit.dart';
-import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
-import 'package:project_nineties/features/customer/presentation/bloc/customer_validator_bloc/customer_validator_bloc.dart';
-import 'package:project_nineties/features/customer/presentation/cubit/customer_dob_date_cubit.dart';
-import 'package:project_nineties/features/customer/presentation/cubit/customer_expired_date_cubit.dart';
-import 'package:project_nineties/features/customer/presentation/cubit/customer_join_date_cubit.dart';
-import 'package:project_nineties/features/customer/presentation/cubit/customer_step_cubit.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_bloc/member_bloc.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_validator_bloc/member_validator_bloc.dart';
+import 'package:project_nineties/features/member/presentation/cubit/member_dob_date_cubit.dart';
+import 'package:project_nineties/features/member/presentation/cubit/member_expired_date_cubit.dart';
+import 'package:project_nineties/features/member/presentation/cubit/member_join_date_cubit.dart';
+import 'package:project_nineties/features/member/presentation/cubit/member_registration_date_cubit.dart';
+import 'package:project_nineties/features/member/presentation/cubit/member_step_cubit.dart';
 import 'package:project_nineties/features/message/presentation/bloc/message_bloc.dart';
 import 'package:project_nineties/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
+import 'package:project_nineties/features/transaction/presentation/cubit/transaction_camera_flag_cubit_hapusable.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
 import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
@@ -54,7 +56,7 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => AuthenticationValidatorBloc()),
           BlocProvider(create: (context) => di.locator<PartnerBloc>()),
           BlocProvider(create: (context) => di.locator<UserBloc>()),
-          BlocProvider(create: (context) => di.locator<CustomerBloc>()),
+          BlocProvider(create: (context) => di.locator<MemberBloc>()),
           BlocProvider(create: (context) => di.locator<TransactionBloc>()),
           BlocProvider(create: (context) => di.locator<MessageBloc>()),
 
@@ -63,14 +65,16 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => PartnerJoinDateCubit()),
           BlocProvider(create: (context) => DatePickerCubit()),
 
-          BlocProvider(create: (context) => CustomerValidatorBloc()),
-          BlocProvider(create: (context) => CustomerJoinDateCubit()),
-          BlocProvider(create: (context) => CustomerDOBDateCubit()),
-          BlocProvider(create: (context) => CustomerExpiredDateCubit()),
+          BlocProvider(create: (context) => MemberValidatorBloc()),
+          BlocProvider(create: (context) => MemberJoinDateCubit()),
+          BlocProvider(create: (context) => MemberDOBDateCubit()),
+          BlocProvider(create: (context) => MemberRegistrationDateCubit()),
+          BlocProvider(create: (context) => MemberExpiredDateCubit()),
           BlocProvider(create: (context) => ThemeCubit()),
 
-          //BlocProvider(create: (context) => CustomerJoinDateCubit()),
-          BlocProvider(create: (context) => CustomerStepCubit()),
+          //BlocProvider(create: (context) => MemberJoinDateCubit()),
+          BlocProvider(create: (context) => MemberStepCubit()),
+         // BlocProvider(create: (context) => TransactionCameraFlagCubit()),
 
           BlocProvider(create: (context) => NavigationCubit()),
           BlocProvider(create: (context) => UserValidatorCubit()),

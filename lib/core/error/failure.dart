@@ -318,3 +318,15 @@ class FirebaseStorageFailure extends Failure {
   // ignore: overridden_fields
   final String message;
 }
+
+class MemberValidationFailure extends Failure {
+  final Map<String, String> errors;
+
+  const MemberValidationFailure(this.errors)
+      : super('Validation errors occurred.');
+
+  @override
+  String toString() {
+    return 'ValidationFailure: ${errors.entries.map((e) => '${e.key}: ${e.value}').join(', ')}';
+  }
+}

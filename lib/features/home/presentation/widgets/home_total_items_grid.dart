@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
-import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_bloc/member_bloc.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_summary_card.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -54,25 +54,25 @@ class HomeTotalItemsGrid extends StatelessWidget {
             );
           },
         ),
-        BlocBuilder<CustomerBloc, CustomerState>(
+        BlocBuilder<MemberBloc, MemberState>(
           builder: (context, state) {
             String itemCount = '0';
-            List<CustomerEntity> param = [];
-            if (state is CustomerLoadDataSuccess) {
+            List<MemberEntity> param = [];
+            if (state is MemberLoadDataSuccess) {
               itemCount = state.data.length.toString();
               param.addAll(state.data); // Assuming data is a list of users
             }
             return SummaryCard(
-              title: 'Total Customers',
+              title: 'Total Members',
               value: itemCount,
               icon: Icons.people,
               color: AppColors.accent,
               onExportToExcel: () => context
-                  .read<CustomerBloc>()
-                  .add(CustomerExportToExcel(param: param)),
+                  .read<MemberBloc>()
+                  .add(MemberExportToExcel(param: param)),
               onExportToCSV: () => context
-                  .read<CustomerBloc>()
-                  .add(CustomerExportToCSV(param: param)),
+                  .read<MemberBloc>()
+                  .add(MemberExportToCSV(param: param)),
             );
           },
         ),

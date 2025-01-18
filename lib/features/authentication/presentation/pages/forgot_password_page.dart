@@ -8,13 +8,16 @@ import 'package:project_nineties/features/authentication/presentation/widgets/pr
 
 class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({super.key});
-  static Page<void> page() => const MaterialPage<void>(child: ForgotPasswordPage());
+  static Page<void> page() =>
+      const MaterialPage<void>(child: ForgotPasswordPage());
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
+    final emailController = TextEditingController();
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: theme.colorScheme.surface,
       body: ResponsiveLayout(
         desktopBody: const Center(
           child: Text('Desktop Body'),
@@ -26,72 +29,86 @@ class ForgotPasswordPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: AppPadding.doublePadding.h),
-                  Icon(
-                    Icons.lock_reset,
-                    size: AppPadding.triplePadding.r * 2,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
+                  _buildIcon(theme),
                   SizedBox(height: AppPadding.doublePadding.h),
-                  Text(
-                    AppStrings.forgotPassword,
-                    style: AppStyles.header.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
+                  _buildHeader(theme),
                   SizedBox(height: AppPadding.defaultPadding.h),
-                  Text(
-                    AppStrings.enterYourEmail,
-                    style: AppStyles.bodyText.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
+                  _buildSubHeader(theme),
                   SizedBox(height: AppPadding.defaultPadding.h),
-                  CustomTextField(
-                    controller: emailController,
-                    type: InputType.email,
-                    authFormType: AuthenticationFormType.forgotPassword,
-                  ),
+                  _buildEmailField(emailController),
                   SizedBox(height: AppPadding.doublePadding.h),
                   const PrimaryButton(
                     authFormType: AuthenticationFormType.forgotPassword,
                   ),
                   SizedBox(height: AppPadding.defaultPadding.h),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppStrings.rememberYourPassword,
-                          style: AppStyles.bodyText.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
-                          ),
-                        ),
-                        SizedBox(width: AppPadding.halfPadding.h / 2),
-                        GestureDetector(
-                          // onTap: () => context.read<AppBloc>().add(
-                          //     const AppUserChanged(UserAccountEntity.empty)),
-                          onTap: () => Navigator.of(context).pop(),
-                          child: Text(
-                            AppStrings.signIn,
-                            style: AppStyles.accentText.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildFooter(context, theme),
                   const ListenerNotificationLogin(),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildIcon(ThemeData theme) {
+    return Icon(
+      Icons.lock_reset,
+      size: AppPadding.triplePadding.r * 2,
+      color: theme.colorScheme.onPrimaryContainer,
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    return Text(
+      AppStrings.forgotPassword,
+      style: AppStyles.header.copyWith(
+        color: theme.colorScheme.onPrimaryContainer,
+      ),
+    );
+  }
+
+  Widget _buildSubHeader(ThemeData theme) {
+    return Text(
+      AppStrings.enterYourEmail,
+      style: AppStyles.bodyText.copyWith(
+        color: theme.colorScheme.onPrimaryContainer,
+      ),
+    );
+  }
+
+  Widget _buildEmailField(TextEditingController controller) {
+    return CustomTextField(
+      controller: controller,
+      type: InputType.email,
+      authFormType: AuthenticationFormType.forgotPassword,
+    );
+  }
+
+  Widget _buildFooter(BuildContext context, ThemeData theme) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            AppStrings.rememberYourPassword,
+            style: AppStyles.bodyText.copyWith(
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+          SizedBox(width: AppPadding.halfPadding.h / 2),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Text(
+              AppStrings.signIn,
+              style: AppStyles.accentText.copyWith(
+                color: theme.colorScheme.onPrimaryContainer,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

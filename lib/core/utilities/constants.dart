@@ -77,7 +77,7 @@ class AppStrings {
   //halaman dashboard
   static const String dashboard = 'Dashboard';
   static const String transactionTrends = 'Transaction Trends';
-  static const String customerGrowth = 'Customer Growth';
+  static const String memberGrowth = 'Member Growth';
   static const String userActivities = 'User Activities';
 
   //drawer
@@ -176,6 +176,8 @@ enum InputType {
   memberType,
   statusMember,
   text,
+  registrationDate,
+  year,
 }
 
 enum AuthenticationFormType { signin, signup, forgotPassword }

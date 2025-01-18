@@ -1,14 +1,13 @@
-
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_nineties/core/error/failure.dart';
-import 'package:project_nineties/features/customer/data/models/customer_model.dart';
+import 'package:project_nineties/features/member/data/models/member_model.dart';
 import 'package:project_nineties/features/transaction/data/models/transaction_model.dart';
 import 'package:project_nineties/features/transaction/domain/entities/transaction_entity.dart';
 
 abstract class TransactionRemoteDataSource {
-  Future<CustomerModel> getCustomer(String param);
+  Future<MemberModel> getMember(String param);
   Future<String> addTransaction(TransactionModel params);
   Future<QuerySnapshot<Map<String, dynamic>>> fetchData();
   Stream<List<TransactionEntity>> getTransactionsStream();
@@ -53,16 +52,15 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   }
 
   @override
-  Future<CustomerModel> getCustomer(String param) async {
+  Future<MemberModel> getMember(String param) async {
     try {
-      final docSnapshot =
-          await instance.collection('customer').doc(param).get();
+      final docSnapshot = await instance.collection('member').doc(param).get();
 
       if (!docSnapshot.exists) {
-        throw const FireBaseCatchFailure('Customer not found');
+        throw const FireBaseCatchFailure('Member not found');
       }
 
-      final result = CustomerModel.fromFirestore(docSnapshot);
+      final result = MemberModel.fromFirestore(docSnapshot);
       return result;
     } on FirebaseException catch (e) {
       throw FireBaseCatchFailure.fromCode(e.code);

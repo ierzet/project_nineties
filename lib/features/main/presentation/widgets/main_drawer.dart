@@ -107,12 +107,24 @@ class MainDrawer extends StatelessWidget {
                   Scaffold.of(context).closeDrawer();
                 },
               ),
+              ListTile(
+                leading: const Icon(Icons.view_list),
+                title: Text(
+                  'Partners Screen',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context.read<NavigationCubit>().updateSubMenuWithAnimated(
+                      context: context, subMenu: 'partner_screen');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
             ],
           ),
           ExpansionTile(
             leading: const Icon(Icons.people),
             title: Text(
-              'Customer',
+              'Member',
               style: AppStyles.drawerItemText,
             ),
             childrenPadding: const EdgeInsets.only(
@@ -121,24 +133,48 @@ class MainDrawer extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.approval),
                 title: Text(
-                  'Register Customer',
+                  'Register Member',
                   style: AppStyles.drawerItemText,
                 ),
                 onTap: () {
                   context.read<NavigationCubit>().updateSubMenuWithAnimated(
-                      context: context, subMenu: 'customer_register');
+                      context: context, subMenu: 'member_register');
                   Scaffold.of(context).closeDrawer();
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.view_list),
+                leading: const Icon(Icons.group_add_outlined),
                 title: Text(
-                  'View Customers',
+                  'Extend Member',
                   style: AppStyles.drawerItemText,
                 ),
                 onTap: () {
                   context.read<NavigationCubit>().updateSubMenuWithAnimated(
-                      context: context, subMenu: 'customer_view');
+                      context: context, subMenu: 'member_view_extend');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.list),
+                title: Text(
+                  'View Members',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context.read<NavigationCubit>().updateSubMenuWithAnimated(
+                      context: context, subMenu: 'member_view');
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.upload_file),
+                title: Text(
+                  'Migrate Data Members',
+                  style: AppStyles.drawerItemText,
+                ),
+                onTap: () {
+                  context.read<NavigationCubit>().updateSubMenuWithAnimated(
+                      context: context, subMenu: 'migrate_data_members');
                   Scaffold.of(context).closeDrawer();
                 },
               ),

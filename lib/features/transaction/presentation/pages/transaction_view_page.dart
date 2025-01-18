@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:project_nineties/core/feature_test/qr_web_scanner.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
@@ -50,8 +51,10 @@ class TransactionViewPage extends StatelessWidget {
                     child: TabBarView(
                       children: [
                         BuildOrderList(status: 'Delivered'),
+                        //Center(child: FlutterWebQRCodeScanner()),
                         Center(child: Text('Processing Orders')),
-                        Center(child: Text('Canceled Orders')),
+                        //Center(child: Text('Canceled Orders')),
+                        Center(child: QRCodeReaderWeb()),
                       ],
                     ),
                   ),
@@ -160,7 +163,7 @@ class BuildOrderList extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 8.0),
-                      Text('Customer: ${transaction.customer.customerName}'),
+                      Text('Member: ${transaction.member.memberName}'),
                       const SizedBox(height: 8.0),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

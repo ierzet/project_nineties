@@ -3,8 +3,8 @@ import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:project_nineties/features/user/data/models/user_model.dart';
 import 'package:project_nineties/features/user/domain/entities/user_entity.dart';
-import 'package:project_nineties/features/customer/data/models/customer_model.dart';
-import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
+import 'package:project_nineties/features/member/data/models/member_model.dart';
+import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/transaction/domain/entities/transaction_entity.dart';
@@ -12,7 +12,7 @@ import 'package:project_nineties/features/transaction/domain/entities/transactio
 class TransactionModel extends TransactionEntity {
   const TransactionModel({
     required super.transactionId,
-    required super.customer,
+    required super.member,
     required super.partner,
     required super.user,
     required super.transactionType,
@@ -33,7 +33,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return TransactionModel(
         transactionId: entity.transactionId,
-        customer: entity.customer,
+        member: entity.member,
         partner: entity.partner,
         user: entity.user,
         transactionType: entity.transactionType,
@@ -59,7 +59,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return TransactionEntity(
         transactionId: transactionId,
-        customer: customer,
+        member: member,
         partner: partner,
         user: user,
         transactionType: transactionType,
@@ -85,7 +85,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return TransactionModel(
         transactionId: json['transaction_id'] as String,
-        customer: CustomerModel.fromJson(json['customer']).toEntity(),
+        member: MemberModel.fromJson(json['member']).toEntity(),
         partner: PartnerModel.fromJson(json['partner']).toEntity(),
         user: UserModel.fromJson(json['user']).toEntity(),
         transactionType: json['transaction_type'] as String,
@@ -115,7 +115,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return {
         'transaction_id': transactionId,
-        'customer': CustomerModel.fromEntity(customer).toJson(),
+        'member': MemberModel.fromEntity(member).toJson(),
         'partner': PartnerModel.fromEntity(partner).toJson(),
         'user': UserModel.fromEntity(user).toJson(),
         'transaction_type': transactionType,
@@ -143,7 +143,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return TransactionModel(
         transactionId: snapshot.id,
-        customer: CustomerModel.fromJson(data['customer']).toEntity(),
+        member: MemberModel.fromJson(data['member']).toEntity(),
         partner: PartnerModel.fromJson(data['partner']).toEntity(),
         user: UserModel.fromTransactionJson(data['user']).toEntity(),
         transactionType: data['transaction_type'] as String,
@@ -171,7 +171,7 @@ class TransactionModel extends TransactionEntity {
   //   try {
   //     return TransactionModel(
   //       transactionId: snapshot.id,
-  //       customer: CustomerModel.fromJson(snapshot['customer']).toEntity(),
+  //       member: MemberModel.fromJson(snapshot['member']).toEntity(),
   //       partner: PartnerModel.fromJson(snapshot['partner']).toEntity(),
   //       user: UserModel.fromJson(snapshot['user']).toEntity(),
   //       transactionType: snapshot['transaction_type'] as String,
@@ -197,7 +197,7 @@ class TransactionModel extends TransactionEntity {
   //   try {
   //     return {
   //       'transaction_id': transactionId,
-  //       'customer': CustomerModel.fromEntity(customer).toFireStore(),
+  //       'member': MemberModel.fromEntity(member).toFireStore(),
   //       'partner': PartnerModel.fromEntity(partner).toFireStore(),
   //       'user': UserModel.fromEntity(user).toFirestore(),
   //       'transaction_type': transactionType,
@@ -223,7 +223,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return {
         'transaction_id': transactionId,
-        'customer': CustomerModel.fromEntity(customer).toFireStore(),
+        'member': MemberModel.fromEntity(member).toFireStore(),
         'partner': PartnerModel.fromEntity(partner).toFireStore(),
         'user': UserModel.fromEntity(user).toFirestore(),
         'transaction_type': transactionType,
@@ -247,7 +247,7 @@ class TransactionModel extends TransactionEntity {
 
   static final empty = TransactionModel(
     transactionId: '',
-    customer: CustomerEntity.empty,
+    member: MemberEntity.empty,
     partner: PartnerEntity.empty,
     user: UserEntity.empty,
     transactionType: 'carwash',
@@ -260,29 +260,29 @@ class TransactionModel extends TransactionEntity {
 
   List<TextCellValue> toTextCellValueHeader() {
     return [
-      const TextCellValue('Transaction Id'),
-      const TextCellValue('Customer'),
-      const TextCellValue('Partner Id'),
-      const TextCellValue('User Id'),
-      const TextCellValue('Transaction Type'),
-      const TextCellValue('Transaction Date'),
-      const TextCellValue('Transaction Amount'),
-      const TextCellValue('Transaction Description'),
-      const TextCellValue('Transaction Status'),
-      const TextCellValue('Created By'),
-      const TextCellValue('Created Date'),
-      const TextCellValue('Updated By'),
-      const TextCellValue('Updated Date'),
-      const TextCellValue('Deleted By'),
-      const TextCellValue('Deleted Date'),
-      const TextCellValue('Is Deleted'),
+      TextCellValue('Transaction Id'),
+      TextCellValue('Member'),
+      TextCellValue('Partner Id'),
+      TextCellValue('User Id'),
+      TextCellValue('Transaction Type'),
+      TextCellValue('Transaction Date'),
+      TextCellValue('Transaction Amount'),
+      TextCellValue('Transaction Description'),
+      TextCellValue('Transaction Status'),
+      TextCellValue('Created By'),
+      TextCellValue('Created Date'),
+      TextCellValue('Updated By'),
+      TextCellValue('Updated Date'),
+      TextCellValue('Deleted By'),
+      TextCellValue('Deleted Date'),
+      TextCellValue('Is Deleted'),
     ];
   }
 
   List<TextCellValue> toTextCellValueList() {
     return [
       TextCellValue(transactionId),
-      TextCellValue(customer.customerId),
+      TextCellValue(member.memberId),
       TextCellValue(partner.partnerId),
       TextCellValue(user.id),
       TextCellValue(transactionType),
@@ -303,7 +303,7 @@ class TransactionModel extends TransactionEntity {
   List<String> toCSVHeader() {
     return [
       'transaction_id',
-      'customer_id',
+      'member_id',
       'partner_id',
       'user_id',
       'transaction_type',
@@ -324,7 +324,7 @@ class TransactionModel extends TransactionEntity {
   List<String> toCSVList() {
     return [
       transactionId,
-      customer.customerId,
+      member.memberId,
       partner.partnerId,
       user.id,
       transactionType,
@@ -350,7 +350,7 @@ class TransactionModel extends TransactionEntity {
   @override
   TransactionModel copyWith({
     String? transactionId,
-    CustomerEntity? customer,
+    MemberEntity? member,
     PartnerEntity? partner,
     UserEntity? user,
     String? transactionType,
@@ -369,7 +369,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return TransactionModel(
         transactionId: transactionId ?? this.transactionId,
-        customer: customer ?? this.customer,
+        member: member ?? this.member,
         partner: partner ?? this.partner,
         user: user ?? this.user,
         transactionType: transactionType ?? this.transactionType,

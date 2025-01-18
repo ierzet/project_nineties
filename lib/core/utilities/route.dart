@@ -12,14 +12,10 @@ List<Page<dynamic>> onGenerateAppViewPages(
       return [MainDashboardPage.page()];
     case AppStatus.unauthenticated:
       return [AuthenticationPage.page()];
-    // case AppStatus.signup:
-    //   return [SignupPage.page()];
-    // case AppStatus.forgotPassword:
-    //   return [ForgotPasswordPage.page()];
     case AppStatus.loading:
-      return [LoadingPage.page()]; // Add loading state handling
+      return [LoadingPage.page()];
     default:
-      return [ErrorPage.page()]; // Optional error handling
+      return [ErrorPage.page()];
   }
 }
 

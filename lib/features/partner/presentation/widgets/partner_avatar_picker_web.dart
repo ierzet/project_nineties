@@ -85,7 +85,11 @@ class _PartnerPlatformAvatarPickerState
         height: 150,
         width: 150,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
+        errorBuilder: (context, error, stackTrace) => const CircleAvatar(
+          radius: 75,
+          backgroundImage:
+              AssetImage('assets/images/profile_empty.png') as ImageProvider,
+        ),
       );
     } else {
       avatarWidget = const Column(

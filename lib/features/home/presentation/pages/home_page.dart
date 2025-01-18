@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/customer/presentation/widgets/listener_notify_customer.dart';
-import 'package:project_nineties/features/home/presentation/widgets/home_customer_growth_box_chart.dart';
+import 'package:project_nineties/features/member/presentation/widgets/listener_notify_member.dart';
+import 'package:project_nineties/features/home/presentation/widgets/home_member_growth_box_chart.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample2.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_total_items_grid.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample1.dart';
@@ -52,11 +52,11 @@ class HomeDashboard extends StatelessWidget {
               child: const TransactionTrendChart2(),
             ),
             SizedBox(height: AppPadding.defaultPadding.h),
-            const ChartHeader(title: AppStrings.customerGrowth),
+            const ChartHeader(title: AppStrings.memberGrowth),
             SizedBox(height: AppPadding.halfPadding.h),
             SizedBox(
               height: AppPadding.triplePadding.h * 4,
-              child: const HomeCustomerGrowthBoxChart(),
+              child: const HomeMemberGrowthBoxChart(),
             ),
             SizedBox(height: AppPadding.defaultPadding.h),
             const ChartHeader(title: AppStrings.userActivities),
@@ -65,7 +65,7 @@ class HomeDashboard extends StatelessWidget {
               height: AppPadding.triplePadding.h * 4,
               child: const HomeUserActivitisPieChart(),
             ),
-            const ListenerNotificationCustomer(),
+            const ListenerNotificationMember(),
             const ListenerNotificationPartner(),
             const ListenerNotificationTransaction(),
             const UserListenerNotification(),

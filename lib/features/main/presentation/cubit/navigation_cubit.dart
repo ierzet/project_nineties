@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_nineties/core/feature_test/partner_screen.dart';
 import 'package:project_nineties/core/utilities/route_page.dart';
 import 'package:project_nineties/features/account_profile/presentation/pages/profile_page.dart';
-import 'package:project_nineties/features/customer/presentation/pages/customer_register_page.dart';
-import 'package:project_nineties/features/customer/presentation/pages/customer_update_page.dart';
-import 'package:project_nineties/features/customer/presentation/pages/customer_view_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_extend_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_migrate_data_member_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_register_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_update_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_view_extend_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_view_page.dart';
 import 'package:project_nineties/features/message/presentation/pages/message_page.dart';
 
 import 'package:project_nineties/features/partner/presentation/pages/partner_update_page.dart';
 import 'package:project_nineties/features/partner/presentation/pages/partners_view_page.dart';
 import 'package:project_nineties/features/settings/presentation/pages/settings_page.dart';
 import 'package:project_nineties/features/transaction/presentation/pages/transaction_page.dart';
+
 import 'package:project_nineties/features/transaction/presentation/pages/transaction_view_page.dart';
+import 'package:project_nineties/features/transaction/presentation/widgets/transaction_review.dart';
 import 'package:project_nineties/features/user/presentation/pages/user_approval_page.dart';
 import 'package:project_nineties/features/user/presentation/pages/user_register_admin_page.dart';
 import 'package:project_nineties/features/user/presentation/pages/users_view_page.dart';
@@ -67,16 +73,34 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
       Navigator.of(context).push(createPageRoute(const PartnerUpdatePage()));
     }
 
-    //customer
-    if (subMenu == 'customer_register') {
+    if (subMenu == 'partner_screen') {
+      Navigator.of(context).push(createPageRoute(const PartnerScreen()));
+    }
+
+    //member
+    if (subMenu == 'member_register') {
       Navigator.of(context)
-          .push(createPageRoute(const CustomerRegistrationPage()));
+          .push(createPageRoute(const MemberRegistrationPage()));
     }
-    if (subMenu == 'customer_view') {
-      Navigator.of(context).push(createPageRoute(const CustomersViewPage()));
+    if (subMenu == 'member_view') {
+      Navigator.of(context).push(createPageRoute(const MembersViewPage()));
     }
-    if (subMenu == 'customer_update') {
-      Navigator.of(context).push(createPageRoute(const CustomerUpdatePage()));
+    if (subMenu == 'member_view_extend') {
+      Navigator.of(context)
+          .push(createPageRoute(const MembersViewExtendPage()));
+    }
+
+    if (subMenu == 'member_update') {
+      Navigator.of(context).push(createPageRoute(const MemberUpdatePage()));
+    }
+
+    if (subMenu == 'member_extend') {
+      Navigator.of(context).push(createPageRoute(const MemberExtendPage()));
+    }
+
+    if (subMenu == 'migrate_data_members') {
+      Navigator.of(context)
+          .push(createPageRoute(const MemberMigrateDataMemberPage()));
     }
 
     //popup menu
@@ -91,11 +115,14 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
     if (subMenu == 'transaction_view') {
       Navigator.of(context).push(createPageRoute(const TransactionViewPage()));
     }
+    if (subMenu == 'scan_qr') {
+      Navigator.of(context).push(createPageRoute(const TransactionReview()));
+    }
   }
 
   List<Widget> get widgetOptions => [
         const HomeDashboard(),
-        const CustomerQRView(),
+        const MemberQRView(),
         MessagesPage(),
       ];
 
@@ -117,12 +144,12 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
       //   return const UserRegisterAdminPage();
       // case 'users_view':
       //   return const UsersViewPage();
-      // case 'customer_register':
-      //   return const CustomerRegistrationPage();
-      // case 'customer_view':
-      //   return const CustomersViewPage();
-      // case 'customer_update':
-      //   return const CustomerUpdatePage();
+      // case 'member_register':
+      //   return const MemberRegistrationPage();
+      // case 'member_view':
+      //   return const MembersViewPage();
+      // case 'member_update':
+      //   return const MemberUpdatePage();
       // case 'transaction_view':
       //   return const TransactionViewPage();
       case 'message':
@@ -146,25 +173,35 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
         return 'Register Admin User';
       case 'users_view':
         return 'Users View';
-      case 'customer_register':
-        return 'Customer Registration';
-      case 'customer_view':
-        return 'Customers View';
-      case 'customer_update':
-        return 'Customer Update';
+      case 'member_register':
+        return 'Member Registration';
+      case 'member_view':
+        return 'Members View';
+      case 'member_view_extend':
+        return 'Members View Extend';
+      case 'member_update':
+        return 'Member Update';
+      case 'member_extend':
+        return 'Member Extend';
       case 'transaction_view':
         return 'Transaction View';
       case 'user_approval':
         return 'User Approval';
       case 'settings':
         return 'Settings';
+      case 'partner_screen':
+        return 'Partner Screen';
+      case 'migrate_data_members':
+        return 'Migrate Data Members';
+      case 'scan_qr':
+        return 'Scan QRCode';
 
       default:
         switch (state.indexBotNavBar) {
           case 0:
             return '90s  Car Wash';
           case 1:
-            return 'Customer QR';
+            return 'Member QR';
           case 2:
             return 'Messages';
           default:

@@ -49,6 +49,9 @@ class PartnersViewPage extends StatelessWidget {
                 itemCount: partners.length,
                 itemBuilder: (context, index) {
                   final partner = partners[index];
+
+                  // final checkJson = PartnerModel.fromEntity(partner).toJson();
+                  // print(checkJson);
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
@@ -59,8 +62,9 @@ class PartnersViewPage extends StatelessWidget {
                             : const AssetImage(
                                     'assets/images/profile_empty.png')
                                 as ImageProvider,
-                        onBackgroundImageError: (_, __) {
-                          // Handle image load error
+                        onBackgroundImageError: (exception, stackTrace) {
+                          debugPrint(
+                              'Error loading image: $exception,${partner.partnerName} ');
                         },
                       ),
                       title: Text(partner.partnerName ?? 'No Name'),

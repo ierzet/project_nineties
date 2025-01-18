@@ -1,192 +1,390 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
-import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
-import 'package:project_nineties/features/transaction/presentation/widgets/listener_notification_transaction.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 
-class CustomerQRView extends StatefulWidget {
-  const CustomerQRView({super.key});
+class MemberQRView extends StatelessWidget {
+  const MemberQRView({super.key});
 
   @override
-  State<CustomerQRView> createState() => _CustomerQRViewState();
+  Widget build(BuildContext context) {
+    return const BarcodeScannerWithController();
+  }
 }
 
-class _CustomerQRViewState extends State<CustomerQRView> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
-  QRViewController? controller;
+class BarcodeScannerWithController extends StatefulWidget {
+  const BarcodeScannerWithController({super.key});
 
   @override
-  void reassemble() {
-    super.reassemble();
-    if (controller != null) {
-      controller!.pauseCamera();
+  State<BarcodeScannerWithController> createState() =>
+      _BarcodeScannerWithControllerState();
+}
+
+class _BarcodeScannerWithControllerState
+    extends State<BarcodeScannerWithController> with WidgetsBindingObserver {
+  final MobileScannerController controller = MobileScannerController(
+    autoStart: false,
+    torchEnabled: false,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<TransactionBloc>().add(const InitialState());
+    WidgetsBinding.instance.addObserver(this);
+    unawaited(controller.start());
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!controller.value.hasCameraPermission) {
+      return;
+    }
+
+    switch (state) {
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+        return;
+      case AppLifecycleState.resumed:
+        unawaited(controller.start());
+      case AppLifecycleState.inactive:
+        unawaited(controller.stop());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<TransactionBloc, TransactionState>(
-        listener: (context, state) {
-          if (state is TransactionLoadCustomerSuccess) {
-            _showCustomerInfoDialog(context, state.data);
-          } else if (state is TransactionLoadFailure) {
-            _showErrorDialog(context, state.message);
-          }
-        },
-        child: Column(
-          children: <Widget>[
-            const ListenerNotificationTransaction(),
-            Expanded(
-              flex: 5,
-              child: QRView(
-                key: qrKey,
-                onQRViewCreated: _onQRViewCreated,
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Center(
-                child: BlocBuilder<TransactionBloc, TransactionState>(
-                  builder: (context, state) {
-                    if (state is TransactionLoadInProgress) {
-                      return const CircularProgressIndicator();
-                    } else if (state is TransactionLoadCustomerSuccess) {
-                      return result != null
-                          ? AnimatedTextKit(
-                              animatedTexts: [
-                                WavyAnimatedText(
-                                    'Getting customer information . . .'),
-                              ],
-                              isRepeatingAnimation: true,
-                            )
-                          : const Text('Scan a code');
-                    } else if (state is TransactionLoadFailure) {
-                      return const Text('Error loading data');
-                    } else {
-                      return const Text('Scan a code');
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-      if (scanData.code != null) {
-        context
-            .read<TransactionBloc>()
-            .add(GetCustomerInformationCard(param: scanData.code!));
-        controller.pauseCamera(); // Pause the camera to avoid multiple scans
-      }
-    });
-  }
-
-  void _showCustomerInfoDialog(BuildContext context, CustomerEntity customer) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final userAccountEntity = context.read<AppBloc>().state.user;
-        return AlertDialog(
-          title: const Text('Customer Information'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoRow('Name:', customer.customerName),
-              _buildInfoRow('Email:', customer.customerEmail),
-              _buildInfoRow('Phone:', customer.customerPhoneNumber),
-              // Add more fields here if necessary
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                setState(() {
-                  result = null;
-                });
-                context.read<TransactionBloc>().add(AddTransaction(
-                      customerEntity: customer,
-                      userAccountEntity: userAccountEntity,
-                    ));
-                controller
-                    ?.resumeCamera(); // Resume the camera after closing the dialog
-                Navigator.of(context).pop();
-                context
-                    .read<NavigationCubit>()
-                    .updateSubMenu('transaction_view');
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildInfoRow(String label, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
+      backgroundColor: Colors.black,
+      body: Stack(
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+          MobileScanner(
+            controller: controller,
+            errorBuilder: (context, error, child) {
+              return ScannerErrorWidget(error: error);
+            },
+            fit: BoxFit.contain,
           ),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: Text(value ?? 'N/A'),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              height: 100,
+              color: const Color.fromRGBO(0, 0, 0, 0.4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // ToggleFlashlightButton(controller: controller),
+                  StartStopMobileScannerButton(controller: controller),
+                  Expanded(
+                    child: Center(
+                      child: ScannedBarcodeLabel(
+                        controller: controller,
+                        barcodes: controller.barcodes,
+                      ),
+                    ),
+                  ),
+                  SwitchCameraButton(controller: controller),
+                  // AnalyzeImageFromGalleryButton(controller: controller),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                setState(() {
-                  result = null;
-                });
-                Navigator.of(context).pop();
-                context
-                    .read<NavigationCubit>()
-                    .updateSubMenu('transaction_view');
-              },
+  @override
+  Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+    await controller.dispose();
+  }
+}
+
+class ScannerErrorWidget extends StatelessWidget {
+  const ScannerErrorWidget({super.key, required this.error});
+
+  final MobileScannerException error;
+
+  @override
+  Widget build(BuildContext context) {
+    String errorMessage;
+
+    switch (error.errorCode) {
+      case MobileScannerErrorCode.controllerUninitialized:
+        errorMessage = 'Controller not ready.';
+      case MobileScannerErrorCode.permissionDenied:
+        errorMessage = 'Permission denied';
+      case MobileScannerErrorCode.unsupported:
+        errorMessage = 'Scanning is unsupported on this device';
+      default:
+        errorMessage = 'Generic Error';
+    }
+
+    return ColoredBox(
+      color: Colors.black,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Icon(Icons.error, color: Colors.white),
+            ),
+            Text(
+              errorMessage,
+              style: const TextStyle(color: Colors.white),
+            ),
+            Text(
+              error.errorDetails?.message ?? '',
+              style: const TextStyle(color: Colors.white),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ScannedBarcodeLabel extends StatelessWidget {
+  const ScannedBarcodeLabel({
+    super.key,
+    required this.barcodes,
+    required this.controller,
+  });
+
+  final Stream<BarcodeCapture> barcodes;
+
+  final MobileScannerController controller;
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: barcodes,
+      builder: (context, snapshot) {
+        final scannedBarcodes = snapshot.data?.barcodes ?? [];
+        final values = scannedBarcodes.map((e) => e.displayValue).join(', ');
+
+        if (scannedBarcodes.isEmpty) {
+          return const Text(
+            'Scan something!',
+            overflow: TextOverflow.fade,
+            style: TextStyle(color: Colors.white),
+          );
+        } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context
+                .read<TransactionBloc>()
+                .add(GetMemberInformationCard(param: values));
+          });
+        }
+
+        return BlocBuilder<TransactionBloc, TransactionState>(
+          builder: (context, state) {
+            if (state is TransactionLoadMemberSuccess) {
+              final memberName = state.data.memberName ?? 'Unknown Member';
+              // Navigate to TransactionReview page
+
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                controller.stop();
+                context.read<NavigationCubit>().updateSubMenuWithAnimated(
+                      context: context,
+                      subMenu: 'scan_qr',
+                    );
+              });
+              return Text(
+                memberName,
+                overflow: TextOverflow.fade,
+                style: const TextStyle(color: Colors.white),
+              );
+            } else if (state is TransactionLoadFailure) {
+              return Text(
+                'Error: ${state.message}',
+                overflow: TextOverflow.fade,
+                style: const TextStyle(color: Colors.white),
+              );
+            } else {
+              return const Text(
+                'Loading...',
+                overflow: TextOverflow.fade,
+                style: TextStyle(color: Colors.white),
+              );
+            }
+          },
         );
       },
     );
   }
+}
+
+class ToggleFlashlightButton extends StatelessWidget {
+  const ToggleFlashlightButton({required this.controller, super.key});
+
+  final MobileScannerController controller;
 
   @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller,
+      builder: (context, state, child) {
+        if (!state.isInitialized || !state.isRunning) {
+          return const SizedBox.shrink();
+        }
+
+        switch (state.torchState) {
+          case TorchState.auto:
+            return IconButton(
+              color: Colors.white,
+              iconSize: 32.0,
+              icon: const Icon(Icons.flash_auto),
+              onPressed: () async {
+                await controller.toggleTorch();
+              },
+            );
+          case TorchState.off:
+            return IconButton(
+              color: Colors.white,
+              iconSize: 32.0,
+              icon: const Icon(Icons.flash_off),
+              onPressed: () async {
+                await controller.toggleTorch();
+              },
+            );
+          case TorchState.on:
+            return IconButton(
+              color: Colors.white,
+              iconSize: 32.0,
+              icon: const Icon(Icons.flash_on),
+              onPressed: () async {
+                await controller.toggleTorch();
+              },
+            );
+          case TorchState.unavailable:
+            return const SizedBox.square(
+              dimension: 48.0,
+              child: Icon(
+                Icons.no_flash,
+                size: 32.0,
+                color: Colors.grey,
+              ),
+            );
+        }
+      },
+    );
+  }
+}
+
+class StartStopMobileScannerButton extends StatelessWidget {
+  const StartStopMobileScannerButton({required this.controller, super.key});
+
+  final MobileScannerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller,
+      builder: (context, state, child) {
+        if (!state.isInitialized || !state.isRunning) {
+          return IconButton(
+            color: Colors.white,
+            icon: const Icon(Icons.play_arrow),
+            iconSize: 32.0,
+            onPressed: () async {
+              context.read<TransactionBloc>().add(const InitialState());
+              await controller.start();
+            },
+          );
+        }
+
+        return IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.stop),
+          iconSize: 32.0,
+          onPressed: () async {
+            await controller.stop();
+          },
+        );
+      },
+    );
+  }
+}
+
+class SwitchCameraButton extends StatelessWidget {
+  const SwitchCameraButton({required this.controller, super.key});
+
+  final MobileScannerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: controller,
+      builder: (context, state, child) {
+        if (!state.isInitialized || !state.isRunning) {
+          return const SizedBox.shrink();
+        }
+
+        final int? availableCameras = state.availableCameras;
+
+        if (availableCameras != null && availableCameras < 2) {
+          return const SizedBox.shrink();
+        }
+
+        final Widget icon;
+
+        switch (state.cameraDirection) {
+          case CameraFacing.front:
+            icon = const Icon(Icons.camera_front);
+          case CameraFacing.back:
+            icon = const Icon(Icons.camera_rear);
+        }
+
+        return IconButton(
+          color: Colors.white,
+          iconSize: 32.0,
+          icon: icon,
+          onPressed: () async {
+            await controller.switchCamera();
+          },
+        );
+      },
+    );
+  }
+}
+
+class StateNow extends StatelessWidget {
+  const StateNow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TransactionBloc, TransactionState>(
+      builder: (context, state) {
+        if (state is TransactionLoadMemberSuccess) {
+          // Handle the success state
+          return const Center(
+            child: Text('TransactionLoadMemberSuccess'),
+          );
+        } else if (state is TransactionLoadFailure) {
+          // Handle the failure state
+          return const Center(
+            child: Text('TransactionLoadFailure'),
+          );
+        } else if (state is TransactionLoadInProgress) {
+          // Handle the loading state
+          return const Center(
+            child: Text('TransactionLoadMemberSuccess'),
+          );
+        } else {
+          // Handle the initial or other states
+          return const Center(
+            child: Text('else'),
+          );
+        }
+      },
+    );
   }
 }

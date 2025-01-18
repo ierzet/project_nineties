@@ -27,10 +27,10 @@ class TransactionLoadSuccess extends TransactionState {
   List<Object> get props => [message];
 }
 
-class TransactionLoadCustomerSuccess extends TransactionState {
-  const TransactionLoadCustomerSuccess({required this.data});
+class TransactionLoadMemberSuccess extends TransactionState {
+  const TransactionLoadMemberSuccess({required this.data});
 
-  final CustomerEntity data;
+  final MemberEntity data;
   @override
   List<Object> get props => [data];
 }

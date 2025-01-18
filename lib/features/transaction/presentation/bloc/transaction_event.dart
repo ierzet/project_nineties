@@ -7,8 +7,15 @@ abstract class TransactionEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetCustomerInformationCard extends TransactionEvent {
-  const GetCustomerInformationCard({required this.param});
+class InitialState extends TransactionEvent {
+  const InitialState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class GetMemberInformationCard extends TransactionEvent {
+  const GetMemberInformationCard({required this.param});
 
   final String param;
 
@@ -18,15 +25,15 @@ class GetCustomerInformationCard extends TransactionEvent {
 
 class AddTransaction extends TransactionEvent {
   const AddTransaction({
-    required this.customerEntity,
+    required this.memberEntity,
     required this.userAccountEntity,
   });
 
-  final CustomerEntity customerEntity;
+  final MemberEntity memberEntity;
   final UserAccountEntity userAccountEntity;
 
   @override
-  List<Object> get props => [customerEntity, userAccountEntity];
+  List<Object> get props => [memberEntity, userAccountEntity];
 }
 
 class TransactionGetData extends TransactionEvent {

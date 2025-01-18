@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "project_nineties",
             "request": "launch",
@@ -22,7 +23,7 @@
             "flutterMode": "release"
         },
         {
-            "name": "project_nineties (web with HTML renderer)",
+            "name": "project_nineties (web with canvaskit renderer)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug",
@@ -30,7 +31,7 @@
                 "-d",
                 "chrome",
                 "--web-renderer",
-                "html"
+                "canvaskit"
             ]
         }
     ]

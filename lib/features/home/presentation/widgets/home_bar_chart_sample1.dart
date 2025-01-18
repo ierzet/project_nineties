@@ -59,7 +59,7 @@ class BarChartSample1State extends State<BarChartSample1> {
                     height: 4,
                   ),
                   Text(
-                    'Grafik transaksi customers',
+                    'Grafik transaksi members',
                     style: TextStyle(
                       color: Theme.of(context)
                           .colorScheme

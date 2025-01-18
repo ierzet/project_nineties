@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:excel/excel.dart';
 import 'package:project_nineties/core/error/failure.dart';
 import 'package:project_nineties/features/authentication/domain/entities/user_account_entity.dart';
-import 'package:project_nineties/features/customer/domain/entities/customer_entity.dart';
+import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
 import 'package:project_nineties/features/transaction/data/models/transaction_model.dart';
 import 'package:project_nineties/features/transaction/domain/entities/transaction_entity.dart';
 import 'package:project_nineties/features/transaction/domain/repositories/transaction_repository.dart';
@@ -18,8 +18,8 @@ class TransactionUseCase {
     return repository.getTransactionsStream();
   }
 
-  Future<Either<Failure, CustomerEntity>> getCustomer(String param) async {
-    final result = repository.getCustomer(param);
+  Future<Either<Failure, MemberEntity>> getMember(String param) async {
+    final result = repository.getMember(param);
     return result;
   }
 
@@ -32,12 +32,12 @@ class TransactionUseCase {
   }
 
   Future<Either<Failure, String>> addTransaction(
-      {required CustomerEntity customerEntity,
+      {required MemberEntity memberEntity,
       required UserAccountEntity userAccountEntity}) async {
     final paramModel = TransactionModel.empty.copyWith(
       user: userAccountEntity.user,
       partner: userAccountEntity.partner,
-      customer: customerEntity,
+      member: memberEntity,
       transactionDate: DateTime.now(),
       createdBy: userAccountEntity.user.id,
       createdDate: DateTime.now(),
@@ -55,8 +55,8 @@ class TransactionUseCase {
     cellStyle.underline = Underline.Single;
 
     // Adding header row
-    sheetObject.appendRow(
-        TransactionModel.fromEntity(TransactionEntity.empty).toTextCellValueHeader());
+    sheetObject.appendRow(TransactionModel.fromEntity(TransactionEntity.empty)
+        .toTextCellValueHeader());
 
     // Adding data rows
     for (var transaction in params) {
@@ -73,7 +73,8 @@ class TransactionUseCase {
       List<List<dynamic>> rows = [];
 
       // Add headers.
-      rows.add(TransactionModel.fromEntity(TransactionEntity.empty).toCSVHeader());
+      rows.add(
+          TransactionModel.fromEntity(TransactionEntity.empty).toCSVHeader());
 
       // Add data.
       for (var transaction in transactions) {

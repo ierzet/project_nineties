@@ -306,21 +306,21 @@ class UserAccountModel extends UserAccountEntity {
   // Adding the methods for text and CSV representations
   List<TextCellValue> toTextCellValueHeader() {
     return [
-      const TextCellValue('User Id'),
-      const TextCellValue('Email'),
-      const TextCellValue('Name'),
-      const TextCellValue('Phone Number'),
-      const TextCellValue('Join Date'),
-      const TextCellValue('Is Active'),
-      const TextCellValue('Partner Id'),
-      const TextCellValue('Role ID'),
-      const TextCellValue('Created By'),
-      const TextCellValue('Created Date'),
-      const TextCellValue('Updated By'),
-      const TextCellValue('Updated Date'),
-      const TextCellValue('Deleted By'),
-      const TextCellValue('Deleted Date'),
-      const TextCellValue('Is Deleted'),
+      TextCellValue('User Id'),
+       TextCellValue('Email'),
+       TextCellValue('Name'),
+       TextCellValue('Phone Number'),
+       TextCellValue('Join Date'),
+       TextCellValue('Is Active'),
+       TextCellValue('Partner Id'),
+       TextCellValue('Role ID'),
+       TextCellValue('Created By'),
+       TextCellValue('Created Date'),
+       TextCellValue('Updated By'),
+       TextCellValue('Updated Date'),
+       TextCellValue('Deleted By'),
+       TextCellValue('Deleted Date'),
+       TextCellValue('Is Deleted'),
     ];
   }
 

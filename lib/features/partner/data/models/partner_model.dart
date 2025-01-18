@@ -124,7 +124,7 @@ class PartnerModel extends PartnerEntity {
         partnerCreatedBy: json['partner_created_by'],
         partnerCreatedDate:
             (json['partner_created_date'] as Timestamp?)?.toDate(),
-        partnerUpdatedBy: json['partner_updated_by'],
+        partnerUpdatedBy: json['partner_updated_by'] ?? '',
         partnerUpdatedDate:
             (json['partner_updated_date'] as Timestamp?)?.toDate(),
         partnerDeletedBy: json['partner_deleted_by'],
@@ -207,21 +207,21 @@ class PartnerModel extends PartnerEntity {
 
   List<TextCellValue> toTextCellValueHeader() {
     return [
-      const TextCellValue('Partner Id'),
-      const TextCellValue('Partner Name'),
-      const TextCellValue('Partner Email'),
-      const TextCellValue('Partner Phone Number'),
-      const TextCellValue('Partner Image URL'),
-      const TextCellValue('Partner Address'),
-      const TextCellValue('Partner Status'),
-      const TextCellValue('Partner Join Date'),
-      const TextCellValue('Partner Created By'),
-      const TextCellValue('Partner Created Date'),
-      const TextCellValue('Partner Updated By'),
-      const TextCellValue('Partner Updated Date'),
-      const TextCellValue('Partner Deleted By'),
-      const TextCellValue('Partner Deleted Date'),
-      const TextCellValue('Partner Is Deleted'),
+       TextCellValue('Partner Id'),
+       TextCellValue('Partner Name'),
+       TextCellValue('Partner Email'),
+       TextCellValue('Partner Phone Number'),
+       TextCellValue('Partner Image URL'),
+       TextCellValue('Partner Address'),
+       TextCellValue('Partner Status'),
+       TextCellValue('Partner Join Date'),
+       TextCellValue('Partner Created By'),
+       TextCellValue('Partner Created Date'),
+       TextCellValue('Partner Updated By'),
+       TextCellValue('Partner Updated Date'),
+       TextCellValue('Partner Deleted By'),
+       TextCellValue('Partner Deleted Date'),
+       TextCellValue('Partner Is Deleted'),
     ];
   }
 

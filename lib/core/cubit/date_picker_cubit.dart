@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_nineties/features/customer/presentation/bloc/customer_validator_bloc/customer_validator_bloc.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_validator_bloc/member_validator_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 
 class DatePickerCubit extends Cubit<DateTime> {
   DatePickerCubit() : super(DateTime.now());
 
-  void onJoinDateCustomerChanged(BuildContext context) async {
+  void onJoinDateMemberChanged(BuildContext context) async {
     DateTime? selectedDate;
     final DateTime firstDate = DateTime(DateTime.now().year - 2);
     final DateTime lastDate = DateTime(DateTime.now().year + 1);
 
-    // Simpan CustomerValidatorBloc sebelum async gap
-    final customerValidatorBloc = context.read<CustomerValidatorBloc>();
+    // Simpan MemberValidatorBloc sebelum async gap
+    final memberValidatorBloc = context.read<MemberValidatorBloc>();
 
     DateTime? date = await showDatePicker(
       context: context,
@@ -22,20 +22,20 @@ class DatePickerCubit extends Cubit<DateTime> {
     );
 
     if (date != null) {
-      final customerParams = customerValidatorBloc.state.data;
-      customerValidatorBloc.add(CustomerValidatorForm(
-          params: customerParams.copyWith(customerJoinDate: date)));
+      final memberParams = memberValidatorBloc.state.data;
+      memberValidatorBloc.add(MemberValidatorForm(
+          params: memberParams.copyWith(memberJoinDate: date)));
       emit(date);
     }
   }
 
-  void onBODateCustomerChanged(BuildContext context) async {
+  void onBODateMemberChanged(BuildContext context) async {
     DateTime? selectedDate;
     final DateTime firstDate = DateTime(DateTime.now().year - 2);
     final DateTime lastDate = DateTime(DateTime.now().year + 1);
 
-    // Simpan CustomerValidatorBloc sebelum async gap
-    final customerValidatorBloc = context.read<CustomerValidatorBloc>();
+    // Simpan MemberValidatorBloc sebelum async gap
+    final memberValidatorBloc = context.read<MemberValidatorBloc>();
 
     DateTime? date = await showDatePicker(
       context: context,
@@ -45,20 +45,20 @@ class DatePickerCubit extends Cubit<DateTime> {
     );
 
     if (date != null) {
-      final customerParams = customerValidatorBloc.state.data;
-      customerValidatorBloc.add(CustomerValidatorForm(
-          params: customerParams.copyWith(customerDateOfBirth: date)));
+      final memberParams = memberValidatorBloc.state.data;
+      memberValidatorBloc.add(MemberValidatorForm(
+          params: memberParams.copyWith(memberDateOfBirth: date)));
       emit(date);
     }
   }
 
-  void onExpiredDateCustomerChanged(BuildContext context) async {
+  void onExpiredDateMemberChanged(BuildContext context) async {
     DateTime? selectedDate;
     final DateTime firstDate = DateTime(DateTime.now().year - 2);
     final DateTime lastDate = DateTime(DateTime.now().year + 1);
 
-    // Simpan CustomerValidatorBloc sebelum async gap
-    final customerValidatorBloc = context.read<CustomerValidatorBloc>();
+    // Simpan MemberValidatorBloc sebelum async gap
+    final memberValidatorBloc = context.read<MemberValidatorBloc>();
 
     DateTime? date = await showDatePicker(
       context: context,
@@ -68,9 +68,9 @@ class DatePickerCubit extends Cubit<DateTime> {
     );
 
     if (date != null) {
-      final customerParams = customerValidatorBloc.state.data;
-      customerValidatorBloc.add(CustomerValidatorForm(
-          params: customerParams.copyWith(customerExpiredDate: date)));
+      final memberParams = memberValidatorBloc.state.data;
+      memberValidatorBloc.add(MemberValidatorForm(
+          params: memberParams.copyWith(memberExpiredDate: date)));
       emit(date);
     }
   }

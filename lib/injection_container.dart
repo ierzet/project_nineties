@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:project_nineties/features/customer/data/datasources/local/customer_local_datasoource.dart';
-import 'package:project_nineties/features/customer/data/datasources/remote/customer_remote_datasource.dart';
-import 'package:project_nineties/features/customer/data/repositories/customer_repository_impl.dart';
-import 'package:project_nineties/features/customer/domain/repositories/customer_repository.dart';
-import 'package:project_nineties/features/customer/domain/usecases/customer_usecase.dart';
-import 'package:project_nineties/features/customer/presentation/bloc/customer_bloc/customer_bloc.dart';
+import 'package:project_nineties/features/member/data/datasources/local/member_local_datasource.dart';
+import 'package:project_nineties/features/member/data/datasources/remote/member_remote_datasource.dart';
+import 'package:project_nineties/features/member/data/repositories/member_repository_impl.dart';
+import 'package:project_nineties/features/member/domain/repositories/member_repository.dart';
+import 'package:project_nineties/features/member/domain/usecases/member_usecase.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_bloc/member_bloc.dart';
 import 'package:project_nineties/features/message/data/datasources/message_remote_datasoource.dart';
 import 'package:project_nineties/features/message/data/repositories/message_repository_impl.dart';
 import 'package:project_nineties/features/message/domain/repositories/message_repository.dart';
@@ -49,7 +49,7 @@ void setupLocator() {
       authenticationUseCase: locator(), authenticationInitiation: locator()));
   locator.registerFactory<PartnerBloc>(() => PartnerBloc(locator()));
   locator.registerFactory<UserBloc>(() => UserBloc(usecase: locator()));
-  locator.registerFactory<CustomerBloc>(() => CustomerBloc(useCase: locator()));
+  locator.registerFactory<MemberBloc>(() => MemberBloc(useCase: locator()));
   locator.registerFactory<TransactionBloc>(
       () => TransactionBloc(useCase: locator()));
   locator.registerFactory<MessageBloc>(() => MessageBloc(useCase: locator()));
@@ -58,7 +58,7 @@ void setupLocator() {
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));
   locator.registerLazySingleton(() => PartnerUseCase(repository: locator()));
   locator.registerLazySingleton(() => UserUseCase(repository: locator()));
-  locator.registerLazySingleton(() => CustomerUseCase(repository: locator()));
+  locator.registerLazySingleton(() => MemberUseCase(repository: locator()));
   locator
       .registerLazySingleton(() => TransactionUseCase(repository: locator()));
   locator.registerLazySingleton(() => MessageUseCase(repository: locator()));
@@ -72,9 +72,8 @@ void setupLocator() {
       remoteDataSource: locator(), localDataSource: locator()));
   locator.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(
       remoteDataSource: locator(), localDataSource: locator()));
-  locator.registerLazySingleton<CustomerRepository>(() =>
-      CustomerRepositoryImpl(
-          remoteDataSource: locator(), localDataSource: locator()));
+  locator.registerLazySingleton<MemberRepository>(() => MemberRepositoryImpl(
+      remoteDataSource: locator(), localDataSource: locator()));
   locator.registerLazySingleton<TransactionRepository>(() =>
       TransactionRepositoryImpl(
           remoteDataSource: locator(), localDataSource: locator()));
@@ -99,10 +98,10 @@ void setupLocator() {
       () => UserRemoteDataSourceImpl(locator(), locator(), locator()));
   locator.registerLazySingleton<UserLocalDataSource>(
       () => UserLocalDataSourceImpl());
-  locator.registerLazySingleton<CustomerRemoteDataSource>(
-      () => CustomerRemoteDataSourceImpl(locator()));
-  locator.registerLazySingleton<CustomerLocalDataSource>(
-      () => CustomerLocalDataSourceImpl());
+  locator.registerLazySingleton<MemberRemoteDataSource>(
+      () => MemberRemoteDataSourceImpl(locator(), locator()));
+  locator.registerLazySingleton<MemberLocalDataSource>(
+      () => MemberLocalDataSourceImpl());
   locator.registerLazySingleton<TransactionRemoteDataSource>(
       () => TransactionRemoteDataSourceImpl(locator()));
   locator.registerLazySingleton<TransactionLocalDataSource>(

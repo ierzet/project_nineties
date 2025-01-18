@@ -19,6 +19,7 @@ class AuthenticationBodyMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
+    final theme = Theme.of(context);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -27,140 +28,154 @@ class AuthenticationBodyMobile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: AppPadding.triplePadding.h),
-              Icon(
-                Icons.directions_car,
-                size: AppPadding.triplePadding.r * 2,
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
+              _buildIcon(theme),
               SizedBox(height: AppPadding.triplePadding.h),
-              Text(
-                AppStrings.welcomeMessage,
-                style: AppStyles.header.copyWith(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer),
-              ),
+              _buildWelcomeText(theme),
               SizedBox(height: AppPadding.defaultPadding.h),
-              CustomTextField(
-                controller: emailController,
-                type: InputType.email,
-                authFormType: AuthenticationFormType.signin,
-              ),
+              _buildTextField(emailController, InputType.email),
               SizedBox(height: AppPadding.defaultPadding.h),
-              CustomTextField(
-                controller: passwordController,
-                type: InputType.password,
-                authFormType: AuthenticationFormType.signin,
-              ),
+              _buildTextField(passwordController, InputType.password),
               SizedBox(height: AppPadding.defaultPadding.h),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: AppPadding.defaultPadding.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      // onTap: () => context
-                      //     .read<AppBloc>()
-                      //     .add(const NavigateToForgotPassword()),
-                      onTap: () => Navigator.of(context)
-                          .push(createPageRoute(const ForgotPasswordPage())),
-
-                      child: Text(
-                        AppStrings.forgotPassword,
-                        style: AppStyles.accentText.copyWith(
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildForgotPassword(context),
               SizedBox(height: AppPadding.doublePadding.h),
               const PrimaryButton(authFormType: AuthenticationFormType.signin),
               SizedBox(height: AppPadding.defaultPadding.h),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: AppPadding.halfPadding.w * 2),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        thickness: 0.5.h,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: AppPadding.halfPadding),
-                      child: Text(
-                        AppStrings.orContinueWith,
-                        style: AppStyles.bodyText.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        color: Theme.of(context).colorScheme.outline,
-                        thickness: 0.5.h,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildOrContinueWithDivider(theme),
               SizedBox(height: AppPadding.doublePadding.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SocialLoginTile(
-                    imagePath: AppPath.googleIcon,
-                    loginType: 'google',
-                  ),
-                  SizedBox(width: AppPadding.halfPadding.w * 3),
-                  const SocialLoginTile(
-                    imagePath: AppPath.facebookIcon,
-                    loginType: 'facebook',
-                  )
-                ],
-              ),
+              _buildSocialLoginButtons(),
               SizedBox(height: AppPadding.defaultPadding.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    AppStrings.notAMember,
-                    style: AppStyles.bodyText.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    ),
-                  ),
-                  SizedBox(width: (AppPadding.halfPadding.w / 2)),
-                  GestureDetector(
-                    onTap: () {
-                      // context.read<AppBloc>().add(const NavigateToSignup());
-                      Navigator.of(context)
-                          .push(createPageRoute(const SignupPage()));
-                      context
-                          .read<AuthenticationValidatorBloc>()
-                          .add(const AuthenticationClearValidator());
-                    },
-                    child: Text(
-                      AppStrings.registerNow,
-                      style: AppStyles.accentText.copyWith(
-                          decoration: TextDecoration.underline,
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer),
-                    ),
-                  ),
-                ],
-              ),
+              _buildRegisterNow(context, theme),
               const ListenerNotificationLogin(),
               const UserListenerNotification(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildIcon(ThemeData theme) {
+    return Icon(
+      Icons.directions_car,
+      size: AppPadding.triplePadding.r * 2,
+      color: theme.colorScheme.onPrimaryContainer,
+    );
+  }
+
+  Widget _buildWelcomeText(ThemeData theme) {
+    return Text(
+      AppStrings.welcomeMessage,
+      style: AppStyles.header.copyWith(
+        color: theme.colorScheme.onPrimaryContainer,
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, InputType type) {
+    return CustomTextField(
+      controller: controller,
+      type: type,
+      authFormType: AuthenticationFormType.signin,
+    );
+  }
+
+  Widget _buildForgotPassword(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppPadding.defaultPadding.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context)
+                .push(createPageRoute(const ForgotPasswordPage())),
+            child: Text(
+              AppStrings.forgotPassword,
+              style: AppStyles.accentText.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrContinueWithDivider(ThemeData theme) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding.w * 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(
+              thickness: 0.5.h,
+              color: theme.colorScheme.outline,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppPadding.halfPadding),
+            child: Text(
+              AppStrings.orContinueWith,
+              style: AppStyles.bodyText.copyWith(
+                color: theme.colorScheme.onPrimaryContainer,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Divider(
+              thickness: 0.5.h,
+              color: theme.colorScheme.outline,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSocialLoginButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SocialLoginTile(
+          imagePath: AppPath.googleIcon,
+          loginType: 'google',
+        ),
+        SizedBox(width: AppPadding.halfPadding.w * 3),
+        const SocialLoginTile(
+          imagePath: AppPath.facebookIcon,
+          loginType: 'facebook',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegisterNow(BuildContext context, ThemeData theme) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          AppStrings.notAMember,
+          style: AppStyles.bodyText.copyWith(
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
+        SizedBox(width: AppPadding.halfPadding.w / 2),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(createPageRoute(const SignupPage()));
+            context
+                .read<AuthenticationValidatorBloc>()
+                .add(const AuthenticationClearValidator());
+          },
+          child: Text(
+            AppStrings.registerNow,
+            style: AppStyles.accentText.copyWith(
+              decoration: TextDecoration.underline,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -9,17 +9,16 @@ import 'package:project_nineties/features/authentication/presentation/widgets/li
 import 'package:project_nineties/features/authentication/presentation/widgets/primary_button.dart';
 
 class SignupBodyMobile extends StatelessWidget {
-  const SignupBodyMobile({
-    super.key,
-  });
+  const SignupBodyMobile({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmedPasswordController =
-        TextEditingController();
+    final nameController = TextEditingController();
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final confirmedPasswordController = TextEditingController();
+    final theme = Theme.of(context);
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Center(
@@ -27,68 +26,68 @@ class SignupBodyMobile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: AppPadding.doublePadding.h),
-              const AvatarPicker(), // Ensure this is styled well
+              const AvatarPicker(),
               SizedBox(height: AppPadding.doublePadding.h),
-              Text(
-                textAlign: TextAlign.center,
-                AppStrings.joinUs,
-                style: AppStyles.header.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
+              _buildHeader(theme),
               SizedBox(height: AppPadding.defaultPadding.h),
-              CustomTextField(
-                controller: nameController,
-                type: InputType.name,
-                authFormType: AuthenticationFormType.signup,
-              ),
+              _buildTextField(nameController, InputType.name),
               SizedBox(height: AppPadding.defaultPadding.h),
-              CustomTextField(
-                controller: emailController,
-                type: InputType.email,
-                authFormType: AuthenticationFormType.signup,
-              ),
+              _buildTextField(emailController, InputType.email),
               SizedBox(height: AppPadding.defaultPadding.h),
-              CustomTextField(
-                controller: passwordController,
-                type: InputType.password,
-                authFormType: AuthenticationFormType.signup,
-              ),
+              _buildTextField(passwordController, InputType.password),
               SizedBox(height: AppPadding.defaultPadding.h),
-              CustomTextField(
-                controller: confirmedPasswordController,
-                type: InputType.confirmedPassword,
-                authFormType: AuthenticationFormType.signup,
-              ),
+              _buildTextField(
+                  confirmedPasswordController, InputType.confirmedPassword),
               SizedBox(height: AppPadding.doublePadding.h),
               const PrimaryButton(authFormType: AuthenticationFormType.signup),
               SizedBox(height: AppPadding.defaultPadding.h),
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${AppStrings.alreadyHaveAnAccount}? ',
-                      style: AppStyles.bodyText,
-                    ),
-                    SizedBox(width: AppPadding.halfPadding.w / 2),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        context
-                            .read<AuthenticationValidatorBloc>()
-                            .add(const AuthenticationClearValidator());
-                      },
-                      child:
-                          Text(AppStrings.signIn, style: AppStyles.accentText),
-                    ),
-                  ],
-                ),
-              ),
+              _buildFooter(context),
               const ListenerNotificationLogin(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    return Text(
+      AppStrings.joinUs,
+      textAlign: TextAlign.center,
+      style: AppStyles.header.copyWith(
+        color: theme.colorScheme.onPrimaryContainer,
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, InputType type) {
+    return CustomTextField(
+      controller: controller,
+      type: type,
+      authFormType: AuthenticationFormType.signup,
+    );
+  }
+
+  Widget _buildFooter(BuildContext context) {
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '${AppStrings.alreadyHaveAnAccount}? ',
+            style: AppStyles.bodyText,
+          ),
+          SizedBox(width: AppPadding.halfPadding.w / 2),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+              context
+                  .read<AuthenticationValidatorBloc>()
+                  .add(const AuthenticationClearValidator());
+            },
+            child: Text(AppStrings.signIn, style: AppStyles.accentText),
+          ),
+        ],
       ),
     );
   }
