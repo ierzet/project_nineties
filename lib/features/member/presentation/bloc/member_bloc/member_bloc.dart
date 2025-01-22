@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,9 +24,12 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<MemberSubscriptionFailure>(_onMemberSubscriptionFailure,
         transformer: debounce(const Duration(milliseconds: 500)));
+    on<MemberStreamUpdate>(_onMemberStreamUpdate,
+        transformer: debounce(const Duration(milliseconds: 500)));
     on<MemberSearchEvent>(_onMemberSearchEvent,
         transformer: debounce(const Duration(milliseconds: 500)));
-
+    on<MemberLoadMoreData>(_onMemberLoadMoreData,
+        transformer: debounce(const Duration(milliseconds: 500)));
     on<MemberExportToExcel>(_onMemberExportToExcel,
         transformer: debounce(const Duration(milliseconds: 500)));
     on<MemberExportToCSV>(_onMemberExportToCSV,
@@ -43,6 +47,23 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
   final MemberUseCase useCase;
   late final StreamSubscription _memberSubscription;
   List<MemberEntity> _originalData = []; // Store original data
+
+  void _onMemberStreamUpdate(
+      MemberStreamUpdate event, Emitter<MemberState> emit) async {
+    // Update only the currently loaded data with the new data from the stream
+    final currentState = state;
+    if (currentState is MemberLoadDataSuccess) {
+      final updatedData = currentState.data.map((member) {
+        final updatedMember = event.data.firstWhere(
+          (newMember) => newMember.memberId == member.memberId,
+          orElse: () => member,
+        );
+        return updatedMember;
+      }).toList();
+      _originalData = updatedData; // Update original data
+      emit(MemberLoadDataSuccess(data: updatedData));
+    }
+  }
 
   void _onMemberSubscriptionSuccsess(
       MemberSubscriptionSuccsess event, Emitter<MemberState> emit) async {
@@ -92,16 +113,45 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
   void _onMemberGetData(MemberGetData event, Emitter<MemberState> emit) async {
     emit(const MemberLoadInProgress());
 
-    final result = await useCase.fetchData();
+    final result = await useCase.fetchData(limit: event.limit);
     result.fold(
       (failure) {
         emit(MemberLoadFailure(message: failure.message));
       },
       (data) {
         _originalData = data; // Store original data
-        emit(MemberLoadDataSuccess(data: data));
+        emit(
+          MemberLoadDataSuccess(
+            data: data,
+            lastDoc: data.isNotEmpty ? data.last.docRef : null,
+          ),
+        );
       },
     );
+  }
+
+  void _onMemberLoadMoreData(
+      MemberLoadMoreData event, Emitter<MemberState> emit) async {
+    if (state is MemberLoadDataSuccess) {
+      final currentState = state as MemberLoadDataSuccess;
+      // emit(const MemberLoadMoreInProgress());
+      final result = await useCase.fetchData(
+          limit: event.limit, lastDoc: currentState.lastDoc); // Fetch more data
+      result.fold(
+        (failure) {
+          emit(MemberLoadFailure(message: failure.message));
+        },
+        (data) {
+          final updatedData = currentState.data + data;
+          _originalData = updatedData;
+          // print('_originalData ${_originalData.length}');
+          emit(MemberLoadDataSuccess(
+            data: updatedData,
+            lastDoc: data.isNotEmpty ? data.last.docRef : currentState.lastDoc,
+          ));
+        },
+      );
+    }
   }
 
   void _onMemberUpdateData(
@@ -138,18 +188,102 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
 
   void _onMemberSearchEvent(
       MemberSearchEvent event, Emitter<MemberState> emit) async {
+    const limit = 5;
     final query = event.query.toLowerCase();
-    final filteredMembers = _originalData.where((member) {
-      final name = member.memberName?.toLowerCase() ?? '';
-      final noVehicle = member.memberNoVehicle?.toLowerCase() ?? '';
-      final partnerName =
-          member.memberJoinPartner?.partnerName?.toLowerCase() ?? '';
-      return name.contains(query) ||
-          noVehicle.contains(query) ||
-          partnerName.contains(query);
-    }).toList();
-    emit(MemberLoadDataSuccess(data: filteredMembers));
+    final result = await useCase.searchMembers(event.query, limit);
+
+    result.fold((failure) {
+      emit(MemberLoadFailure(message: failure.message));
+    }, (data) {
+      // _originalData = data;
+      final filteredMembers = data.where((member) {
+        final name = member.memberName?.toLowerCase() ?? '';
+        final noVehicle = member.memberNoVehicle?.toLowerCase() ?? '';
+        final partnerName =
+            member.memberJoinPartner?.partnerName?.toLowerCase() ?? '';
+        return name.contains(query) ||
+            noVehicle.contains(query) ||
+            partnerName.contains(query);
+      }).toList();
+
+      emit(MemberLoadDataSuccess(data: filteredMembers));
+    });
   }
+  // void _onMemberSearchEvent(
+  //     MemberSearchEvent event, Emitter<MemberState> emit) async {
+  //   if (state is MemberLoadDataSuccess) {
+  //     //final currentState = state as MemberLoadDataSuccess;
+  //     final query = event.query.toLowerCase();
+  //     List<MemberEntity> filteredMembers;
+
+  //     // Flag to track if more data can be loaded
+  //     bool canLoadMore = true;
+  //     //int attempts = 0;
+
+  //     do {
+  //       // Filter members based on the query
+  //       filteredMembers = _originalData.where((member) {
+  //         final name = member.memberName?.toLowerCase() ?? '';
+  //         final noVehicle = member.memberNoVehicle?.toLowerCase() ?? '';
+  //         final partnerName =
+  //             member.memberJoinPartner?.partnerName?.toLowerCase() ?? '';
+  //         return name.contains(query) ||
+  //             noVehicle.contains(query) ||
+  //             partnerName.contains(query);
+  //       }).toList();
+
+  //       print('Filtered members length: ${filteredMembers.length}');
+  //       print('Original data length: ${_originalData.length}');
+
+  //       // If no members found, load more data
+  //       if (filteredMembers.length < 10) {
+  //         print('Loading more data...');
+  //         final currentState = state as MemberLoadDataSuccess;
+  //         // emit(const MemberLoadMoreInProgress());
+  //         final result = await useCase.fetchData(
+  //             limit: 10, lastDoc: currentState.lastDoc); // Fetch more data
+  //         result.fold(
+  //           (failure) {
+  //             emit(MemberLoadFailure(message: failure.message));
+  //           },
+  //           (data) {
+  //             final updatedData = currentState.data + data;
+  //             _originalData = updatedData;
+  //             print('_originalData ${_originalData.length}');
+  //             emit(MemberLoadDataSuccess(
+  //               data: updatedData,
+  //               lastDoc:
+  //                   data.isNotEmpty ? data.last.docRef : currentState.lastDoc,
+  //             ));
+  //           },
+  //         );
+  //         //attempts++;
+  //       }
+
+  //       // Limit the number of attempts to prevent infinite loops
+  //       // if (attempts >= 100) {
+  //       //   canLoadMore = false;
+  //       // }
+  //     } while (filteredMembers.isEmpty && canLoadMore);
+
+  //     // Emit the filtered members if found
+  //     emit(MemberLoadDataSuccess(data: filteredMembers));
+  //   }
+  // }
+  // void _onMemberSearchEvent(
+  //     MemberSearchEvent event, Emitter<MemberState> emit) async {
+  //   final query = event.query.toLowerCase();
+  //   final filteredMembers = _originalData.where((member) {
+  //     final name = member.memberName?.toLowerCase() ?? '';
+  //     final noVehicle = member.memberNoVehicle?.toLowerCase() ?? '';
+  //     final partnerName =
+  //         member.memberJoinPartner?.partnerName?.toLowerCase() ?? '';
+  //     return name.contains(query) ||
+  //         noVehicle.contains(query) ||
+  //         partnerName.contains(query);
+  //   }).toList();
+  //   emit(MemberLoadDataSuccess(data: filteredMembers));
+  // }
 
   // void _onMemberSearchEvent(
   //     MemberSearchEvent event, Emitter<MemberState> emit) async {

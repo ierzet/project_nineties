@@ -32,6 +32,14 @@ class AppColors {
   static const Color success = Color(0xFF28A745); // Darker Green for success
   static const Color info = Color(0xFF17A2B8); // Light Blue for info
 }
+
+class AppCollection {
+  static const memberCollection = 'member';
+  static const userAccountCollection = 'user_account';
+  static const partnerCollection = 'partner';
+  static const transactionCollection = 'transaction';
+  static const messageCollection = 'message';
+}
 // class AppColors {
 //   static const Color primary = Color(0xFFECF0F1); // Light Gray #ECF0F1
 //   static const Color secondary = Color(0xFF3498DB); // Curious Blue #3498DB
@@ -150,6 +158,104 @@ class AppStyles {
     // color: AppColors.primary,
     fontWeight: FontWeight.w400,
   );
+}
+
+class AppMasterList {
+  static List<String> generateYearList() {
+    int currentYear = DateTime.now().year;
+    return List<String>.generate(
+        currentYear - 1945 + 1, (index) => (1945 + index).toString());
+  }
+
+  static List<String> masterListGender = ['Male', 'Female', 'No Data'];
+  static List<String> masterListTypeOfVehicle = ['MOTOR', 'MOBIL', 'No Data'];
+  static List<String> masterListYearOfVehicle = generateYearList();
+  static List<String> masterListStatusMember = [
+    'Active',
+    'Inactive',
+    'No Data'
+  ];
+  static List<String> masterListTypeOfMember = [
+    'Platinum',
+    'Gold',
+    'Silver',
+    'Kecubung',
+    "Family Plan",
+    "Member Perorangan",
+    "Member",
+    "No Data"
+  ];
+  static List<String> masterListSizeOfVehicle = [
+    'Small',
+    'Medium',
+    'Large',
+    'large',
+    'Motor',
+    'No Data',
+  ];
+  static List<String> masterListBrandOfVehicle = [
+    "AVANZA",
+    "BEETLE",
+    "BMW",
+    "CHEVROLET",
+    "CHEVROLST",
+    "DAIHATSU",
+    "DATSUN",
+    "DAYHATSU",
+    "DODGE",
+    "ETIOS",
+    "FORD",
+    "FORTUNER",
+    "GLORY",
+    "HARLEY",
+    "HODA",
+    "HONDA",
+    "HRV",
+    "HYUNDAI",
+    "INMOVA",
+    "INNOVA",
+    "INOVA",
+    "ISUZU",
+    "JEEP",
+    "KAWASAKI",
+    "KIA",
+    "MAZDA",
+    "MERCEDESBENZ",
+    "MERCY",
+    "MG",
+    "MHITSUBITSI",
+    "MIBIL",
+    "MISTUBISHI",
+    "MITSHUBISHI",
+    "MITSUBISHI",
+    "MITSUBISI",
+    "MITSUBITSHI",
+    "MITSUBULISHI",
+    "MOBIL",
+    "MOTOR",
+    "NISAN",
+    "NISSAN",
+    "PAJERO",
+    "PAJEROSPORT",
+    "PIAGGIO",
+    "PIAGIO",
+    "PORSCE",
+    "PORSCHE",
+    "RANGEROVER",
+    "REANAULT",
+    "RUSH",
+    "SUBARU",
+    "SUZUKI",
+    "SUZUXI",
+    "TOYOTA",
+    "TRAIL",
+    "VESPA",
+    "VW",
+    "WULING",
+    "YAMAHA",
+    "YAMAJA",
+    'No Data',
+  ];
 }
 
 class AppPath {

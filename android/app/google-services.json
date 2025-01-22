@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "582028717733-7q6k76m5ghpn05l11bo3c0v9ofc6d06f.apps.googleusercontent.com",
+              "client_id": "582028717733-3ae46ocbhjecckksh7j29vjfnm6746d0.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.erzet.developer.projecNineties"
+                "bundle_id": "com.erzetsatari.developer.projectNineties"
               }
             }
           ]

@@ -7,99 +7,107 @@ import 'package:project_nineties/features/partner/data/models/partner_model.dart
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
 class MemberModel extends MemberEntity {
-  const MemberModel(
-      {required super.memberId,
-      super.memberName,
-      super.memberEmail,
-      super.memberPhoneNumber,
-      super.memberGender,
-      super.memberDateOfBirth,
-      super.memberAddress,
-      super.memberPhotoOfVehicle,
-      super.memberYearOfVehicle,
-      super.memberNoVehicle,
-      super.memberTypeOfVehicle,
-      super.memberColorOfVehicle,
-      super.memberBrandOfVehicle,
-      super.memberSizeOfVehicle,
-      super.memberTypeOfMember,
-      bool? memberStatusMember,
-      super.memberJoinDate,
-      super.memberExpiredDate,
-      super.memberRegistrationDate,
-      super.memberJoinPartner,
-      super.memberCreatedBy,
-      super.memberCreatedDate,
-      super.memberUpdatedBy,
-      super.memberUpdatedDate,
-      super.memberDeletedBy,
-      super.memberDeletedDate,
-      super.memberIsDeleted,
-      super.memberPhotoOfVehicleFile})
-      : super(
+  const MemberModel({
+    required super.memberId,
+    super.memberName,
+    super.memberEmail,
+    super.memberPhoneNumber,
+    super.memberGender,
+    super.memberDateOfBirth,
+    super.memberAddress,
+    super.memberPhotoOfVehicle,
+    super.memberYearOfVehicle,
+    super.memberNoVehicle,
+    super.memberTypeOfVehicle,
+    super.memberColorOfVehicle,
+    super.memberBrandOfVehicle,
+    super.memberSizeOfVehicle,
+    super.memberTypeOfMember,
+    bool? memberStatusMember,
+    super.memberJoinDate,
+    super.memberExpiredDate,
+    super.memberRegistrationDate,
+    super.memberJoinPartner,
+    super.memberCreatedBy,
+    super.memberCreatedDate,
+    super.memberUpdatedBy,
+    super.memberUpdatedDate,
+    super.memberDeletedBy,
+    super.memberDeletedDate,
+    super.memberIsDeleted,
+    super.memberPhotoOfVehicleFile,
+    super.docRef,
+    super.isLegacy,
+  }) : super(
           memberStatusMember: memberStatusMember ?? true,
         );
 
   MemberEntity toEntity() => MemberEntity(
-      memberId: memberId,
-      memberName: memberName,
-      memberEmail: memberEmail,
-      memberPhoneNumber: memberPhoneNumber,
-      memberGender: memberGender,
-      memberDateOfBirth: memberDateOfBirth,
-      memberAddress: memberAddress,
-      memberPhotoOfVehicle: memberPhotoOfVehicle,
-      memberYearOfVehicle: memberYearOfVehicle,
-      memberNoVehicle: memberNoVehicle,
-      memberTypeOfVehicle: memberTypeOfVehicle,
-      memberColorOfVehicle: memberColorOfVehicle,
-      memberBrandOfVehicle: memberBrandOfVehicle,
-      memberSizeOfVehicle: memberSizeOfVehicle,
-      memberTypeOfMember: memberTypeOfMember,
-      memberStatusMember: memberStatusMember,
-      memberJoinDate: memberJoinDate,
-      memberExpiredDate: memberExpiredDate,
-      memberRegistrationDate: memberRegistrationDate,
-      memberJoinPartner: memberJoinPartner,
-      memberCreatedBy: memberCreatedBy,
-      memberCreatedDate: memberCreatedDate,
-      memberUpdatedBy: memberUpdatedBy,
-      memberUpdatedDate: memberUpdatedDate,
-      memberDeletedBy: memberDeletedBy,
-      memberDeletedDate: memberDeletedDate,
-      memberIsDeleted: memberIsDeleted,
-      memberPhotoOfVehicleFile: memberPhotoOfVehicleFile);
+        memberId: memberId,
+        memberName: memberName,
+        memberEmail: memberEmail,
+        memberPhoneNumber: memberPhoneNumber,
+        memberGender: memberGender,
+        memberDateOfBirth: memberDateOfBirth,
+        memberAddress: memberAddress,
+        memberPhotoOfVehicle: memberPhotoOfVehicle,
+        memberYearOfVehicle: memberYearOfVehicle,
+        memberNoVehicle: memberNoVehicle,
+        memberTypeOfVehicle: memberTypeOfVehicle,
+        memberColorOfVehicle: memberColorOfVehicle,
+        memberBrandOfVehicle: memberBrandOfVehicle,
+        memberSizeOfVehicle: memberSizeOfVehicle,
+        memberTypeOfMember: memberTypeOfMember,
+        memberStatusMember: memberStatusMember,
+        memberJoinDate: memberJoinDate,
+        memberExpiredDate: memberExpiredDate,
+        memberRegistrationDate: memberRegistrationDate,
+        memberJoinPartner: memberJoinPartner,
+        memberCreatedBy: memberCreatedBy,
+        memberCreatedDate: memberCreatedDate,
+        memberUpdatedBy: memberUpdatedBy,
+        memberUpdatedDate: memberUpdatedDate,
+        memberDeletedBy: memberDeletedBy,
+        memberDeletedDate: memberDeletedDate,
+        memberIsDeleted: memberIsDeleted,
+        memberPhotoOfVehicleFile: memberPhotoOfVehicleFile,
+        docRef: docRef,
+        isLegacy: isLegacy,
+      );
 
   factory MemberModel.fromEntity(MemberEntity entity) {
     return MemberModel(
-        memberId: entity.memberId,
-        memberName: entity.memberName,
-        memberEmail: entity.memberEmail,
-        memberPhoneNumber: entity.memberPhoneNumber,
-        memberGender: entity.memberGender,
-        memberDateOfBirth: entity.memberDateOfBirth,
-        memberAddress: entity.memberAddress,
-        memberPhotoOfVehicle: entity.memberPhotoOfVehicle,
-        memberYearOfVehicle: entity.memberYearOfVehicle,
-        memberNoVehicle: entity.memberNoVehicle,
-        memberTypeOfVehicle: entity.memberTypeOfVehicle,
-        memberColorOfVehicle: entity.memberColorOfVehicle,
-        memberBrandOfVehicle: entity.memberBrandOfVehicle,
-        memberSizeOfVehicle: entity.memberSizeOfVehicle,
-        memberTypeOfMember: entity.memberTypeOfMember,
-        memberStatusMember: entity.memberStatusMember,
-        memberJoinDate: entity.memberJoinDate,
-        memberExpiredDate: entity.memberExpiredDate,
-        memberRegistrationDate: entity.memberRegistrationDate,
-        memberJoinPartner: entity.memberJoinPartner,
-        memberCreatedBy: entity.memberCreatedBy,
-        memberCreatedDate: entity.memberCreatedDate,
-        memberUpdatedBy: entity.memberUpdatedBy,
-        memberUpdatedDate: entity.memberUpdatedDate,
-        memberDeletedBy: entity.memberDeletedBy,
-        memberDeletedDate: entity.memberDeletedDate,
-        memberIsDeleted: entity.memberIsDeleted,
-        memberPhotoOfVehicleFile: entity.memberPhotoOfVehicleFile);
+      memberId: entity.memberId,
+      memberName: entity.memberName,
+      memberEmail: entity.memberEmail,
+      memberPhoneNumber: entity.memberPhoneNumber,
+      memberGender: entity.memberGender,
+      memberDateOfBirth: entity.memberDateOfBirth,
+      memberAddress: entity.memberAddress,
+      memberPhotoOfVehicle: entity.memberPhotoOfVehicle,
+      memberYearOfVehicle: entity.memberYearOfVehicle,
+      memberNoVehicle: entity.memberNoVehicle,
+      memberTypeOfVehicle: entity.memberTypeOfVehicle,
+      memberColorOfVehicle: entity.memberColorOfVehicle,
+      memberBrandOfVehicle: entity.memberBrandOfVehicle,
+      memberSizeOfVehicle: entity.memberSizeOfVehicle,
+      memberTypeOfMember: entity.memberTypeOfMember,
+      memberStatusMember: entity.memberStatusMember,
+      memberJoinDate: entity.memberJoinDate,
+      memberExpiredDate: entity.memberExpiredDate,
+      memberRegistrationDate: entity.memberRegistrationDate,
+      memberJoinPartner: entity.memberJoinPartner,
+      memberCreatedBy: entity.memberCreatedBy,
+      memberCreatedDate: entity.memberCreatedDate,
+      memberUpdatedBy: entity.memberUpdatedBy,
+      memberUpdatedDate: entity.memberUpdatedDate,
+      memberDeletedBy: entity.memberDeletedBy,
+      memberDeletedDate: entity.memberDeletedDate,
+      memberIsDeleted: entity.memberIsDeleted,
+      memberPhotoOfVehicleFile: entity.memberPhotoOfVehicleFile,
+      docRef: entity.docRef,
+      isLegacy: entity.isLegacy,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -133,6 +141,7 @@ class MemberModel extends MemberEntity {
       'member_deleted_by': memberDeletedBy,
       'member_deleted_date': memberDeletedDate?.toIso8601String(),
       'member_is_deleted': memberIsDeleted,
+      'is_legacy': isLegacy,
     };
   }
 
@@ -181,6 +190,7 @@ class MemberModel extends MemberEntity {
             ? Timestamp.fromDate(memberDeletedDate!)
             : null,
         'member_is_deleted': memberIsDeleted,
+        'is_legacy': isLegacy,
       };
 
       return data;
@@ -240,6 +250,7 @@ class MemberModel extends MemberEntity {
             ? (json['member_deleted_date'] as Timestamp).toDate()
             : null,
         memberIsDeleted: json['member_is_deleted'] ?? false,
+        isLegacy: json['is_legacy'],
       );
     } catch (e) {
       debugPrint('Error in MemberModel.fromJson: $e');
@@ -289,6 +300,8 @@ class MemberModel extends MemberEntity {
         memberDeletedDate:
             (data['member_deleted_date'] as Timestamp?)?.toDate(),
         memberIsDeleted: data['member_is_deleted'] ?? false,
+        docRef: snapshot,
+        isLegacy: data['is_legacy'],
       );
     } catch (e) {
       debugPrint('Error in MemberModel.fromFirestore: $e');
@@ -451,6 +464,8 @@ class MemberModel extends MemberEntity {
     DateTime? memberDeletedDate,
     bool? memberIsDeleted,
     Uint8List? memberPhotoOfVehicleFile,
+    DocumentSnapshot? docRef,
+    bool? isLegacy,
   }) {
     return MemberModel(
       memberId: memberId ?? this.memberId,
@@ -483,6 +498,8 @@ class MemberModel extends MemberEntity {
       memberIsDeleted: memberIsDeleted ?? this.memberIsDeleted,
       memberPhotoOfVehicleFile:
           memberPhotoOfVehicleFile ?? this.memberPhotoOfVehicleFile,
+      docRef: docRef ?? this.docRef,
+      isLegacy: isLegacy ?? this.isLegacy,
     );
   }
 
@@ -521,5 +538,7 @@ class MemberModel extends MemberEntity {
         memberDeletedDate,
         memberIsDeleted,
         memberPhotoOfVehicleFile,
+        docRef,
+        isLegacy,
       ];
 }

@@ -56,6 +56,25 @@ class MemberExtendPage extends StatelessWidget {
           currentYear - 1945 + 1, (index) => (1945 + index).toString());
     }
 
+    //initialize dropdown value
+    final initMemberGender = memberState.memberGender ?? 'No Data';
+    final initMemberYearOfVehicle = memberState.memberYearOfVehicle != null &&
+            memberState.memberYearOfVehicle == 0
+        ? '1945'
+        : memberState.memberYearOfVehicle.toString();
+    final initMemberTypeOfVehicle =
+        memberState.memberTypeOfVehicle ?? 'No Data';
+    final initMemberBrandOfVehicle =
+        memberState.memberBrandOfVehicle ?? 'No Data';
+    final initMemberSizeOfVehicle =
+        memberState.memberSizeOfVehicle ?? 'No Data';
+    final initMemberTypeOfMember = memberState.memberTypeOfMember ?? 'No Data';
+    final initMemberStatusMember = memberState.memberStatusMember == null
+        ? 'No Data'
+        : memberState.memberStatusMember == true
+            ? 'Active'
+            : 'Inactive';
+
     return Scaffold(
       appBar: const MainAppBarNoAvatar(),
       body: SingleChildScrollView(
@@ -145,6 +164,7 @@ class MemberExtendPage extends StatelessWidget {
                           memberId: memberState.memberId,
                         ),
                       ),
+                      SizedBox(height: AppPadding.defaultPadding.h),
                       MemberCustomTextField(
                         controller: nameController,
                         type: InputType.name,
@@ -167,8 +187,8 @@ class MemberExtendPage extends StatelessWidget {
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
-                        initialValue: memberState.memberGender ?? 'Male',
-                        items: const ['Male', 'Female', 'Other'],
+                        initialValue: initMemberGender,
+                        items: AppMasterList.masterListGender,
                         label: 'Select Gender',
                         type: 'gender', // Pass the type here
                         isEnabled: false,
@@ -201,16 +221,17 @@ class MemberExtendPage extends StatelessWidget {
                   content: Column(
                     children: [
                       SizedBox(height: AppPadding.halfPadding.h / 2),
-                      const MemberVehicleImagePicker(
-                        isEnabled: false,
-                      ),
-                      SizedBox(height: AppPadding.defaultPadding.h),
+                      if (memberState.isLegacy != true)
+                        const MemberVehicleImagePicker(
+                          isEnabled: false,
+                        ),
+                      if (memberState.isLegacy != true)
+                        SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
-                        initialValue:
-                            memberState.memberYearOfVehicle.toString(),
-                        items: generateYearList(),
+                        initialValue: initMemberYearOfVehicle,
+                        items: AppMasterList.masterListYearOfVehicle,
                         label: 'Select Year',
-                        type: 'year', // Pass the type here
+                        type: 'year',
                         isEnabled: false,
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
@@ -222,30 +243,27 @@ class MemberExtendPage extends StatelessWidget {
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
-                        initialValue:
-                            memberState.memberTypeOfVehicle ?? 'Sedan',
-                        items: const ['Sedan', 'Truck', 'Motor', 'Bus'],
+                        initialValue: initMemberTypeOfVehicle,
+                        items: AppMasterList.masterListTypeOfVehicle,
                         label: 'Select Vehicle Type',
-                        type: 'vehicleType', // Pass the type here
-                        isEnabled: false,
+                        type: 'vehicleType',
+                        isEnabled: false, // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
-                        initialValue:
-                            memberState.memberBrandOfVehicle ?? 'Toyota',
-                        items: const ['BMW', 'Honda', 'Toyota', 'Hyundai'],
+                        initialValue: initMemberBrandOfVehicle,
+                        items: AppMasterList.masterListBrandOfVehicle,
                         label: 'Select Vehicle Brand',
-                        type: 'vehicleBrand', // Pass the type here
-                        isEnabled: false,
+                        type: 'vehicleBrand',
+                        isEnabled: false, // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
-                        initialValue:
-                            memberState.memberSizeOfVehicle ?? 'Medium',
-                        items: const ['Small', 'Medium', 'Large'],
+                        initialValue: initMemberSizeOfVehicle,
+                        items: AppMasterList.masterListSizeOfVehicle,
                         label: 'Select Vehicle Size',
-                        type: 'vehicleSize', // Pass the type here
-                        isEnabled: false,
+                        type: 'vehicleSize',
+                        isEnabled: false, // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberCustomTextField(
@@ -263,26 +281,27 @@ class MemberExtendPage extends StatelessWidget {
                     children: [
                       SizedBox(height: AppPadding.halfPadding.h / 2),
                       MemberDropdownSelector(
-                        initialValue:
-                            memberState.memberTypeOfMember ?? 'Silver',
-                        items: const ['Platinum', 'Gold', 'Silver', 'Kecubung'],
+                        initialValue: initMemberTypeOfMember,
+                        items: AppMasterList.masterListTypeOfMember,
                         label: 'Select Member',
-                        type: 'memberType', // Pass the type here
+                        type: 'memberType',
+                        // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
-                        initialValue: memberState.memberStatusMember == true
-                            ? 'Active'
-                            : 'Inactive',
-                        items: const ['Active', 'Inactive'],
+                        initialValue: initMemberStatusMember,
+                        items: AppMasterList.masterListStatusMember,
                         label: 'Select Status',
-                        type: 'status', // Pass the type here
+                        type: 'status',
                       ),
-                      SizedBox(height: AppPadding.defaultPadding.h),
-                      MemberPartnerDd(
-                        initialValue: memberState.memberJoinPartner?.partnerId,
-                        dropDownType: DropDownType.update,
-                      ),
+                      if (memberState.isLegacy != true)
+                        SizedBox(height: AppPadding.defaultPadding.h),
+                      if (memberState.isLegacy != true)
+                        MemberPartnerDd(
+                          initialValue:
+                              memberState.memberJoinPartner?.partnerId,
+                          dropDownType: DropDownType.update,
+                        ),
                       SizedBox(height: AppPadding.defaultPadding.h),
                       BlocBuilder<MemberJoinDateCubit, DateTime>(
                         builder: (context, state) {
@@ -308,7 +327,8 @@ class MemberExtendPage extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: AppPadding.halfPadding.h * 3),
-                      const MemberSubmitButton(type: 'update'),
+                      if (memberState.isLegacy != true)
+                        const MemberSubmitButton(type: 'extend'),
                       SizedBox(height: AppPadding.triplePadding),
                       //const ListenerNotificationMember(),
                     ],

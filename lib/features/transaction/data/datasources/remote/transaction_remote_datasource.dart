@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:project_nineties/core/error/failure.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/member/data/models/member_model.dart';
 import 'package:project_nineties/features/transaction/data/models/transaction_model.dart';
 import 'package:project_nineties/features/transaction/domain/entities/transaction_entity.dart';
@@ -54,7 +55,10 @@ class TransactionRemoteDataSourceImpl implements TransactionRemoteDataSource {
   @override
   Future<MemberModel> getMember(String param) async {
     try {
-      final docSnapshot = await instance.collection('member').doc(param).get();
+      final docSnapshot = await instance
+          .collection(AppCollection.memberCollection)
+          .doc(param)
+          .get();
 
       if (!docSnapshot.exists) {
         throw const FireBaseCatchFailure('Member not found');

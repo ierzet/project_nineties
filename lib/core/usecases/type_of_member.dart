@@ -7,9 +7,7 @@ class TypeOfMember extends FormzInput<String, TypeOfMemberValidationError> {
 
   const TypeOfMember.dirty([super.value = '']) : super.dirty();
 
-  static final RegExp _typeOfMemberRegExp = RegExp(
-    r'^(basic|gold|platinum)$',
-  );
+  static final RegExp _typeOfMemberRegExp = RegExp(r"^[A-Za-z\-\'\s]+$");
   @override
   TypeOfMemberValidationError? validator(String? value) {
     return _typeOfMemberRegExp.hasMatch(value ?? '')

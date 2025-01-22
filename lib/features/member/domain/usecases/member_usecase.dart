@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 import 'package:dartz/dartz.dart';
 import 'package:excel/excel.dart';
@@ -29,12 +30,25 @@ class MemberUseCase {
     return repository.updateData(dataModel);
   }
 
-  Future<Either<Failure, List<MemberEntity>>> fetchData() async {
-    final listModelResult = await repository.fetchData();
-    final listEnity = listModelResult
+  Future<Either<Failure, List<MemberEntity>>> fetchData(
+      {int limit = 50, DocumentSnapshot? lastDoc}) async {
+    final listModelResult =
+        await repository.fetchData(limit: limit, lastDoc: lastDoc);
+    final listEntity = listModelResult
         .map((models) => models.map((model) => model.toEntity()).toList());
 
-    return listEnity;
+    return listEntity;
+  }
+
+  Future<Either<Failure, List<MemberEntity>>> searchMembers(
+    String queryString,
+    int limit,
+  ) async {
+    final listModelResult = await repository.searchMembers(queryString, limit);
+    final listEntity = listModelResult
+        .map((models) => models.map((model) => model.toEntity()).toList());
+
+    return listEntity;
   }
 
   Stream<Either<Failure, List<MemberEntity>>> call() {

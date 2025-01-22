@@ -33,12 +33,7 @@ class MemberRegistrationPage extends StatelessWidget {
     final TextEditingController registrationDateController =
         TextEditingController();
 
-    List<String> generateYearList() {
-      int currentYear = DateTime.now().year;
-      return List<String>.generate(
-          currentYear - 1945 + 1, (index) => (1945 + index).toString());
-    }
-
+    const initValueData = 'No Data';
     return Scaffold(
       appBar: const MainAppBarNoAvatar(),
       body: SingleChildScrollView(
@@ -139,9 +134,9 @@ class MemberRegistrationPage extends StatelessWidget {
                         label: 'Phone Number',
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
-                      const MemberDropdownSelector(
-                        initialValue: 'Male',
-                        items: ['Male', 'Female', 'Other'],
+                      MemberDropdownSelector(
+                        initialValue: initValueData,
+                        items: AppMasterList.masterListGender,
                         label: 'Select Gender',
                         type: 'gender', // Pass the type here
                       ),
@@ -177,7 +172,7 @@ class MemberRegistrationPage extends StatelessWidget {
                       SizedBox(height: AppPadding.defaultPadding.h),
                       MemberDropdownSelector(
                         initialValue: DateTime.now().year.toString(),
-                        items: generateYearList(),
+                        items: AppMasterList.masterListYearOfVehicle,
                         label: 'Select Year',
                         type: 'year', // Pass the type here
                       ),
@@ -188,23 +183,23 @@ class MemberRegistrationPage extends StatelessWidget {
                         label: 'Vehicle Number',
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
-                      const MemberDropdownSelector(
-                        initialValue: 'Sedan',
-                        items: ['Sedan', 'Truck', 'Motor', 'Bus'],
+                      MemberDropdownSelector(
+                        initialValue: initValueData,
+                        items: AppMasterList.masterListTypeOfVehicle,
                         label: 'Select Vehicle Type',
                         type: 'vehicleType', // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
-                      const MemberDropdownSelector(
-                        initialValue: 'Toyota',
-                        items: ['BMW', 'Honda', 'Toyota', 'Hyundai'],
+                      MemberDropdownSelector(
+                        initialValue: initValueData,
+                        items: AppMasterList.masterListBrandOfVehicle,
                         label: 'Select Vehicle Brand',
                         type: 'vehicleBrand', // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
-                      const MemberDropdownSelector(
-                        initialValue: 'Medium',
-                        items: ['Small', 'Medium', 'Large'],
+                      MemberDropdownSelector(
+                        initialValue: initValueData,
+                        items: AppMasterList.masterListSizeOfVehicle,
                         label: 'Select Vehicle Size',
                         type: 'vehicleSize', // Pass the type here
                       ),
@@ -222,16 +217,16 @@ class MemberRegistrationPage extends StatelessWidget {
                   content: Column(
                     children: [
                       SizedBox(height: AppPadding.halfPadding.h / 2),
-                      const MemberDropdownSelector(
-                        initialValue: 'Silver',
-                        items: ['Platinum', 'Gold', 'Silver', 'Kecubung'],
+                      MemberDropdownSelector(
+                        initialValue: initValueData,
+                        items: AppMasterList.masterListTypeOfMember,
                         label: 'Select Member',
                         type: 'memberType', // Pass the type here
                       ),
                       SizedBox(height: AppPadding.defaultPadding.h),
-                      const MemberDropdownSelector(
+                      MemberDropdownSelector(
                         initialValue: 'Active',
-                        items: ['Active', 'Inactive'],
+                        items: AppMasterList.masterListStatusMember,
                         label: 'Select Status',
                         type: 'status', // Pass the type here
                       ),

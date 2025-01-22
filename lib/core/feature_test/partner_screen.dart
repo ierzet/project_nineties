@@ -40,15 +40,15 @@ class _PartnerScreenState extends State<PartnerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBarNoAvatar(),
+      appBar: const MainAppBarNoAvatar(),
       body: Center(
         child: FutureBuilder<List<PartnerEntity>>(
           future: futurePartners,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
-              print(snapshot.error);
+              debugPrint(snapshot.error.toString());
               return Text("${snapshot.error}");
             } else {
               return ListView.builder(

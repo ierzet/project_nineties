@@ -6,9 +6,7 @@ import 'package:project_nineties/features/main/presentation/widgets/main_appbar.
 import 'package:project_nineties/features/main/presentation/widgets/main_body.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_bottom_nav_bar.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_drawer.dart';
-import 'package:project_nineties/features/member/presentation/pages/member_register_page.dart';
-import 'package:project_nineties/features/member/presentation/pages/member_update_page.dart';
-import 'package:project_nineties/features/member/presentation/pages/member_view_extend_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_migrate_data_member_page.dart';
 import 'package:project_nineties/features/member/presentation/pages/member_view_page.dart';
 
 class MainDashboardPage extends StatelessWidget {
@@ -30,7 +28,7 @@ class MainDashboardPage extends StatelessWidget {
           child: Text('Desktop View'),
         ),
       ),
-      // body: const MembersViewExtendPage(),
+      // body: const MemberMigrateDataMemberPage(),
       bottomNavigationBar: const MainBottomNavBar(),
     );
   }

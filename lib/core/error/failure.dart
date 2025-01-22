@@ -242,6 +242,8 @@ class FireBaseCatchFailure extends Failure {
 
   factory FireBaseCatchFailure.fromCode(String code) {
     switch (code) {
+      case 'failed-precondition':
+        return const FireBaseCatchFailure('The query requires an index.');
       default:
         return const FireBaseCatchFailure();
     }

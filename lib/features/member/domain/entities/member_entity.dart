@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:project_nineties/core/usecases/address.dart';
 import 'package:project_nineties/core/usecases/brand.dart';
@@ -53,6 +54,8 @@ class MemberEntity extends Equatable {
   final DateTime? memberDeletedDate;
   final bool? memberIsDeleted;
   final Uint8List? memberPhotoOfVehicleFile;
+  final DocumentSnapshot? docRef;
+  final bool? isLegacy;
 
   const MemberEntity({
     required this.memberId,
@@ -83,6 +86,8 @@ class MemberEntity extends Equatable {
     this.memberDeletedDate,
     this.memberIsDeleted,
     this.memberPhotoOfVehicleFile,
+    this.docRef,
+    this.isLegacy,
   });
 
   static final empty = MemberEntity(
@@ -149,9 +154,9 @@ class MemberEntity extends Equatable {
     if (!isPhoneValid) {
       errors['phone'] = 'Invalid phone number';
     }
-    // if (!isGenderValid) {
-    //   errors['gender'] = 'Invalid gender';
-    // }
+    if (!isGenderValid || memberGender == "No Data") {
+      errors['gender'] = 'Invalid gender';
+    }
     // if (!isDOBValid) {
     //   errors['dob'] = 'Invalid date of birth';
     // }
@@ -164,15 +169,23 @@ class MemberEntity extends Equatable {
     if (!isAddressValid) {
       errors['address'] = 'Invalid address';
     }
-    // if (!isTypeOfVehicleValid) {
-    //   errors['typeOfVehicle'] = 'Invalid vehicle type';
-    // }
+    if (!isTypeOfVehicleValid || memberTypeOfVehicle == "No Data") {
+      errors['typeOfVehicle'] = 'Invalid vehicle type';
+    }
     if (!isColorOfVehicleValid) {
       errors['colorOfVehicle'] = 'Invalid vehicle color';
     }
-    // if (!isTypeOfMemberValid) {
-    //   errors['typeOfMember'] = 'Invalid member type';
-    // }
+
+    if (!isTypeOfMemberValid || memberTypeOfMember == "No Data") {
+      errors['typeOfMember'] = 'Invalid member type';
+    }
+    if (!isBrandOfVehicleValid || memberBrandOfVehicle == "No Data") {
+      errors['memberBrand'] = 'Invalid brand type';
+    }
+
+    if (!isSizeOfVehicleValid || memberSizeOfVehicle == "No Data") {
+      errors['sizeOfVehicle'] = 'Invalid vehicle size';
+    }
     // if (!isJoinDateValid) {
     //   errors['joinDate'] = 'Invalid join date';
     // }
@@ -251,6 +264,8 @@ class MemberEntity extends Equatable {
     DateTime? memberDeletedDate,
     bool? memberIsDeleted,
     Uint8List? memberPhotoOfVehicleFile,
+    DocumentSnapshot? docRef,
+    bool? isLegacy,
   }) {
     return MemberEntity(
       memberId: memberId ?? this.memberId,
@@ -283,6 +298,8 @@ class MemberEntity extends Equatable {
       memberIsDeleted: memberIsDeleted ?? this.memberIsDeleted,
       memberPhotoOfVehicleFile:
           memberPhotoOfVehicleFile ?? this.memberPhotoOfVehicleFile,
+      docRef: docRef ?? this.docRef,
+      isLegacy: isLegacy ?? this.isLegacy,
     );
   }
 
@@ -316,5 +333,7 @@ class MemberEntity extends Equatable {
         memberDeletedDate,
         memberIsDeleted,
         memberPhotoOfVehicleFile,
+        docRef,
+        isLegacy,
       ];
 }

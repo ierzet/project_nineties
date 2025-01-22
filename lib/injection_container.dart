@@ -2,6 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:project_nineties/features/home/data/datasources/home_remote_datasource.dart';
+import 'package:project_nineties/features/home/data/repositories/home_repository_impl.dart';
+import 'package:project_nineties/features/home/domain/repositories/home_repository.dart';
+import 'package:project_nineties/features/home/domain/usecases/home_usecase.dart';
+import 'package:project_nineties/features/home/presentation/cubit/home_cubit.dart';
 import 'package:project_nineties/features/member/data/datasources/local/member_local_datasource.dart';
 import 'package:project_nineties/features/member/data/datasources/remote/member_remote_datasource.dart';
 import 'package:project_nineties/features/member/data/repositories/member_repository_impl.dart';
@@ -53,6 +58,7 @@ void setupLocator() {
   locator.registerFactory<TransactionBloc>(
       () => TransactionBloc(useCase: locator()));
   locator.registerFactory<MessageBloc>(() => MessageBloc(useCase: locator()));
+  locator.registerFactory<HomeCubit>(() => HomeCubit(useCase: locator()));
 
 //usecase
   locator.registerLazySingleton(() => AuthenticationUseCase(locator()));
@@ -62,6 +68,7 @@ void setupLocator() {
   locator
       .registerLazySingleton(() => TransactionUseCase(repository: locator()));
   locator.registerLazySingleton(() => MessageUseCase(repository: locator()));
+  locator.registerLazySingleton(() => HomeUseCase(repository: locator()));
 
   //repository
   locator.registerLazySingleton<AuthenticationRepository>(() =>
@@ -79,6 +86,8 @@ void setupLocator() {
           remoteDataSource: locator(), localDataSource: locator()));
   locator.registerLazySingleton<MessageRepository>(
       () => MessageRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<HomeRepository>(
+      () => HomeRepositoryImpl(remoteDatasource: locator()));
 
   //data source
   locator.registerLazySingleton<AuthenticationRemoteDataSource>(
@@ -108,6 +117,8 @@ void setupLocator() {
       () => TransactionLocalDataSourceImpl());
   locator.registerLazySingleton<MessaggeRemoteDataSource>(
       () => MessaggeRemoteDataSourceImpl(locator()));
+  locator.registerLazySingleton<HomeRemoteDatasource>(
+      () => HomeRemoteDatasourceImpl(locator()));
 
   //external
 

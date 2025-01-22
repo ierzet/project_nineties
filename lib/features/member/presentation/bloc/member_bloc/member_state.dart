@@ -52,9 +52,23 @@ class MemberLoadFailure extends MemberState {
 }
 
 class MemberLoadDataSuccess extends MemberState {
-  const MemberLoadDataSuccess({required this.data});
+  const MemberLoadDataSuccess({
+    required this.data,
+    this.lastDoc,
+  });
 
   final List<MemberEntity> data;
+  final DocumentSnapshot? lastDoc;
+
   @override
-  List<Object> get props => [data];
+  List<Object> get props => [
+        data,
+        lastDoc ?? '',
+      ];
+}
+
+class MemberLoadMoreInProgress extends MemberState {
+  const MemberLoadMoreInProgress();
+  @override
+  List<Object> get props => [];
 }

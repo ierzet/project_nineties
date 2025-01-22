@@ -15,18 +15,21 @@ class ListenerNotificationMember extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
+              duration: const Duration(seconds: 3),
             ),
           );
         } else if (state is MemberLoadUpdateSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
+              duration: const Duration(seconds: 3),
             ),
           );
         } else if (state is MemberLoadFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),
+              duration: const Duration(seconds: 3),
             ),
           );
         }

@@ -12,31 +12,22 @@ class MemberSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final validationMessage = ScaffoldMessenger.of(context);
     final updatedUser = context.watch<AppBloc>().state.user.user.id;
     void onSubmit() {
       final memberParams = context.read<MemberValidatorBloc>().state.data;
 
-      final initiateGender = memberParams.isGenderValid == false
-          ? 'Male'
-          : memberParams.memberGender;
+      final initiateGender = memberParams.memberGender;
       final initiateDOB = memberParams.memberDateOfBirth == DateTime(1970, 1, 1)
           ? DateTime.now().subtract(const Duration(days: 365 * 10))
           : memberParams.memberDateOfBirth;
-      final initiateVehicleType = memberParams.isTypeOfVehicleValid == false
-          ? 'Sedan'
-          : memberParams.memberTypeOfVehicle;
+      final initiateVehicleType = memberParams.memberTypeOfVehicle;
 
-      final initiateVehicleBrand = memberParams.isBrandOfVehicleValid == false
-          ? 'Toyota'
-          : memberParams.memberBrandOfVehicle;
+      final initiateVehicleBrand = memberParams.memberBrandOfVehicle;
 
-      final initiateSizeOfVehicle = memberParams.isSizeOfVehicleValid == false
-          ? 'Medium'
-          : memberParams.memberSizeOfVehicle;
+      final initiateSizeOfVehicle = memberParams.memberSizeOfVehicle;
 
-      final initateTypeOfMember = memberParams.isTypeOfMemberValid == false
-          ? 'Silver'
-          : memberParams.memberTypeOfMember;
+      final initateTypeOfMember = memberParams.memberTypeOfMember;
 
       final bool initiateStatusMember = memberParams.memberStatusMember ?? true;
 
@@ -52,7 +43,21 @@ class MemberSubmitButton extends StatelessWidget {
           memberParams.memberExpiredDate == DateTime(1970, 1, 1)
               ? DateTime.now()
               : memberParams.memberExpiredDate;
-      // print('button params:${memberParams.memberJoinPartner}');
+
+      // if (initiateGender == "No Data" ||
+      //     initiateVehicleType == "No Data" ||
+      //     initiateVehicleBrand == "No Data" ||
+      //     initiateSizeOfVehicle == "No Data" ||
+      //     initateTypeOfMember == "No Data") {
+      //   validationMessage.showSnackBar(
+      //     const SnackBar(
+      //       content: Text('Please fill in all required fields.'),
+      //       duration: Duration(seconds: 3),
+      //     ),
+      //   );
+      //   return; // Stop the submission process
+      // }
+
       type == 'register'
           ? context.read<MemberBloc>().add(MemberRegister(
                 context: context,
@@ -67,14 +72,22 @@ class MemberSubmitButton extends StatelessWidget {
                   memberRegistrationDate: initiateRegistrationDate,
                   memberJoinDate: initiateJoinDate,
                   memberExpiredDate: initiateExpiredDate,
+                  isLegacy: false,
                 ),
               ))
-          : context.read<MemberBloc>().add(MemberExtend(
-                context: context,
-                params: memberParams.copyWith(
-                    memberUpdatedBy: updatedUser,
-                    memberUpdatedDate: DateTime.now()),
-              ));
+          : type == 'update'
+              ? context.read<MemberBloc>().add(MemberUpdateData(
+                    context: context,
+                    params: memberParams.copyWith(
+                        memberUpdatedBy: updatedUser,
+                        memberUpdatedDate: DateTime.now()),
+                  ))
+              : context.read<MemberBloc>().add(MemberExtend(
+                    context: context,
+                    params: memberParams.copyWith(
+                        memberUpdatedBy: updatedUser,
+                        memberUpdatedDate: DateTime.now()),
+                  ));
     }
 
     return Padding(

@@ -26,10 +26,12 @@ class MemberUpdateData extends MemberEvent {
 }
 
 class MemberGetData extends MemberEvent {
-  const MemberGetData();
+  final int limit;
+
+  const MemberGetData({this.limit = 10});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [limit];
 }
 
 class MemberSubscriptionSuccsess extends MemberEvent {
@@ -86,4 +88,21 @@ class MemberExtend extends MemberEvent {
   @override
   List<Object> get props => [params, context];
 }
-               
+
+class MemberLoadMoreData extends MemberEvent {
+  final int limit;
+
+  const MemberLoadMoreData({this.limit = 10});
+
+  @override
+  List<Object> get props => [limit];
+}
+
+class MemberStreamUpdate extends MemberEvent {
+  final List<MemberEntity> data;
+
+  const MemberStreamUpdate({required this.data});
+
+  @override
+  List<Object> get props => [data];
+}

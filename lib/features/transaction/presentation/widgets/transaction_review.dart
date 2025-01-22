@@ -4,10 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
-import 'package:project_nineties/features/transaction/presentation/pages/transaction_page.dart';
 
 class TransactionReview extends StatelessWidget {
   const TransactionReview({super.key});
@@ -356,7 +354,7 @@ class TransactionReview extends StatelessWidget {
                                           ),
                                           const SizedBox(width: 8),
                                           Text(
-                                            'Registration: ${member.memberExpiredDate != null ? DateFormat.yMMMd().format(member.memberExpiredDate!) : 'No Expiry Date'}',
+                                            'Registration: ${member.memberRegistrationDate != null ? DateFormat.yMMMd().format(member.memberRegistrationDate!) : 'No Expiry Date'}',
                                           ),
                                         ],
                                       ),
@@ -371,7 +369,7 @@ class TransactionReview extends StatelessWidget {
                                           ),
                                           const SizedBox(width: 8),
                                           Text(
-                                            'Extend: ${member.memberExpiredDate != null ? DateFormat.yMMMd().format(member.memberExpiredDate!) : 'No Expiry Date'}',
+                                            'Extend: ${member.memberJoinDate != null ? DateFormat.yMMMd().format(member.memberJoinDate!) : 'No Expiry Date'}',
                                           ),
                                         ],
                                       ),

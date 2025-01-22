@@ -3,17 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/app_setup/authentication_init.dart';
 import 'package:project_nineties/core/cubit/date_picker_cubit.dart';
 import 'package:project_nineties/core/cubit/global_cubit.dart';
+import 'package:project_nineties/features/home/presentation/cubit/home_cubit.dart';
 import 'package:project_nineties/features/member/presentation/bloc/member_bloc/member_bloc.dart';
 import 'package:project_nineties/features/member/presentation/bloc/member_validator_bloc/member_validator_bloc.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_dob_date_cubit.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_expired_date_cubit.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_join_date_cubit.dart';
+import 'package:project_nineties/features/member/presentation/cubit/member_migrate_params_cubit.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_registration_date_cubit.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_step_cubit.dart';
 import 'package:project_nineties/features/message/presentation/bloc/message_bloc.dart';
 import 'package:project_nineties/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:project_nineties/features/transaction/presentation/bloc/transaction_bloc.dart';
-import 'package:project_nineties/features/transaction/presentation/cubit/transaction_camera_flag_cubit_hapusable.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_bloc/user_bloc.dart';
 import 'package:project_nineties/features/user/presentation/bloc/user_validator_bloc/user_validator_bloc.dart';
 import 'package:project_nineties/features/user/presentation/cubit/user_validator_cubit.dart';
@@ -71,10 +72,12 @@ class BlocProviderSetup extends StatelessWidget {
           BlocProvider(create: (context) => MemberRegistrationDateCubit()),
           BlocProvider(create: (context) => MemberExpiredDateCubit()),
           BlocProvider(create: (context) => ThemeCubit()),
+          BlocProvider(create: (context) => di.locator<HomeCubit>()),
 
           //BlocProvider(create: (context) => MemberJoinDateCubit()),
           BlocProvider(create: (context) => MemberStepCubit()),
-         // BlocProvider(create: (context) => TransactionCameraFlagCubit()),
+          BlocProvider(create: (context) => MemberMigrateParamsCubit()),
+          // BlocProvider(create: (context) => TransactionCameraFlagCubit()),
 
           BlocProvider(create: (context) => NavigationCubit()),
           BlocProvider(create: (context) => UserValidatorCubit()),

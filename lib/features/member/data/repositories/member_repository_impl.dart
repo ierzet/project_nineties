@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:excel/excel.dart';
 import 'package:project_nineties/core/error/failure.dart';
@@ -57,9 +58,31 @@ class MemberRepositoryImpl implements MemberRepository {
   }
 
   @override
-  Future<Either<Failure, List<MemberModel>>> fetchData() async {
+  Future<Either<Failure, List<MemberModel>>> fetchData(
+      {int limit = 50, DocumentSnapshot? lastDoc}) async {
     try {
-      final queryData = await remoteDataSource.fetchData();
+      final queryData =
+          await remoteDataSource.fetchData(limit: limit, lastDoc: lastDoc);
+      final result =
+          queryData.docs.map((doc) => MemberModel.fromFirestore(doc)).toList();
+      return Right(result);
+    } on FireBaseCatchFailure catch (e) {
+      return Left(FireBaseCatchFailure(e.message));
+    } on SocketException {
+      return const Left(ConnectionFailure('Failed to connect to the network'));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MemberModel>>> searchMembers(
+    String queryString,
+    int limit,
+  ) async {
+    try {
+      final queryData =
+          await remoteDataSource.searchMembers(queryString, limit);
       final result =
           queryData.docs.map((doc) => MemberModel.fromFirestore(doc)).toList();
       return Right(result);

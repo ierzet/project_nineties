@@ -64,10 +64,8 @@ class _MemberPlatformVehicleImagePickerState
       // Upload the bytes directly
       await ref.putData(bytes);
       // Optionally, get the download URL
-      String downloadUrl = await ref.getDownloadURL();
-      print('File uploaded successfully. Download URL: $downloadUrl');
     } catch (e) {
-      print('Error uploading image: $e');
+      debugPrint('Error uploading image: $e');
     }
   }
 

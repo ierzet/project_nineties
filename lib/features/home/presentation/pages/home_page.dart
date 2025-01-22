@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/home/presentation/cubit/home_cubit.dart';
 import 'package:project_nineties/features/member/presentation/widgets/listener_notify_member.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_member_growth_box_chart.dart';
 import 'package:project_nineties/features/home/presentation/widgets/home_line_chart_sample2.dart';
@@ -17,6 +19,8 @@ class HomeDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
+    homeCubit.count();
     return SafeArea(
       child: SingleChildScrollView(
         padding: EdgeInsets.all(AppPadding.defaultPadding.r),
