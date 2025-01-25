@@ -151,14 +151,14 @@ class MemberUpdatePage extends StatelessWidget {
                   content: Column(
                     children: [
                       SizedBox(height: AppPadding.halfPadding.h / 2),
-                      SizedBox(
-                        height: 150.h,
-                        width: 150.w,
-                        child: MemberQRCode(
-                          memberId: memberState.memberId,
-                        ),
-                      ),
-                      SizedBox(height: AppPadding.defaultPadding.h),
+                      // SizedBox(
+                      //   height: 150.h,
+                      //   width: 150.w,
+                      //   child: MemberQRCode(
+                      //     memberId: memberState.memberId,
+                      //   ),
+                      // ),
+                      // SizedBox(height: AppPadding.defaultPadding.h),
                       MemberCustomTextField(
                         controller: nameController,
                         type: InputType.name,

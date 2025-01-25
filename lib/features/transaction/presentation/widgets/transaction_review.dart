@@ -440,6 +440,21 @@ class TransactionReview extends StatelessWidget {
                                               Row(
                                                 children: [
                                                   Icon(
+                                                    Icons.update,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    'Member Type:  ${history.typeOfMember}',
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                children: [
+                                                  Icon(
                                                     Icons.date_range,
                                                     color: Theme.of(context)
                                                         .colorScheme

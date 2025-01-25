@@ -5,6 +5,7 @@ import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/features/member/presentation/bloc/member_validator_bloc/member_validator_bloc.dart';
+import 'package:project_nineties/features/member/presentation/widgets/member_qrcode.dart';
 
 class MemberProfilePage extends StatelessWidget {
   const MemberProfilePage({super.key});
@@ -310,7 +311,7 @@ class MemberProfilePage extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 8),
                                     const Text(
-                                      'Member Type: ',
+                                      'Vehicle Type: ',
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
@@ -366,6 +367,7 @@ class MemberProfilePage extends StatelessWidget {
                         ],
                       ),
                     ),
+
                     const SizedBox(height: 16),
                     Card(
                       elevation: 4,
@@ -418,6 +420,21 @@ class MemberProfilePage extends StatelessWidget {
                                             ),
                                             const SizedBox(width: 8),
                                             Text(
+                                              'Member Typer:  ${history.typeOfMember}',
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.date_range,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
                                               'Start Date:  ${history.joinDate != null ? DateFormat.yMMMd().format(history.joinDate!) : 'No Start Date'}',
                                             ),
                                           ],
@@ -454,6 +471,36 @@ class MemberProfilePage extends StatelessWidget {
                                   ),
                                 );
                               },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      elevation: 4,
+                      child: ExpansionTile(
+                        title: const Text(
+                          'QR Code',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        children: [
+                          const Divider(
+                            height: 20,
+                            thickness: 2,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                MemberQRCode(
+                                  memberId: member.memberId,
+                                ),
+                              ],
                             ),
                           ),
                         ],
