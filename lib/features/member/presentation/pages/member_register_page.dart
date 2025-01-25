@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/member/presentation/bloc/member_validator_bloc/member_validator_bloc.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_dob_date_cubit.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_expired_date_cubit.dart';
 import 'package:project_nineties/features/member/presentation/cubit/member_join_date_cubit.dart';
@@ -34,6 +35,8 @@ class MemberRegistrationPage extends StatelessWidget {
         TextEditingController();
 
     const initValueData = 'No Data';
+    final validationFormBloc = context.read<MemberValidatorBloc>();
+    validationFormBloc.add(MemberClearValidator(context: context));
     return Scaffold(
       appBar: const MainAppBarNoAvatar(),
       body: SingleChildScrollView(

@@ -186,6 +186,34 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
     );
   }
 
+  void _onMemberExtend(MemberExtend event, Emitter<MemberState> emit) async {
+    emit(const MemberLoadInProgress());
+
+    // fittur extend ini menggunakan validasi register
+    final errors = event.params.validateFields('extend');
+    if (errors.isNotEmpty) {
+      emit(MemberLoadFailure(
+          message:
+              'Data is not valid: ${errors.entries.map((e) => '${e.key}: ${e.value}').join(', ')}'));
+      return;
+    }
+
+    final clearFormValidatorBloc = event.context.read<MemberValidatorBloc>();
+    final result = await useCase.updateData(event.params);
+
+    result.fold(
+      (failure) {
+        emit(MemberLoadFailure(message: failure.message));
+      },
+      (data) {
+        clearFormValidatorBloc
+            .add(MemberClearValidator(context: event.context));
+        Navigator.pop(event.context);
+        emit(MemberLoadSuccess(message: data));
+      },
+    );
+  }
+
   void _onMemberSearchEvent(
       MemberSearchEvent event, Emitter<MemberState> emit) async {
     const limit = 5;
@@ -323,34 +351,6 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
       (data) {
         emit(MemberLoadSuccess(message: data));
         emit(MemberLoadDataSuccess(data: event.param));
-      },
-    );
-  }
-
-  void _onMemberExtend(MemberExtend event, Emitter<MemberState> emit) async {
-    emit(const MemberLoadInProgress());
-
-    // fittur extend ini menggunakan validasi register
-    final errors = event.params.validateFields('extend');
-    if (errors.isNotEmpty) {
-      emit(MemberLoadFailure(
-          message:
-              'Data is not valid: ${errors.entries.map((e) => '${e.key}: ${e.value}').join(', ')}'));
-      return;
-    }
-
-    final clearFormValidatorBloc = event.context.read<MemberValidatorBloc>();
-    final result = await useCase.insertData(event.params);
-
-    result.fold(
-      (failure) {
-        emit(MemberLoadFailure(message: failure.message));
-      },
-      (data) {
-        clearFormValidatorBloc
-            .add(MemberClearValidator(context: event.context));
-        Navigator.pop(event.context);
-        emit(MemberLoadSuccess(message: data));
       },
     );
   }

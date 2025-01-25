@@ -5,6 +5,7 @@ import 'package:project_nineties/core/utilities/route_page.dart';
 import 'package:project_nineties/features/account_profile/presentation/pages/profile_page.dart';
 import 'package:project_nineties/features/member/presentation/pages/member_extend_page.dart';
 import 'package:project_nineties/features/member/presentation/pages/member_migrate_data_member_page.dart';
+import 'package:project_nineties/features/member/presentation/pages/member_profile_page.dart';
 import 'package:project_nineties/features/member/presentation/pages/member_register_page.dart';
 import 'package:project_nineties/features/member/presentation/pages/member_update_page.dart';
 import 'package:project_nineties/features/member/presentation/pages/member_view_extend_page.dart';
@@ -89,7 +90,9 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
       Navigator.of(context)
           .push(createPageRoute(const MembersViewExtendPage()));
     }
-
+    if (subMenu == 'member_profile') {
+      Navigator.of(context).push(createPageRoute(const MemberProfilePage()));
+    }
     if (subMenu == 'member_update') {
       Navigator.of(context).push(createPageRoute(const MemberUpdatePage()));
     }
@@ -183,6 +186,8 @@ class NavigationCubit extends Cubit<NavigationCubitState> {
         return 'Member Update';
       case 'member_extend':
         return 'Member Extend';
+      case 'member_profile':
+        return 'Member Profile';
       case 'transaction_view':
         return 'Transaction View';
       case 'user_approval':

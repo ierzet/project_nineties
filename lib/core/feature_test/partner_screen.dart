@@ -22,20 +22,44 @@ class _PartnerScreenState extends State<PartnerScreen> {
   }
 
   Future<List<PartnerEntity>> fetchPartners() async {
-    //print('halo...');
-    final response =
-        await http.get(Uri.parse('http://192.168.1.24:3000/api/partners/'));
+    const String baseUrl =
+        'http://localhost:3000'; // Replace localhost with your local IP
+    final String url = '$baseUrl/api/partners/';
 
-    if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      // print('jsonResponse: $jsonResponse');
-      return jsonResponse
-          .map((partner) => PartnerModel.fromJson(partner).toEntity())
-          .toList();
-    } else {
-      throw Exception('Failed to load partners');
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        List jsonResponse = json.decode(response.body);
+        return jsonResponse
+            .map((partner) => PartnerModel.fromAPI(partner).toEntity())
+            .toList();
+      } else {
+        throw Exception('Failed to load partners');
+      }
+    } on Exception catch (e) {
+      throw Exception('Failed to load partners: $e');
     }
   }
+  // Future<List<PartnerEntity>> fetchPartners() async {
+  //   //print('halo...');
+  //   try {
+  //     final response =
+  //         await http.get(Uri.parse('http://localhost:3000/api/partners/'));
+
+  //     if (response.statusCode == 200) {
+  //       List jsonResponse = json.decode(response.body);
+  //       // print('jsonResponse: $jsonResponse');
+  //       return jsonResponse
+  //           .map((partner) => PartnerModel.fromJson(partner).toEntity())
+  //           .toList();
+  //     } else {
+  //       throw Exception('Failed to load partners');
+  //     }
+  //   } on Exception catch (e) {
+  //     throw Exception('Failed to load partners: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
+import 'package:project_nineties/features/member/data/models/member_history.dart';
+import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
 import 'package:project_nineties/features/member/presentation/bloc/member_bloc/member_bloc.dart';
 import 'package:project_nineties/features/member/presentation/bloc/member_validator_bloc/member_validator_bloc.dart';
 
@@ -12,10 +14,11 @@ class MemberSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final validationMessage = ScaffoldMessenger.of(context);
+    //final validationMessage = ScaffoldMessenger.of(context);
     final updatedUser = context.watch<AppBloc>().state.user.user.id;
     void onSubmit() {
-      final memberParams = context.read<MemberValidatorBloc>().state.data;
+      MemberEntity memberParams =
+          context.read<MemberValidatorBloc>().state.data;
 
       final initiateGender = memberParams.memberGender;
       final initiateDOB = memberParams.memberDateOfBirth == DateTime(1970, 1, 1)
@@ -44,20 +47,30 @@ class MemberSubmitButton extends StatelessWidget {
               ? DateTime.now()
               : memberParams.memberExpiredDate;
 
-      // if (initiateGender == "No Data" ||
-      //     initiateVehicleType == "No Data" ||
-      //     initiateVehicleBrand == "No Data" ||
-      //     initiateSizeOfVehicle == "No Data" ||
-      //     initateTypeOfMember == "No Data") {
-      //   validationMessage.showSnackBar(
-      //     const SnackBar(
-      //       content: Text('Please fill in all required fields.'),
-      //       duration: Duration(seconds: 3),
-      //     ),
-      //   );
-      //   return; // Stop the submission process
-      // }
+      final membershipHistory = MembershipHistory(
+        joinDate: initiateJoinDate,
+        expiredDate: initiateExpiredDate,
+        typeOfMember: initateTypeOfMember,
+        historyDate: DateTime.now(),
+        joinPartner: memberParams.memberJoinPartner,
+      );
 
+      List<MembershipHistory>? initiateMembershipHistoryList =
+          memberParams.membershipHistory ?? [];
+
+      //print('Before copyWith: ${memberParams.membershipHistory}');
+
+      if (type == 'update' && initiateMembershipHistoryList.isNotEmpty) {
+        initiateMembershipHistoryList.removeLast();
+      }
+
+      initiateMembershipHistoryList.add(membershipHistory);
+
+      //Update memberParams with the new membership history list
+      memberParams = memberParams.copyWith(
+          membershipHistory: initiateMembershipHistoryList);
+
+      //print('After copyWith: ${memberParams.membershipHistory}');
       type == 'register'
           ? context.read<MemberBloc>().add(MemberRegister(
                 context: context,

@@ -164,8 +164,41 @@ class PartnerModel extends PartnerEntity {
         partnerIsDeleted: data['partner_is_deleted'] ?? false,
       );
     } catch (e) {
-      debugPrint('Error in fromFirestore: $e');
+      debugPrint('Error in PartnerModel.fromFirestore: $e');
       rethrow; // Rethrow the exception for better debugging
+    }
+  }
+
+  factory PartnerModel.fromAPI(Map<String, dynamic> json) {
+    try {
+      return PartnerModel(
+        partnerId: json['partner_id'],
+        partnerName: json['partner_name'],
+        partnerEmail: json['partner_email'],
+        partnerPhoneNumber: json['partner_phone_number'],
+        partnerImageUrl: json['partner_image_url'],
+        partnerAddress: json['partner_address'],
+        partnerStatus: json['partner_status'],
+        partnerJoinDate: json['partner_join_date'] != null
+            ? DateTime.parse(json['partner_join_date'])
+            : null,
+        partnerCreatedBy: json['partner_created_by'],
+        partnerCreatedDate: json['partner_created_date'] != null
+            ? DateTime.parse(json['partner_created_date'])
+            : null,
+        partnerUpdatedBy: json['partner_updated_by'] ?? '',
+        partnerUpdatedDate: json['partner_updated_date'] != null
+            ? DateTime.parse(json['partner_updated_date'])
+            : null,
+        partnerDeletedBy: json['partner_deleted_by'],
+        partnerDeletedDate: json['partner_deleted_date'] != null
+            ? DateTime.parse(json['partner_deleted_date'])
+            : null,
+        partnerIsDeleted: json['partner_is_deleted'] ?? false,
+      );
+    } catch (e) {
+      debugPrint('Error in PartnerModel.fromJson: $e');
+      rethrow;
     }
   }
 
@@ -207,21 +240,21 @@ class PartnerModel extends PartnerEntity {
 
   List<TextCellValue> toTextCellValueHeader() {
     return [
-       TextCellValue('Partner Id'),
-       TextCellValue('Partner Name'),
-       TextCellValue('Partner Email'),
-       TextCellValue('Partner Phone Number'),
-       TextCellValue('Partner Image URL'),
-       TextCellValue('Partner Address'),
-       TextCellValue('Partner Status'),
-       TextCellValue('Partner Join Date'),
-       TextCellValue('Partner Created By'),
-       TextCellValue('Partner Created Date'),
-       TextCellValue('Partner Updated By'),
-       TextCellValue('Partner Updated Date'),
-       TextCellValue('Partner Deleted By'),
-       TextCellValue('Partner Deleted Date'),
-       TextCellValue('Partner Is Deleted'),
+      TextCellValue('Partner Id'),
+      TextCellValue('Partner Name'),
+      TextCellValue('Partner Email'),
+      TextCellValue('Partner Phone Number'),
+      TextCellValue('Partner Image URL'),
+      TextCellValue('Partner Address'),
+      TextCellValue('Partner Status'),
+      TextCellValue('Partner Join Date'),
+      TextCellValue('Partner Created By'),
+      TextCellValue('Partner Created Date'),
+      TextCellValue('Partner Updated By'),
+      TextCellValue('Partner Updated Date'),
+      TextCellValue('Partner Deleted By'),
+      TextCellValue('Partner Deleted Date'),
+      TextCellValue('Partner Is Deleted'),
     ];
   }
 

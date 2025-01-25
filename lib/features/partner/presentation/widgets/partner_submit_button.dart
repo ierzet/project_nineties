@@ -50,9 +50,9 @@ class PartnerSubmitButton extends StatelessWidget {
                   // ? const CircularProgressIndicator(
                   //     // color: AppColors.background,
                   //     )
-                  ? const CircularProgressIndicator(
-                      // color: AppColors.background,
-                      )
+                  ? CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    )
                   : Text(
                       'Submit',
                       style: AppStyles.buttonText.copyWith(

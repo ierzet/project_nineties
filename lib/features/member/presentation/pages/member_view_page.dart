@@ -64,6 +64,7 @@ class MembersViewPage extends StatelessWidget {
                           }
 
                           final member = members[index];
+                          //print('member:${member.membershipHistory}');
                           final initExpiredDate =
                               member.memberExpiredDate ?? DateTime.now();
                           final initJoinDate =
@@ -109,9 +110,7 @@ class MembersViewPage extends StatelessWidget {
                                   //     overflow: TextOverflow.ellipsis,
                                   //   ),
                                   // ),
-                                  // SizedBox(
-                                  //   width: 8.w,
-                                  // ),
+
                                   Text(
                                     member.memberStatusMember == true
                                         ? 'Active'
@@ -121,6 +120,32 @@ class MembersViewPage extends StatelessWidget {
                                           ? Colors.green
                                           : Colors.red,
                                     ),
+                                  ),
+                                  SizedBox(
+                                    width: 8.w,
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.visibility),
+                                    onPressed: () {
+                                      context
+                                          .read<NavigationCubit>()
+                                          .updateSubMenuWithAnimated(
+                                              context: context,
+                                              subMenu: 'member_profile');
+                                      context.read<MemberValidatorBloc>().add(
+                                          MemberValidatorForm(params: member));
+
+                                      // Setup date default value
+                                      context
+                                          .read<MemberExpiredDateCubit>()
+                                          .onInitialDate(initExpiredDate);
+                                      context
+                                          .read<MemberJoinDateCubit>()
+                                          .onInitialDate(initJoinDate);
+                                      context
+                                          .read<MemberDOBDateCubit>()
+                                          .onInitialDate(initDOBDate);
+                                    },
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.edit),

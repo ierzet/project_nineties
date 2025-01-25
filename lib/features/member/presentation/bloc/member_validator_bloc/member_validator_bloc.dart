@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:project_nineties/features/member/data/models/member_history.dart';
 import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
 
 part 'member_validator_bloc_event.dart';

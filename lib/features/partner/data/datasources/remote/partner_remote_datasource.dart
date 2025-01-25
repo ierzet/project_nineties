@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:project_nineties/core/error/failure.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:universal_html/html.dart' as html;
@@ -23,7 +24,10 @@ class PartnerRemoteDataSourceImpl implements PartnerRemoteDataSource {
 
   @override
   Stream<List<PartnerEntity>> getPartnersStream() {
-    var result = instance.collection('partner').snapshots().map((snapshot) {
+    var result = instance
+        .collection(AppCollection.partnerCollection)
+        .snapshots()
+        .map((snapshot) {
       try {
         final partners = snapshot.docs.map((doc) {
           return PartnerModel.fromFirestore(doc).toEntity();
@@ -70,10 +74,49 @@ class PartnerRemoteDataSourceImpl implements PartnerRemoteDataSource {
     }
   }
 
+  // @override
+  // Future<String> insertData(PartnerModel dataModel) async {
+  //   try {
+  //     final docRef = instance
+  //         .collection(AppCollection.partnerCollection)
+  //         .doc(dataModel.partnerEmail);
+  //     final docSnapshot = await docRef.get();
+
+  //     // validasi id partner dengan email
+  //     if (docSnapshot.exists) {
+  //       //TODO: tambahin mekanisme hapus image file yang berhasi terupload
+  //       throw const FireBaseCatchFailure(
+  //           'Data mitra sudah ada silakan gunakan email yang lain');
+  //     }
+
+  //     //4 Save dataModel to Firestore
+  //     await docRef.set(dataModel.toFireStore());
+  //     return 'Data mitra berhasil ditambahkan';
+  //   } on FirebaseException catch (e) {
+  //     throw FireBaseCatchFailure.fromCode(e.code);
+  //   } on SocketException {
+  //     throw const ConnectionFailure('failed connect to the network');
+  //   } catch (e) {
+  //     if (e is FireBaseCatchFailure) {
+  //       rethrow;
+  //     } else {
+  //       throw const FireBaseCatchFailure();
+  //     }
+  //   }
+  // }
+  /////////////////////////////////////////////////////////////////////////////
   @override
   Future<String> insertData(PartnerModel dataModel) async {
+    return AppBackendConfig.writeBackend == BackendType.firebase
+        ? _insertPartnerDataToFirebase(dataModel)
+        : _insertPartnerDataToMongoDB(dataModel);
+  }
+
+  Future<String> _insertPartnerDataToFirebase(PartnerModel dataModel) async {
     try {
-      final docRef = instance.collection('partner').doc(dataModel.partnerEmail);
+      final docRef = instance
+          .collection(AppCollection.partnerCollection)
+          .doc(dataModel.partnerEmail);
       final docSnapshot = await docRef.get();
 
       // validasi id partner dengan email
@@ -99,10 +142,17 @@ class PartnerRemoteDataSourceImpl implements PartnerRemoteDataSource {
     }
   }
 
+  Future<String> _insertPartnerDataToMongoDB(PartnerModel dataModel) async {
+    throw const FireBaseCatchFailure();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
   @override
   Future<String> updateData(PartnerModel dataModel) async {
     try {
-      final docRef = instance.collection('partner').doc(dataModel.partnerEmail);
+      final docRef = instance
+          .collection(AppCollection.partnerCollection)
+          .doc(dataModel.partnerEmail);
 
       await docRef.set(dataModel.toFireStore());
       return 'Data mitra berhasil diperbarui';
@@ -122,7 +172,8 @@ class PartnerRemoteDataSourceImpl implements PartnerRemoteDataSource {
   @override
   Future<QuerySnapshot<Map<String, dynamic>>> fetchData() async {
     try {
-      final result = await instance.collection('partner').get();
+      final result =
+          await instance.collection(AppCollection.partnerCollection).get();
       return result;
     } on FirebaseException catch (e) {
       throw FireBaseCatchFailure.fromCode(e.code);

@@ -33,6 +33,15 @@ class AppColors {
   static const Color info = Color(0xFF17A2B8); // Light Blue for info
 }
 
+enum Feature {
+  member,
+  useraccount,
+  partner,
+  transaction,
+  setting,
+  message,
+}
+
 class AppCollection {
   static const memberCollection = 'member';
   static const userAccountCollection = 'user_account';
@@ -47,6 +56,16 @@ class AppCollection {
 //   static const Color background = Color(0xFF2C3E50); // Dark Slate Blue #2C3E50
 //   static const Color textColor = Color(0xFFFFFFFF); // White for text
 // }
+
+enum BackendType {
+  firebase,
+  mongodb,
+}
+
+class AppBackendConfig {
+  static const BackendType readBackend = BackendType.firebase;
+  static const BackendType writeBackend = BackendType.firebase;
+}
 
 class AppStrings {
   static const String appName = '90s Car Wash';

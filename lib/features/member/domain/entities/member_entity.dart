@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:project_nineties/core/usecases/address.dart';
 import 'package:project_nineties/core/usecases/brand.dart';
 import 'package:project_nineties/core/usecases/color_of_vehicle.dart';
@@ -17,6 +18,8 @@ import 'package:project_nineties/core/usecases/size.dart';
 import 'package:project_nineties/core/usecases/type_of_member.dart';
 import 'package:project_nineties/core/usecases/type_of_vehicle.dart';
 import 'package:project_nineties/features/authentication/domain/usecases/email.dart';
+import 'package:project_nineties/features/member/data/models/member_history.dart';
+import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
 class MemberEntity extends Equatable {
@@ -44,7 +47,7 @@ class MemberEntity extends Equatable {
   final DateTime? memberExpiredDate;
   final DateTime? memberRegistrationDate;
   final PartnerEntity? memberJoinPartner; // Assuming PartnerEntity is defined
-
+  final List<MembershipHistory>? membershipHistory;
   ///////////////////////////////////
   final String? memberCreatedBy;
   final DateTime? memberCreatedDate;
@@ -78,6 +81,7 @@ class MemberEntity extends Equatable {
     this.memberExpiredDate,
     this.memberRegistrationDate,
     this.memberJoinPartner,
+    this.membershipHistory,
     this.memberCreatedBy,
     this.memberCreatedDate,
     this.memberUpdatedBy,
@@ -256,6 +260,7 @@ class MemberEntity extends Equatable {
     DateTime? memberExpiredDate,
     DateTime? memberRegistrationDate,
     PartnerEntity? memberJoinPartner,
+    List<MembershipHistory>? membershipHistory,
     String? memberCreatedBy,
     DateTime? memberCreatedDate,
     String? memberUpdatedBy,
@@ -289,6 +294,7 @@ class MemberEntity extends Equatable {
       memberRegistrationDate:
           memberRegistrationDate ?? this.memberRegistrationDate,
       memberJoinPartner: memberJoinPartner ?? this.memberJoinPartner,
+      membershipHistory: membershipHistory ?? this.membershipHistory,
       memberCreatedBy: memberCreatedBy ?? this.memberCreatedBy,
       memberCreatedDate: memberCreatedDate ?? this.memberCreatedDate,
       memberUpdatedBy: memberUpdatedBy ?? this.memberUpdatedBy,
@@ -325,6 +331,7 @@ class MemberEntity extends Equatable {
         memberExpiredDate,
         memberRegistrationDate,
         memberJoinPartner,
+        membershipHistory,
         memberCreatedBy,
         memberCreatedDate,
         memberUpdatedBy,

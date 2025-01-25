@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:project_nineties/features/member/data/models/member_history.dart';
 import 'package:project_nineties/features/member/domain/entities/member_entity.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
@@ -28,6 +29,7 @@ class MemberModel extends MemberEntity {
     super.memberExpiredDate,
     super.memberRegistrationDate,
     super.memberJoinPartner,
+    super.membershipHistory,
     super.memberCreatedBy,
     super.memberCreatedDate,
     super.memberUpdatedBy,
@@ -60,6 +62,7 @@ class MemberModel extends MemberEntity {
         memberTypeOfMember: memberTypeOfMember,
         memberStatusMember: memberStatusMember,
         memberJoinDate: memberJoinDate,
+        membershipHistory: membershipHistory,
         memberExpiredDate: memberExpiredDate,
         memberRegistrationDate: memberRegistrationDate,
         memberJoinPartner: memberJoinPartner,
@@ -97,6 +100,7 @@ class MemberModel extends MemberEntity {
       memberExpiredDate: entity.memberExpiredDate,
       memberRegistrationDate: entity.memberRegistrationDate,
       memberJoinPartner: entity.memberJoinPartner,
+      membershipHistory: entity.membershipHistory,
       memberCreatedBy: entity.memberCreatedBy,
       memberCreatedDate: entity.memberCreatedDate,
       memberUpdatedBy: entity.memberUpdatedBy,
@@ -142,7 +146,146 @@ class MemberModel extends MemberEntity {
       'member_deleted_date': memberDeletedDate?.toIso8601String(),
       'member_is_deleted': memberIsDeleted,
       'is_legacy': isLegacy,
+      'member_history': //MembershipHistory.empty,
+          // membershipHistory?.map((history) => history?.toJson()).toList(),
+          membershipHistory?.map((history) => history.toJson()).toList() ?? [],
     };
+  }
+
+  factory MemberModel.fromJson(Map<String, dynamic> json) {
+    try {
+      List<MembershipHistory> membershipHistory = [];
+      if (json['membership_history'] != null) {
+        // Ensure that membership_history is a list
+        for (var historyData in json['membership_history']) {
+          if (historyData is Map<String, dynamic>) {
+            membershipHistory.add(MembershipHistory.fromJson(historyData));
+          } else {
+            debugPrint('Invalid membership history data: $historyData');
+          }
+        }
+      }
+
+      return MemberModel(
+        memberId: json['member_id'] ?? '',
+        memberName: json['member_name'],
+        memberEmail: json['member_email'],
+        memberPhoneNumber: json['member_phone_number'],
+        memberGender: json['member_gender'],
+        memberDateOfBirth: json['member_date_of_birth'] != null
+            ? DateTime.parse(json['member_date_of_birth'])
+            : null,
+        memberAddress: json['member_address'],
+        memberPhotoOfVehicle: json['member_photo_of_vehicle'],
+        memberYearOfVehicle: json['member_year_of_vehicle'] ?? 0,
+        memberNoVehicle: json['member_no_vehicle'],
+        memberTypeOfVehicle: json['member_type_of_vehicle'],
+        memberColorOfVehicle: json['member_color_of_vehicle'],
+        memberBrandOfVehicle: json['member_brand_of_vehicle'],
+        memberSizeOfVehicle: json['member_size_of_vehicle'],
+        memberTypeOfMember: json['member_type_of_member'],
+        memberStatusMember: json['member_status_member'] ?? true,
+        memberJoinDate: json['member_join_date'] != null
+            ? DateTime.parse(json['member_join_date'])
+            : null,
+        memberExpiredDate: json['member_expired_date'] != null
+            ? DateTime.parse(json['member_expired_date'])
+            : null,
+        memberRegistrationDate: json['member_registration_date'] != null
+            ? DateTime.parse(json['member_registration_date'])
+            : null,
+        memberJoinPartner: json['member_join_partner'] != null
+            ? PartnerModel.fromJson(
+                    Map<String, dynamic>.from(json['member_join_partner']))
+                .toEntity()
+            : PartnerEntity.empty,
+        memberCreatedBy: json['member_created_by'],
+        memberCreatedDate: json['member_created_date'] != null
+            ? DateTime.parse(json['member_created_date'])
+            : null,
+        memberUpdatedBy: json['member_updated_by'],
+        memberUpdatedDate: json['member_updated_date'] != null
+            ? DateTime.parse(json['member_updated_date'])
+            : null,
+        memberDeletedBy: json['member_deleted_by'],
+        memberDeletedDate: json['member_deleted_date'] != null
+            ? DateTime.parse(json['member_deleted_date'])
+            : null,
+        memberIsDeleted: json['member_is_deleted'] ?? false,
+        isLegacy: json['is_legacy'],
+      );
+    } catch (e) {
+      debugPrint('Error in MemberModel.fromJson: $e');
+      rethrow; // Rethrow the exception for better debugging
+    }
+  }
+
+  factory MemberModel.fromMap(Map<String, dynamic> json) {
+    try {
+      List<MembershipHistory> membershipHistory = [];
+      if (json['membership_history'] != null) {
+        // Ensure that membership_history is a list
+        for (var historyData in json['membership_history']) {
+          if (historyData is Map<String, dynamic>) {
+            membershipHistory.add(MembershipHistory.fromFirestore(historyData));
+          } else {
+            debugPrint('Invalid membership history data: $historyData');
+          }
+        }
+      }
+      return MemberModel(
+        memberId: json['member_id'] ?? '',
+        memberName: json['member_name'],
+        memberEmail: json['member_email'],
+        memberPhoneNumber: json['member_phone_number'],
+        memberGender: json['member_gender'],
+        memberDateOfBirth: (json['member_date_of_birth'] is Timestamp)
+            ? (json['member_date_of_birth'] as Timestamp).toDate()
+            : null,
+        memberAddress: json['member_address'],
+        memberPhotoOfVehicle: json['member_photo_of_vehicle'],
+        memberYearOfVehicle: json['member_year_of_vehicle'] ?? 0,
+        memberNoVehicle: json['member_no_vehicle'],
+        memberTypeOfVehicle: json['member_type_of_vehicle'],
+        memberColorOfVehicle: json['member_color_of_vehicle'],
+        memberBrandOfVehicle: json['member_brand_of_vehicle'],
+        memberSizeOfVehicle: json['member_size_of_vehicle'],
+        memberTypeOfMember: json['member_type_of_member'],
+        memberStatusMember: json['member_status_member'] ?? true,
+        memberJoinDate: (json['member_join_date'] is Timestamp)
+            ? (json['member_join_date'] as Timestamp).toDate()
+            : null,
+        memberExpiredDate: (json['member_expired_date'] is Timestamp)
+            ? (json['member_expired_date'] as Timestamp).toDate()
+            : null,
+        memberRegistrationDate: (json['member_registration_date'] is Timestamp)
+            ? (json['member_registration_date'] as Timestamp).toDate()
+            : null,
+        memberJoinPartner: json['member_join_partner'] != null
+            ? PartnerModel.fromJson(
+                    Map<String, dynamic>.from(json['member_join_partner']))
+                .toEntity()
+            : PartnerEntity.empty,
+        memberCreatedBy: json['member_created_by'],
+        memberCreatedDate: (json['member_created_date'] is Timestamp)
+            ? (json['member_created_date'] as Timestamp).toDate()
+            : null,
+        memberUpdatedBy: json['member_updated_by'],
+        memberUpdatedDate: (json['member_updated_date'] is Timestamp)
+            ? (json['member_updated_date'] as Timestamp).toDate()
+            : null,
+        memberDeletedBy: json['member_deleted_by'],
+        memberDeletedDate: (json['member_deleted_date'] is Timestamp)
+            ? (json['member_deleted_date'] as Timestamp).toDate()
+            : null,
+        memberIsDeleted: json['member_is_deleted'] ?? false,
+        isLegacy: json['is_legacy'],
+        membershipHistory: membershipHistory,
+      );
+    } catch (e) {
+      debugPrint('Error in MemberModel.fromJson: $e');
+      rethrow; // Rethrow the exception for better debugging
+    }
   }
 
   Map<String, dynamic> toFireStore() {
@@ -191,6 +334,10 @@ class MemberModel extends MemberEntity {
             : null,
         'member_is_deleted': memberIsDeleted,
         'is_legacy': isLegacy,
+        'membership_history': membershipHistory
+                ?.map((history) => history.toFirestore())
+                .toList() ??
+            [],
       };
 
       return data;
@@ -202,66 +349,22 @@ class MemberModel extends MemberEntity {
     }
   }
 
-  factory MemberModel.fromJson(Map<String, dynamic> json) {
-    try {
-      return MemberModel(
-        memberId: json['member_id'] ?? '',
-        memberName: json['member_name'],
-        memberEmail: json['member_email'],
-        memberPhoneNumber: json['member_phone_number'],
-        memberGender: json['member_gender'],
-        memberDateOfBirth: (json['member_date_of_birth'] is Timestamp)
-            ? (json['member_date_of_birth'] as Timestamp).toDate()
-            : null,
-        memberAddress: json['member_address'],
-        memberPhotoOfVehicle: json['member_photo_of_vehicle'],
-        memberYearOfVehicle: json['member_year_of_vehicle'] ?? 0,
-        memberNoVehicle: json['member_no_vehicle'],
-        memberTypeOfVehicle: json['member_type_of_vehicle'],
-        memberColorOfVehicle: json['member_color_of_vehicle'],
-        memberBrandOfVehicle: json['member_brand_of_vehicle'],
-        memberSizeOfVehicle: json['member_size_of_vehicle'],
-        memberTypeOfMember: json['member_type_of_member'],
-        memberStatusMember: json['member_status_member'] ?? true,
-        memberJoinDate: (json['member_join_date'] is Timestamp)
-            ? (json['member_join_date'] as Timestamp).toDate()
-            : null,
-        memberExpiredDate: (json['member_expired_date'] is Timestamp)
-            ? (json['member_expired_date'] as Timestamp).toDate()
-            : null,
-        memberRegistrationDate: (json['member_registration_date'] is Timestamp)
-            ? (json['member_registration_date'] as Timestamp).toDate()
-            : null,
-        memberJoinPartner: json['member_join_partner'] != null
-            ? PartnerModel.fromJson(
-                    Map<String, dynamic>.from(json['member_join_partner']))
-                .toEntity()
-            : PartnerEntity.empty,
-        memberCreatedBy: json['member_created_by'],
-        memberCreatedDate: (json['member_created_date'] is Timestamp)
-            ? (json['member_created_date'] as Timestamp).toDate()
-            : null,
-        memberUpdatedBy: json['member_updated_by'],
-        memberUpdatedDate: (json['member_updated_date'] is Timestamp)
-            ? (json['member_updated_date'] as Timestamp).toDate()
-            : null,
-        memberDeletedBy: json['member_deleted_by'],
-        memberDeletedDate: (json['member_deleted_date'] is Timestamp)
-            ? (json['member_deleted_date'] as Timestamp).toDate()
-            : null,
-        memberIsDeleted: json['member_is_deleted'] ?? false,
-        isLegacy: json['is_legacy'],
-      );
-    } catch (e) {
-      debugPrint('Error in MemberModel.fromJson: $e');
-      rethrow; // Rethrow the exception for better debugging
-    }
-  }
-
   factory MemberModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data() ?? {};
+
     try {
+      List<MembershipHistory> membershipHistory = [];
+      if (data['membership_history'] != null) {
+        // Ensure that membership_history is a list
+        for (var historyData in data['membership_history']) {
+          if (historyData is Map<String, dynamic>) {
+            membershipHistory.add(MembershipHistory.fromFirestore(historyData));
+          } else {
+            debugPrint('Invalid membership history data: $historyData');
+          }
+        }
+      }
       return MemberModel(
         memberId: snapshot.id,
         memberName: data['member_name'],
@@ -302,6 +405,7 @@ class MemberModel extends MemberEntity {
         memberIsDeleted: data['member_is_deleted'] ?? false,
         docRef: snapshot,
         isLegacy: data['is_legacy'],
+        membershipHistory: membershipHistory,
       );
     } catch (e) {
       debugPrint('Error in MemberModel.fromFirestore: $e');
@@ -456,6 +560,7 @@ class MemberModel extends MemberEntity {
     DateTime? memberExpiredDate,
     DateTime? memberRegistrationDate,
     PartnerEntity? memberJoinPartner,
+    List<MembershipHistory>? membershipHistory,
     String? memberCreatedBy,
     DateTime? memberCreatedDate,
     String? memberUpdatedBy,
@@ -489,6 +594,7 @@ class MemberModel extends MemberEntity {
       memberRegistrationDate:
           memberRegistrationDate ?? this.memberRegistrationDate,
       memberJoinPartner: memberJoinPartner ?? this.memberJoinPartner,
+      membershipHistory: membershipHistory ?? this.membershipHistory,
       memberCreatedBy: memberCreatedBy ?? this.memberCreatedBy,
       memberCreatedDate: memberCreatedDate ?? this.memberCreatedDate,
       memberUpdatedBy: memberUpdatedBy ?? this.memberUpdatedBy,

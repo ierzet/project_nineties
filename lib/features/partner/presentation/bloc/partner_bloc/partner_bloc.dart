@@ -8,6 +8,7 @@ import 'package:project_nineties/features/main/presentation/cubit/navigation_cub
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_usecase.dart';
+import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'partner_event.dart';
@@ -58,7 +59,8 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
       emit(const PartnerLoadFailure(message: AppStrings.dataIsNotValid));
       return;
     }
-    final navigatorBloc = event.context.read<NavigationCubit>();
+    final clearFormValidatorBloc = event.context.read<PartnerValidatorBloc>();
+
     final result = await usecase.insertData(event.params);
     result.fold(
       (failure) {
@@ -66,7 +68,9 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
       },
       (data) {
         //back to home
-        navigatorBloc.updateIndex(0);
+        clearFormValidatorBloc
+            .add(PartnerClearValidator(context: event.context));
+        Navigator.pop(event.context);
         emit(PartnerLoadSuccess(message: data));
       },
     );

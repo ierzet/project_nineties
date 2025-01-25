@@ -143,7 +143,7 @@ class TransactionModel extends TransactionEntity {
     try {
       return TransactionModel(
         transactionId: snapshot.id,
-        member: MemberModel.fromJson(data['member']).toEntity(),
+        member: MemberModel.fromMap(data['member']).toEntity(),
         partner: PartnerModel.fromJson(data['partner']).toEntity(),
         user: UserModel.fromTransactionJson(data['user']).toEntity(),
         transactionType: data['transaction_type'] as String,

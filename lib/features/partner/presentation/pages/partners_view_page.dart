@@ -72,6 +72,9 @@ class PartnersViewPage extends StatelessWidget {
                       trailing: IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
+                          // final checkJson =
+                          //     PartnerModel.fromEntity(partner).toJson();
+                          // print(checkJson);
                           context
                               .read<NavigationCubit>()
                               .updateSubMenuWithAnimated(

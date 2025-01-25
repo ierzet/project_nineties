@@ -394,6 +394,100 @@ class TransactionReview extends StatelessWidget {
                               ],
                             ),
                           ),
+                          const SizedBox(height: 16),
+                          Card(
+                            elevation: 4,
+                            child: ExpansionTile(
+                              initiallyExpanded: true,
+                              title: const Text(
+                                'Membership History',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              children: [
+                                const Divider(
+                                  height: 20,
+                                  thickness: 2,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: member.membershipHistory!.length,
+                                    itemBuilder: (context, index) {
+                                      final reversedIndex =
+                                          member.membershipHistory!.length -
+                                              1 -
+                                              index;
+
+                                      final history = member
+                                          .membershipHistory![reversedIndex];
+
+                                      return Card(
+                                        elevation: 1,
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.date_range,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    'Start Date:  ${history.joinDate != null ? DateFormat.yMMMd().format(history.joinDate!) : 'No Start Date'}',
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.update,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                    'End Date:  ${history.expiredDate != null ? DateFormat.yMMMd().format(history.expiredDate!) : 'No End Date'}',
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.notes,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
+                                                  const SizedBox(width: 8),
+                                                  Text(
+                                                      'Partner: ${history.joinPartner!.partnerName ?? 'No Notes'}'),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),

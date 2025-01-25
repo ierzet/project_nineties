@@ -132,9 +132,12 @@ class MembersViewExtendPage extends StatelessWidget {
                                               context: context,
                                               subMenu: 'member_extend');
                                       context.read<MemberValidatorBloc>().add(
-                                          MemberValidatorForm(
-                                              params: member.copyWith(
-                                                  memberId: '')));
+                                            MemberValidatorForm(
+                                              params:
+                                                  //member.copyWith(memberId: ''),
+                                                  member,
+                                            ),
+                                          );
 
                                       // Setup date default value
                                       context
