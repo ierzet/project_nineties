@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 import 'package:universal_html/html.dart';
@@ -68,25 +69,60 @@ class PartnerModel extends PartnerEntity {
       partnerAvatarFileWeb: entity.partnerAvatarFileWeb,
     );
   }
-
+//?.toIso8601String()
+  // Map<String, dynamic> toJson() {
+  //   try {
+  //     final data = {
+  //       'partner_id': partnerId,
+  //       'partner_name': partnerName,
+  //       'partner_email': partnerEmail,
+  //       'partner_phone_number': partnerPhoneNumber,
+  //       'partner_image_url': partnerImageUrl,
+  //       'partner_address': partnerAddress,
+  //       'partner_status': partnerStatus,
+  //       'partner_join_date': partnerJoinDate?.toIso8601String(),
+  //       'partner_created_by': partnerCreatedBy,
+  //       'partner_created_date': partnerCreatedDate?.toIso8601String(),
+  //       'partner_updated_by': partnerUpdatedBy,
+  //       'partner_updated_date': partnerUpdatedDate?.toIso8601String(),
+  //       'partner_deleted_by': partnerDeletedBy,
+  //       'partner_deleted_date': partnerDeletedDate?.toIso8601String(),
+  //       'partner_is_deleted': partnerIsDeleted,
+  //     };
+  //     print('data: $data');
+  //     return data;
+  //   } catch (e) {
+  //     // Log the error for debugging purposes
+  //     debugPrint('PartnerModel.toJson: $e');
+  //     // Rethrow the exception for further handling
+  //     throw Exception('Failed to convert MemberModel to Json data: $e');
+  //   }
+  // }
   Map<String, dynamic> toJson() {
-    return {
-      'partner_id': partnerId,
-      'partner_name': partnerName,
-      'partner_email': partnerEmail,
-      'partner_phone_number': partnerPhoneNumber,
-      'partner_image_url': partnerImageUrl,
-      'partner_address': partnerAddress,
-      'partner_status': partnerStatus,
-      'partner_join_date': partnerJoinDate,
-      'partner_created_by': partnerCreatedBy,
-      'partner_created_date': partnerCreatedDate,
-      'partner_updated_by': partnerUpdatedBy,
-      'partner_updated_date': partnerUpdatedDate,
-      'partner_deleted_by': partnerDeletedBy,
-      'partner_deleted_date': partnerDeletedDate,
-      'partner_is_deleted': partnerIsDeleted,
-    };
+    try {
+      final data = {
+        'partner_id': partnerId,
+        'partner_name': partnerName,
+        'partner_email': partnerEmail ?? '',
+        'partner_phone_number': partnerPhoneNumber,
+        'partner_image_url': partnerImageUrl,
+        'partner_address': partnerAddress,
+        'partner_status': partnerStatus,
+        'partner_join_date': partnerJoinDate?.toIso8601String(),
+        'partner_created_by': partnerCreatedBy,
+        'partner_created_date': partnerCreatedDate?.toIso8601String(),
+        'partner_updated_by': partnerUpdatedBy,
+        'partner_updated_date': partnerUpdatedDate?.toIso8601String(),
+        'partner_deleted_by': partnerDeletedBy,
+        'partner_deleted_date': partnerDeletedDate?.toIso8601String(),
+        'partner_is_deleted': partnerIsDeleted ?? false,
+      };
+      //print('data: $data');
+      return data;
+    } catch (e) {
+      debugPrint('PartnerModel.toJson: $e');
+      throw Exception('Failed to convert PartnerModel to Json data: $e');
+    }
   }
 
   Map<String, dynamic> toFireStore() {
@@ -110,7 +146,7 @@ class PartnerModel extends PartnerEntity {
     };
   }
 
-  factory PartnerModel.fromJson(Map<String, dynamic> json) {
+  factory PartnerModel.fromMap(Map<String, dynamic> json) {
     try {
       return PartnerModel(
         partnerId: json['partner_id'],
@@ -120,18 +156,50 @@ class PartnerModel extends PartnerEntity {
         partnerImageUrl: json['partner_image_url'],
         partnerAddress: json['partner_address'],
         partnerStatus: json['partner_status'],
-        partnerJoinDate: (json['partner_join_date'] as Timestamp?)?.toDate(),
+        partnerJoinDate: parseDateApp(json['partner_join_date']),
         partnerCreatedBy: json['partner_created_by'],
-        partnerCreatedDate:
-            (json['partner_created_date'] as Timestamp?)?.toDate(),
+        partnerCreatedDate: parseDateApp(json['partner_created_date']),
         partnerUpdatedBy: json['partner_updated_by'] ?? '',
-        partnerUpdatedDate:
-            (json['partner_updated_date'] as Timestamp?)?.toDate(),
+        partnerUpdatedDate: parseDateApp(json['partner_updated_date']),
         partnerDeletedBy: json['partner_deleted_by'],
-        partnerDeletedDate:
-            (json['partner_deleted_date'] as Timestamp?)?.toDate(),
+        partnerDeletedDate: parseDateApp(json['partner_deleted_date']),
         partnerIsDeleted: json['partner_is_deleted'] ?? false,
       );
+    } catch (e) {
+      debugPrint('Error in PartnerModel.fromMap: $e');
+      rethrow;
+    }
+  }
+
+  factory PartnerModel.fromJson(Map<String, dynamic> json) {
+    try {
+      final data = PartnerModel(
+        partnerId: json['_id'],
+        partnerName: json['partner_name'],
+        partnerEmail: json['partner_email'],
+        partnerPhoneNumber: json['partner_phone_number'],
+        partnerImageUrl: json['partner_image_url'],
+        partnerAddress: json['partner_address'],
+        partnerStatus: json['partner_status'],
+        partnerJoinDate: json['partner_join_date'] != null
+            ? DateTime.parse(json['partner_join_date'])
+            : null,
+        partnerCreatedBy: json['partner_created_by'],
+        partnerCreatedDate: json['partner_created_date'] != null
+            ? DateTime.parse(json['partner_created_date'])
+            : null,
+        partnerUpdatedBy: json['partner_updated_by'] ?? '',
+        partnerUpdatedDate: json['partner_updated_date'] != null
+            ? DateTime.parse(json['partner_updated_date'])
+            : null,
+        partnerDeletedBy: json['partner_deleted_by'],
+        partnerDeletedDate: json['partner_deleted_date'] != null
+            ? DateTime.parse(json['partner_deleted_date'])
+            : null,
+        partnerIsDeleted: json['partner_is_deleted'] ?? false,
+      );
+
+      return data;
     } catch (e) {
       debugPrint('Error in PartnerModel.fromJson: $e');
       rethrow;
@@ -361,7 +429,7 @@ class PartnerModel extends PartnerEntity {
 
   factory PartnerModel.fromParams(PartnerParams params) {
     return PartnerModel(
-      partnerId: 'param',
+      partnerId: params.partnerId,
       partnerName: params.partnerName,
       partnerEmail: params.partnerEmail,
       partnerPhoneNumber: params.partnerPhoneNumber,

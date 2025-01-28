@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/partner/data/models/partner_model.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 
@@ -64,7 +65,7 @@ class MembershipHistory extends Equatable {
             ? DateTime.parse(json['history_date'])
             : null,
         joinPartner: json['join_partner'] != null
-            ? PartnerModel.fromJson(json['join_partner']).toEntity()
+            ? PartnerModel.fromMap(json['join_partner']).toEntity()
             : null,
       );
     } catch (e, stackTrace) {
@@ -100,23 +101,22 @@ class MembershipHistory extends Equatable {
     }
   }
 
+  
+
   // Create the object from Firestore data with error handling
   factory MembershipHistory.fromFirestore(Map<String, dynamic> firestoreData) {
+    //print(firestoreData['join_partner']);
     try {
       return MembershipHistory(
-        joinDate: firestoreData['join_date'] != null
-            ? (firestoreData['join_date'] as Timestamp).toDate()
-            : null,
-        expiredDate: firestoreData['expired_date'] != null
-            ? (firestoreData['expired_date'] as Timestamp).toDate()
-            : null,
+        joinDate: parseDateApp(firestoreData['join_date']),
+        expiredDate: parseDateApp(firestoreData['expired_date']),
         typeOfMember: firestoreData['type_of_member'],
-        historyDate: firestoreData['history_date'] != null
-            ? (firestoreData['history_date'] as Timestamp).toDate()
-            : null,
+        historyDate: parseDateApp(firestoreData['history_date']),
         joinPartner: firestoreData['join_partner'] != null
-            ? PartnerModel.fromJson(firestoreData['join_partner']).toEntity()
-            : null,
+            ? PartnerModel.fromMap(
+                    Map<String, dynamic>.from(firestoreData['join_partner']))
+                .toEntity()
+            : PartnerEntity.empty,
       );
     } catch (e, stackTrace) {
       print('Error creating MembershipHistory from Firestore: $e');

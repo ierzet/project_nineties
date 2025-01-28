@@ -36,12 +36,12 @@ class MemberBloc extends Bloc<MemberEvent, MemberState> {
         transformer: debounce(const Duration(milliseconds: 500)));
     on<MemberExtend>(_onMemberExtend,
         transformer: debounce(const Duration(milliseconds: 500)));
-    _memberSubscription = useCase().listen((result) {
-      result.fold(
-        (failure) => add(MemberSubscriptionFailure(message: failure.message)),
-        (data) => add(MemberSubscriptionSuccsess(params: data)),
-      );
-    });
+    // _memberSubscription = useCase().listen((result) {
+    //   result.fold(
+    //     (failure) => add(MemberSubscriptionFailure(message: failure.message)),
+    //     (data) => add(MemberSubscriptionSuccsess(params: data)),
+    //   );
+    // });
   }
 
   final MemberUseCase useCase;

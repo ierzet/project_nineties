@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
-import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/partner/domain/entities/partner_entity.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_usecase.dart';
@@ -31,12 +30,12 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
     on<PartnerExportToCSV>(_onPartnerExportToCSV,
         transformer: debounce(const Duration(milliseconds: 500)));
 
-    _partnerSubscription = usecase().listen((result) {
-      result.fold(
-        (failure) => add(PartnerSubscriptionFailure(message: failure.message)),
-        (data) => add(PartnerSubscriptionSuccsess(params: data)),
-      );
-    });
+    // _partnerSubscription = usecase().listen((result) {
+    //   result.fold(
+    //     (failure) => add(PartnerSubscriptionFailure(message: failure.message)),
+    //     (data) => add(PartnerSubscriptionSuccsess(params: data)),
+    //   );
+    // });
   }
   final PartnerUseCase usecase;
   late final StreamSubscription _partnerSubscription;
@@ -99,7 +98,8 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
       emit(const PartnerLoadFailure(message: AppStrings.dataIsNotValid));
       return;
     }
-    final navigatorBloc = event.context.read<NavigationCubit>();
+
+    final clearFormValidatorBloc = event.context.read<PartnerValidatorBloc>();
     final result = await usecase.updateData(event.params);
     result.fold(
       (failure) {
@@ -107,7 +107,10 @@ class PartnerBloc extends Bloc<PartnerEvent, PartnerState> {
       },
       (data) {
         //back to home
-        navigatorBloc.updateSubMenu('transaction_view');
+        clearFormValidatorBloc
+            .add(PartnerClearValidator(context: event.context));
+        //back to home
+        Navigator.pop(event.context);
         emit(PartnerLoadUpdateSuccess(message: data));
       },
     );

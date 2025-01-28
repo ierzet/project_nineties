@@ -27,4 +27,8 @@ class PartnerJoinDateCubit extends Cubit<DateTime> {
       emit(date);
     }
   }
+
+  void onInitialDate(DateTime date) {
+    emit(date);
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -44,6 +45,7 @@ import 'package:project_nineties/features/partner/data/repositories/partner_repo
 import 'package:project_nineties/features/partner/domain/repositories/pertner_repository.dart';
 import 'package:project_nineties/features/partner/domain/usecases/partner_usecase.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
+import 'package:http/http.dart' as http;
 
 final locator = GetIt.instance;
 void setupLocator() {
@@ -100,7 +102,7 @@ void setupLocator() {
   locator.registerLazySingleton<AuthenticationLocalDataSource>(
       () => AuthenticationLocalDataSourceImpl(locator()));
   locator.registerLazySingleton<PartnerRemoteDataSource>(
-      () => PartnerRemoteDataSourceImpl(locator(), locator()));
+      () => PartnerRemoteDataSourceImpl(locator(), locator(), locator()));
   locator.registerLazySingleton<PartnerLocalDataSource>(
       () => PartnerLocalDataSourceImpl());
   locator.registerLazySingleton<UserRemoteDataSource>(
@@ -126,4 +128,6 @@ void setupLocator() {
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
   locator.registerLazySingleton(() => FirebaseStorage.instance);
   locator.registerLazySingleton(() => GoogleSignIn.standard());
+  locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(() => Dio());
 }

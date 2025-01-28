@@ -10,6 +10,7 @@ import 'package:project_nineties/features/member/presentation/cubit/member_join_
 import 'package:project_nineties/features/member/presentation/widgets/member_search.dart';
 import 'package:project_nineties/features/main/presentation/cubit/navigation_cubit.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
+import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 
 class MembersViewExtendPage extends StatelessWidget {
   const MembersViewExtendPage({super.key});
@@ -17,7 +18,7 @@ class MembersViewExtendPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final memberBloc = context.read<MemberBloc>();
-
+    final partnerBloc = context.read<PartnerBloc>();
     return Scaffold(
       appBar: const MainAppBarNoAvatar(),
       body: Column(
@@ -31,10 +32,14 @@ class MembersViewExtendPage extends StatelessWidget {
               ),
               child: BlocBuilder<MemberBloc, MemberState>(
                 builder: (context, state) {
-                  // if (state is MemberLoadInProgress) {
-                  //   return const Center(child: CircularProgressIndicator());
-                  // } else
                   if (state is MemberInitial) {
+                    memberBloc.add(const MemberGetData(limit: 10));
+                    partnerBloc.add(const PartnerGetData());
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is MemberLoadUpdateSuccess) {
+                    memberBloc.add(const MemberGetData(limit: 10));
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is MemberLoadSuccess) {
                     memberBloc.add(const MemberGetData(limit: 10));
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is MemberLoadDataSuccess) {

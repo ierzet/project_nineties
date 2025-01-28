@@ -6,52 +6,38 @@ import 'package:project_nineties/features/partner/data/models/partner_model.dart
 import 'package:project_nineties/features/partner/domain/usecases/partner_params.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
+import 'package:project_nineties/features/partner/presentation/cubit/partner_join_date_cubit.dart';
 
 class PartnersViewPage extends StatelessWidget {
   const PartnersViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    context.read<PartnerBloc>().add(const PartnerGetData());
+    final partnerBloc = context.read<PartnerBloc>();
     return Scaffold(
       appBar: const MainAppBarNoAvatar(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: BlocConsumer<PartnerBloc, PartnerState>(
-          listener: (context, state) {
-            if (state is PartnerLoadSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
-            } else if (state is PartnerLoadUpdateSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
-            } else if (state is PartnerLoadFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
-            }
-          },
+        child: BlocBuilder<PartnerBloc, PartnerState>(
           builder: (context, state) {
-            if (state is PartnerLoadInProgress) {
+            if (state is PartnerInitial) {
+              partnerBloc.add(const PartnerGetData());
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is PartnerLoadUpdateSuccess) {
+              partnerBloc.add(const PartnerGetData());
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is PartnerLoadSuccess) {
+              partnerBloc.add(const PartnerGetData());
               return const Center(child: CircularProgressIndicator());
             } else if (state is PartnerLoadDataSuccess) {
               final partners = state.data;
-
               return ListView.builder(
                 itemCount: partners.length,
                 itemBuilder: (context, index) {
                   final partner = partners[index];
+                  final initJoinDate =
+                      partner.partnerJoinDate ?? DateTime.now();
 
-                  // final checkJson = PartnerModel.fromEntity(partner).toJson();
-                  // print(checkJson);
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ListTile(
@@ -72,9 +58,9 @@ class PartnersViewPage extends StatelessWidget {
                       trailing: IconButton(
                         icon: const Icon(Icons.edit),
                         onPressed: () {
-                          // final checkJson =
-                          //     PartnerModel.fromEntity(partner).toJson();
-                          // print(checkJson);
+                          context
+                              .read<PartnerJoinDateCubit>()
+                              .onInitialDate(initJoinDate);
                           context
                               .read<NavigationCubit>()
                               .updateSubMenuWithAnimated(
@@ -91,7 +77,20 @@ class PartnersViewPage extends StatelessWidget {
               );
             } else if (state is PartnerLoadFailure) {
               return Center(
-                  child: Text('Failed to load partners: ${state.message}'));
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Failed to load members: ${state.message}'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<PartnerBloc>().add(const PartnerGetData());
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
             } else {
               return const Center(child: Text('No data available'));
             }

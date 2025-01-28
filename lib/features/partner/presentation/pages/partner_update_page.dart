@@ -6,7 +6,6 @@ import 'package:project_nineties/core/utilities/constants.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/cubit/partner_join_date_cubit.dart';
-import 'package:project_nineties/features/partner/presentation/widgets/listener_notify_partner.dart';
 import 'package:project_nineties/features/partner/presentation/widgets/partner_avatar_picker.dart';
 import 'package:project_nineties/features/partner/presentation/widgets/partner_custom_textfield.dart';
 import 'package:project_nineties/features/partner/presentation/widgets/partner_submit_button.dart';
@@ -85,7 +84,7 @@ class PartnerUpdatePage extends StatelessWidget {
               SizedBox(height: AppPadding.halfPadding.h * 3),
               const PartnerSubmitButton(type: 'update'),
               SizedBox(height: AppPadding.triplePadding),
-              const ListenerNotificationPartner(),
+              //const ListenerNotificationPartner(),
             ],
           ),
         ),

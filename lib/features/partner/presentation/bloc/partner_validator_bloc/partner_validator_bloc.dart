@@ -19,7 +19,6 @@ class PartnerValidatorBloc
 
   void _onPartnerClearValidator(PartnerClearValidator event,
       Emitter<PartnerValidatorBlocState> emit) async {
-    //TODO:add clear textfield here
     emit(PartnerValidatorBlocState.empty);
   }
 }

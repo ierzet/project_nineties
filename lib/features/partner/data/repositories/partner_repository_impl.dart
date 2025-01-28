@@ -15,7 +15,8 @@ class PartnerRepositoryImpl implements PartnerRepository {
   final PartnerLocalDataSource localDataSource;
 
   PartnerRepositoryImpl({
-    required this.remoteDataSource,required this.localDataSource,
+    required this.remoteDataSource,
+    required this.localDataSource,
   });
 
   @override
@@ -61,9 +62,11 @@ class PartnerRepositoryImpl implements PartnerRepository {
   Future<Either<Failure, String>> updateData(PartnerModel dataModel) async {
     try {
       // 1. Upload image
-      final downloadUrl = await remoteDataSource.uploadImage(dataModel);
-      dataModel = dataModel.copyWith(partnerImageUrl: downloadUrl);
-
+      if (dataModel.partnerAvatarFile != null ||
+          dataModel.partnerAvatarFileWeb != null) {
+        final downloadUrl = await remoteDataSource.uploadImage(dataModel);
+        dataModel = dataModel.copyWith(partnerImageUrl: downloadUrl);
+      }
       // 2. insert partner dataModel to firestrore
       final result = await remoteDataSource.updateData(dataModel);
 
@@ -83,9 +86,8 @@ class PartnerRepositoryImpl implements PartnerRepository {
   @override
   Future<Either<Failure, List<PartnerModel>>> fetchData() async {
     try {
-      final queryData = await remoteDataSource.fetchData();
-      final result =
-          queryData.docs.map((doc) => PartnerModel.fromFirestore(doc)).toList();
+      final result = await remoteDataSource.fetchData();
+
       return Right(result);
     } on FireBaseCatchFailure catch (e) {
       return Left(

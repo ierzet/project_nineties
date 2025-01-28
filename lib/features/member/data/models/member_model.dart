@@ -195,7 +195,7 @@ class MemberModel extends MemberEntity {
             ? DateTime.parse(json['member_registration_date'])
             : null,
         memberJoinPartner: json['member_join_partner'] != null
-            ? PartnerModel.fromJson(
+            ? PartnerModel.fromMap(
                     Map<String, dynamic>.from(json['member_join_partner']))
                 .toEntity()
             : PartnerEntity.empty,
@@ -262,7 +262,7 @@ class MemberModel extends MemberEntity {
             ? (json['member_registration_date'] as Timestamp).toDate()
             : null,
         memberJoinPartner: json['member_join_partner'] != null
-            ? PartnerModel.fromJson(
+            ? PartnerModel.fromMap(
                     Map<String, dynamic>.from(json['member_join_partner']))
                 .toEntity()
             : PartnerEntity.empty,
@@ -352,7 +352,7 @@ class MemberModel extends MemberEntity {
   factory MemberModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final data = snapshot.data() ?? {};
-
+    //print(data['member_join_partner']);
     try {
       List<MembershipHistory> membershipHistory = [];
       if (data['membership_history'] != null) {
@@ -389,7 +389,7 @@ class MemberModel extends MemberEntity {
         memberRegistrationDate:
             (data['member_registration_date'] as Timestamp?)?.toDate(),
         memberJoinPartner: data['member_join_partner'] != null
-            ? PartnerModel.fromJson(
+            ? PartnerModel.fromMap(
                     Map<String, dynamic>.from(data['member_join_partner']))
                 .toEntity()
             : PartnerEntity.empty,

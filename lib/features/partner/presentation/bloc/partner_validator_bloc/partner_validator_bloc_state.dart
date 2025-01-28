@@ -8,6 +8,7 @@ class PartnerValidatorBlocState extends Equatable {
   final PartnerParams partnerParams;
   static final empty = PartnerValidatorBlocState(
     partnerParams: PartnerParams(
+      partnerId: '',
       partnerName: '',
       partnerEmail: '',
       partnerPhoneNumber: '',

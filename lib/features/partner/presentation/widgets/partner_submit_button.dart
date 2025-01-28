@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project_nineties/core/utilities/constants.dart';
+import 'package:project_nineties/features/authentication/presentation/bloc/app_bloc/app_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_bloc/partner_bloc.dart';
 import 'package:project_nineties/features/partner/presentation/bloc/partner_validator_bloc/partner_validator_bloc.dart';
 
@@ -11,6 +12,7 @@ class PartnerSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final updatedUser = context.watch<AppBloc>().state.user.user.id;
     void onSubmit() {
       final partnerParams =
           context.read<PartnerValidatorBloc>().state.partnerParams;
@@ -22,11 +24,10 @@ class PartnerSubmitButton extends StatelessWidget {
               ))
           : context.read<PartnerBloc>().add(PartnerUpdateData(
                 context: context,
-                params: partnerParams,
+                params: partnerParams.copyWith(
+                    partnerUpdatedBy: updatedUser,
+                    partnerUpdatedDate: DateTime.now()),
               ));
-      context
-          .read<PartnerValidatorBloc>()
-          .add(PartnerClearValidator(context: context));
     }
 
     return Padding(

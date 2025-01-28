@@ -86,7 +86,7 @@ class TransactionModel extends TransactionEntity {
       return TransactionModel(
         transactionId: json['transaction_id'] as String,
         member: MemberModel.fromJson(json['member']).toEntity(),
-        partner: PartnerModel.fromJson(json['partner']).toEntity(),
+        partner: PartnerModel.fromMap(json['partner']).toEntity(),
         user: UserModel.fromJson(json['user']).toEntity(),
         transactionType: json['transaction_type'] as String,
         transactionDate: DateTime.parse(json['transaction_date'] as String),
@@ -144,7 +144,7 @@ class TransactionModel extends TransactionEntity {
       return TransactionModel(
         transactionId: snapshot.id,
         member: MemberModel.fromMap(data['member']).toEntity(),
-        partner: PartnerModel.fromJson(data['partner']).toEntity(),
+        partner: PartnerModel.fromMap(data['partner']).toEntity(),
         user: UserModel.fromTransactionJson(data['user']).toEntity(),
         transactionType: data['transaction_type'] as String,
         transactionDate: (data['transaction_date'] as Timestamp).toDate(),

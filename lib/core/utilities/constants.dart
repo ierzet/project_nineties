@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -57,14 +58,32 @@ class AppCollection {
 //   static const Color textColor = Color(0xFFFFFFFF); // White for text
 // }
 
+String maskDate(String date) {
+  String formattedDate = date.replaceAll('Z', '');
+
+  return formattedDate;
+}
+
+// Helper method to parse date
+DateTime? parseDateApp(dynamic date) {
+  if (date is Timestamp) {
+    return date.toDate();
+  } else if (date is String) {
+    return DateTime.parse(date);
+  }
+  return null; // Return null if the date is neither Timestamp nor String
+}
+
 enum BackendType {
   firebase,
-  mongodb,
+  api,
 }
 
 class AppBackendConfig {
-  static const BackendType readBackend = BackendType.firebase;
-  static const BackendType writeBackend = BackendType.firebase;
+  static const String token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2Nzk2NjBlNWE5YzExOWE0YWQxYjgzM2UiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTczODA3NjI1NywiZXhwIjoxNzM4MDk0MjU3fQ.Q1PVyb1WtOWrsS44XGLL2rbiTkxAkEcDGovivNLGGzE';
+  static const BackendType readBackend = BackendType.api;
+  static const BackendType writeBackend = BackendType.api;
 }
 
 class AppStrings {

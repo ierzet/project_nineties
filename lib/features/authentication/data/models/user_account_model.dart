@@ -106,7 +106,7 @@ class UserAccountModel extends UserAccountEntity {
         user: UserModel.fromJson(json).toEntity(),
         joinDate: (json['join_date'] as Timestamp?)?.toDate(),
         isActive: json['is_active'] ?? false,
-        partner: PartnerModel.fromJson(json).toEntity(),
+        partner: PartnerModel.fromMap(json).toEntity(),
         roleId: json['role_id'] ?? '',
         menuAuth: json['menu_auth'] ?? [],
         isInitiate: json['is_initiate'],
@@ -132,7 +132,7 @@ class UserAccountModel extends UserAccountEntity {
         joinDate: (data['join_date'] as Timestamp?)?.toDate(),
         isActive: data['is_active'] ?? false,
         partner: data['partner'] != null
-            ? PartnerModel.fromJson(Map<String, dynamic>.from(data['partner']))
+            ? PartnerModel.fromMap(Map<String, dynamic>.from(data['partner']))
                 .toEntity()
             : PartnerEntity.empty,
         // partner: PartnerModel.fromFirestoreUserAccount(snapshot).toEntity(),
@@ -307,20 +307,20 @@ class UserAccountModel extends UserAccountEntity {
   List<TextCellValue> toTextCellValueHeader() {
     return [
       TextCellValue('User Id'),
-       TextCellValue('Email'),
-       TextCellValue('Name'),
-       TextCellValue('Phone Number'),
-       TextCellValue('Join Date'),
-       TextCellValue('Is Active'),
-       TextCellValue('Partner Id'),
-       TextCellValue('Role ID'),
-       TextCellValue('Created By'),
-       TextCellValue('Created Date'),
-       TextCellValue('Updated By'),
-       TextCellValue('Updated Date'),
-       TextCellValue('Deleted By'),
-       TextCellValue('Deleted Date'),
-       TextCellValue('Is Deleted'),
+      TextCellValue('Email'),
+      TextCellValue('Name'),
+      TextCellValue('Phone Number'),
+      TextCellValue('Join Date'),
+      TextCellValue('Is Active'),
+      TextCellValue('Partner Id'),
+      TextCellValue('Role ID'),
+      TextCellValue('Created By'),
+      TextCellValue('Created Date'),
+      TextCellValue('Updated By'),
+      TextCellValue('Updated Date'),
+      TextCellValue('Deleted By'),
+      TextCellValue('Deleted Date'),
+      TextCellValue('Is Deleted'),
     ];
   }
 

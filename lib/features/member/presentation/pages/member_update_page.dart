@@ -11,7 +11,6 @@ import 'package:project_nineties/features/member/presentation/cubit/member_step_
 import 'package:project_nineties/features/member/presentation/widgets/member_custom_texfield.dart';
 import 'package:project_nineties/features/member/presentation/widgets/member_dd_selector.dart';
 import 'package:project_nineties/features/member/presentation/widgets/member_join_partner.dart';
-import 'package:project_nineties/features/member/presentation/widgets/member_qrcode.dart';
 import 'package:project_nineties/features/member/presentation/widgets/member_submit_button.dart';
 import 'package:project_nineties/features/main/presentation/widgets/main_appbar.dart';
 import 'package:project_nineties/features/member/presentation/widgets/member_vehicle_image_picker.dart';
